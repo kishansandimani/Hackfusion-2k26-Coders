@@ -1,42 +1,319 @@
 <!DOCTYPE html>
-
 <html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary-fixed-dim": "#edc157", "error-container": "#ffdad6", "surface-tint": "#b0284b", "inverse-on-surface": "#eff0ff", "inverse-surface": "#2c3041", "surface": "#faf8ff", "on-tertiary-container": "#412f00", "surface-container": "#ebedff", "on-tertiary-fixed-variant": "#5b4300", "primary-fixed-dim": "#ffb2bc", "surface-container-low": "#f3f2ff", "on-primary-container": "#6a0024", "inverse-primary": "#ffb2bc", "surface-dim": "#d6d9ef", "on-secondary-fixed": "#002116", "on-surface": "#171b2b", "on-tertiary": "#ffffff", "secondary-fixed": "#64fcc9", "tertiary-fixed": "#ffdf9b", "tertiary-container": "#bc942f", "surface-container-high": "#e4e7fe", "primary-fixed": "#ffd9dd", "background": "#faf8ff", "outline-variant": "dfbfc2", "on-error": "#ffffff", "on-surface-variant": "#584143", "secondary-container": "#64fcc9", "on-primary-fixed-variant": "#8f0935", "on-secondary-fixed-variant": "#00513c", "error": "#ba1a1a", "on-primary": "#ffffff", "on-tertiary-fixed": "#251a00", "surface-container-highest": "#dee1f8", "secondary": "#006c51", "on-secondary": "#ffffff", "surface-bright": "#faf8ff", "surface-variant": "#dee1f8", "primary": "#b0284b", "on-background": "#171b2b", "primary-container": "#ff6584", "secondary-fixed-dim": "#40dfae", "outline": "#8c7073", "on-error-container": "#93000a", "on-secondary-container": "#007256", "tertiary": "#785a00", "on-primary-fixed": "#400012", "surface-container-lowest": "#ffffff" }, "borderRadius": { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, "spacing": { "margin": "1rem", "gutter": "1.25rem", "gutter-desktop": "2rem", "space-md": "1rem", "space-sm": "0.5rem", "margin-desktop": "2.5rem", "space-lg": "1.5rem", "space-xl": "2.5rem", "space-xs": "0.25rem" }, "fontFamily": { "body-sm": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "display-lg-mobile": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "display-lg": ["Plus Jakarta Sans"] }, "fontSize": { "body-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "700" }], "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "700" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "display-lg-mobile": ["34px", { "lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "body-md": ["15px", { "lineHeight": "24px", "fontWeight": "400" }], "label-lg": ["15px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "700" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "500" }], "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }] } } } };</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased"><header class="fixed top-0 w-full z-50 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 max-w-[1280px] mx-auto px-margin md:px-margin-desktop flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-sm"><img alt="ChipPal Robot Mascot Logo" class="h-8 w-auto object-contain" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAgMTUwIj48ZyBzdHJva2U9IiMxNzFiMmIiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIj48cGF0aCBkPSJNNDUgMjhWMTJNNzUgMjhWOE0xMDUgMjhWMTJNNDUgMTIydjE2TTc1IDEyMnYxOE0xMDUgMTIydjE2TTI0IDU1SDhNMjQgOTVIOE0xMjYgNTVoMTZNMTI2IDk1aDE2Ii8+PHJlY3QgeD0iMjQiIHk9IjI4IiB3aWR0aD0iMTAyIiBoZWlnaHQ9Ijk0IiByeD0iMjQiIGZpbGw9IiNmZjY1ODQiLz48L2c+PGNpcmNsZSBjeD0iNTgiIGN5PSI3MCIgcj0iMTIiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSI5MiIgY3k9IjcwIiByPSIxMiIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iNzIiIHI9IjYiIGZpbGw9IiMxNzFiMmIiLz48Y2lyY2xlIGN4PSI5NCIgY3k9IjcyIiByPSI2IiBmaWxsPSIjMTcxYjJiIi8+PHBhdGggZD0iTTYyIDk4cTEzIDEyIDI2IDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzE3MWIyYiIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4="/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface leading-tight tracking-tight">ChipPal</span><span class="font-label-sm text-label-sm text-on-surface-variant">E-Waste AI Detective</span></div></div><nav class="hidden lg:flex items-center gap-space-xs p-space-xs bg-surface-container-low rounded-full" data-active-classes="bg-primary-container text-on-primary font-label-md"><a aria-current="page" class="px-space-md py-space-sm rounded-full transition-all duration-200 bg-primary-container text-on-primary font-label-md" data-path="scanner" href="#">Scanner</a><a class="px-space-md py-space-sm rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200" data-path="analysis-results" href="#">Analysis Results</a><a class="px-space-md py-space-sm rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200" data-path="component-library" href="#">Component Library</a><a class="px-space-md py-space-sm rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200" data-path="eco-impact" href="#">Eco Impact</a><a class="px-space-md py-space-sm rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200" data-path="history" href="#">History</a></nav><div class="flex items-center gap-space-sm"><div class="hidden sm:flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-tertiary-fixed text-on-tertiary-fixed shadow-[0_2px_4px_rgba(45,49,66,0.04)]"><span class="font-label-md text-label-md" id="scan-count">🔥 0 boards scanned</span></div><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-primary-container text-on-primary font-label-md text-label-md shadow-[0_4px_0_#b0284b] hover:translate-y-[-1px] active:translate-y-[2px] active:shadow-[0_1px_0_#b0284b] transition-transform" type="button"><span class="material-symbols-outlined text-[18px]">photo_camera</span><span class="hidden md:inline">Scan Board</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 shadow-[0_2px_4px_rgba(45,49,66,0.08)]"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-surface min-h-[calc(100vh-80px)]"><div class="flex flex-col w-full">
-<!-- Interactive Top Alert Banner -->
-<div class="w-full bg-secondary-container/40 px-margin md:px-margin-desktop py-2.5">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }
+
+/* =========================================================
+   PROMINENT ANIMATIONS & 60FPS UI MICRO-INTERACTIONS
+   ========================================================= */
+
+/* 1. Large Fluid Aurora Ambient Floating Orbs */
+@keyframes float-drift-1 {
+  0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+  33% { transform: translate3d(70px, -60px, 0) scale(1.15) rotate(15deg); }
+  66% { transform: translate3d(-50px, 50px, 0) scale(0.92) rotate(-10deg); }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+}
+
+@keyframes float-drift-2 {
+  0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+  33% { transform: translate3d(-80px, 70px, 0) scale(1.2) rotate(-20deg); }
+  66% { transform: translate3d(60px, -40px, 0) scale(0.88) rotate(15deg); }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+}
+
+@keyframes float-drift-3 {
+  0% { transform: translate3d(0, 0, 0) scale(0.95); }
+  50% { transform: translate3d(60px, 90px, 0) scale(1.18); }
+  100% { transform: translate3d(0, 0, 0) scale(0.95); }
+}
+
+@keyframes float-drift-4 {
+  0% { transform: translate3d(0, 0, 0) scale(1.05); }
+  50% { transform: translate3d(-70px, -80px, 0) scale(0.9); }
+  100% { transform: translate3d(0, 0, 0) scale(1.05); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.45; filter: blur(70px); }
+  50% { opacity: 0.75; filter: blur(55px); }
+}
+
+/* 2. Circuit Trace Electrical Pulses */
+@keyframes electricPulseFlow {
+  0% { stroke-dashoffset: 120; opacity: 0.2; }
+  50% { opacity: 1; filter: drop-shadow(0 0 5px #4ECCA3); }
+  100% { stroke-dashoffset: -120; opacity: 0.2; }
+}
+
+/* 3. Floating Micro-particles / Circuit Sparks */
+@keyframes sparkDriftUp {
+  0% { transform: translate3d(0, 0, 0) scale(0.7); opacity: 0; }
+  20% { opacity: 0.85; }
+  80% { opacity: 0.85; }
+  100% { transform: translate3d(30px, -180px, 0) scale(1.2); opacity: 0; }
+}
+
+/* 4. Sweeping Neon Laser Scanline over PCB */
+@keyframes laserScanSweep {
+  0% { top: 0%; opacity: 0.85; }
+  50% { top: 96%; opacity: 1; }
+  100% { top: 0%; opacity: 0.85; }
+}
+
+/* 5. Target Reticle Radar Ping Rings */
+@keyframes radarTargetPing {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(78, 204, 163, 0.7); }
+  70% { transform: scale(1.03); box-shadow: 0 0 0 16px rgba(78, 204, 163, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(78, 204, 163, 0); }
+}
+
+@keyframes radarTargetPingPrimary {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 101, 132, 0.7); }
+  70% { transform: scale(1.03); box-shadow: 0 0 0 16px rgba(255, 101, 132, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 101, 132, 0); }
+}
+
+@keyframes reticleRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 6. ChipPal Mascot Continuous Motion, LED Eyes & Antenna Light */
+@keyframes mascotBouncyFloat {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  30% { transform: translate3d(0, -9px, 0) rotate(-2.5deg); }
+  60% { transform: translate3d(0, -3px, 0) rotate(2deg); }
+}
+
+@keyframes antennaPulseBeacon {
+  0%, 100% { transform: scale(1); opacity: 0.6; box-shadow: 0 0 4px #4ECCA3; }
+  50% { transform: scale(1.4); opacity: 1; box-shadow: 0 0 16px #4ECCA3, 0 0 24px #4ECCA3; }
+}
+
+@keyframes robotEyeBlink {
+  0%, 46%, 50%, 96%, 100% { opacity: 1; transform: scaleY(1); }
+  48%, 98% { opacity: 0.15; transform: scaleY(0.1); }
+}
+
+/* 7. Pulsating CTA Camera Button with Ripple Ring */
+@keyframes ctaPulseRipple {
+  0% { box-shadow: 0 0 0 0 rgba(78, 204, 163, 0.65), 0 4px 0 #007256; }
+  70% { box-shadow: 0 0 0 14px rgba(78, 204, 163, 0), 0 4px 0 #007256; }
+  100% { box-shadow: 0 0 0 0 rgba(78, 204, 163, 0), 0 4px 0 #007256; }
+}
+
+/* 8. Glowing Gradient Animated Card Borders */
+@keyframes gradientRotate {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.glow-border-card {
+  position: relative;
+  background-clip: padding-box;
+}
+.glow-border-card::before {
+  content: '';
+  position: absolute;
+  inset: -1.5px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,101,132,0.45), rgba(78,204,163,0.5), rgba(255,209,102,0.4), rgba(157,128,243,0.45));
+  background-size: 300% 300%;
+  animation: gradientRotate 6s ease infinite;
+  z-index: -1;
+  opacity: 0.75;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+.glow-border-card:hover::before {
+  opacity: 1;
+  filter: drop-shadow(0 0 10px rgba(78,204,163,0.45));
+}
+
+/* 9. Animated Donut & Hazard Gauge Progress Arcs */
+@keyframes donutSpinPulse {
+  0%, 100% { stroke-width: 14; }
+  50% { stroke-width: 16.5; }
+}
+
+@keyframes needleOscillateActive {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(5deg); }
+  65% { transform: rotate(-3.5deg); }
+  85% { transform: rotate(2deg); }
+}
+
+/* Utility Animation Classes */
+.animate-aurora-1 { animation: float-drift-1 18s ease-in-out infinite, pulse-glow 7s ease-in-out infinite; }
+.animate-aurora-2 { animation: float-drift-2 22s ease-in-out infinite, pulse-glow 8s ease-in-out infinite; }
+.animate-aurora-3 { animation: float-drift-3 19s ease-in-out infinite, pulse-glow 9s ease-in-out infinite; }
+.animate-aurora-4 { animation: float-drift-4 24s ease-in-out infinite, pulse-glow 7.5s ease-in-out infinite; }
+
+.laser-scanline {
+  animation: laserScanSweep 4.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+.animate-target-ping {
+  animation: radarTargetPing 2.4s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+}
+.animate-target-ping-primary {
+  animation: radarTargetPingPrimary 2.4s cubic-bezier(0.25, 1, 0.5, 1) infinite 0.8s;
+}
+.animate-reticle-spin {
+  animation: reticleRotate 10s linear infinite;
+}
+.animate-mascot-bouncy {
+  animation: mascotBouncyFloat 3.8s ease-in-out infinite;
+}
+.animate-beacon {
+  animation: antennaPulseBeacon 1.8s ease-in-out infinite;
+}
+.animate-robot-eye {
+  animation: robotEyeBlink 3.6s ease-in-out infinite;
+}
+.animate-cta-ripple {
+  animation: ctaPulseRipple 2.2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+}
+.animate-needle-active {
+  transform-origin: 80px 80px;
+  animation: needleOscillateActive 4.5s ease-in-out infinite;
+}
+.spark-particle {
+  animation: sparkDriftUp 6s linear infinite;
+}
+
+.btn-spring {
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
+}
+.btn-spring:hover {
+  transform: translateY(-2.5px) scale(1.02);
+}
+.btn-spring:active {
+  transform: translateY(1px) scale(0.98);
+}
+.card-spring {
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.card-spring:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 35px -10px rgba(23, 27, 43, 0.12), 0 6px 12px -2px rgba(23, 27, 43, 0.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary-fixed-dim": "#edc157", "error-container": "#ffdad6", "surface-tint": "#b0284b", "inverse-on-surface": "#eff0ff", "inverse-surface": "#2c3041", "surface": "#faf8ff", "on-tertiary-container": "#412f00", "surface-container": "#ebedff", "on-tertiary-fixed-variant": "#5b4300", "primary-fixed-dim": "#ffb2bc", "surface-container-low": "#f3f2ff", "on-primary-container": "#6a0024", "inverse-primary": "#ffb2bc", "surface-dim": "#d6d9ef", "on-secondary-fixed": "#002116", "on-surface": "#171b2b", "on-tertiary": "#ffffff", "secondary-fixed": "#64fcc9", "tertiary-fixed": "#ffdf9b", "tertiary-container": "#bc942f", "surface-container-high": "#e4e7fe", "primary-fixed": "#ffd9dd", "background": "#faf8ff", "outline-variant": "dfbfc2", "on-error": "#ffffff", "on-surface-variant": "#584143", "secondary-container": "#64fcc9", "on-primary-fixed-variant": "#8f0935", "on-secondary-fixed-variant": "#00513c", "error": "#ba1a1a", "on-primary": "#ffffff", "on-tertiary-fixed": "#251a00", "surface-container-highest": "#dee1f8", "secondary": "#006c51", "on-secondary": "#ffffff", "surface-bright": "#faf8ff", "surface-variant": "#dee1f8", "primary": "#b0284b", "on-background": "#171b2b", "primary-container": "#ff6584", "secondary-fixed-dim": "#40dfae", "outline": "#8c7073", "on-error-container": "#93000a", "on-secondary-container": "#007256", "tertiary": "#785a00", "on-primary-fixed": "#400012", "surface-container-lowest": "#ffffff" }, "borderRadius": { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, "spacing": { "margin": "1rem", "gutter": "1.25rem", "gutter-desktop": "2rem", "space-md": "1rem", "space-sm": "0.5rem", "margin-desktop": "2.5rem", "space-lg": "1.5rem", "space-xl": "2.5rem", "space-xs": "0.25rem" }, "fontFamily": { "body-sm": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "display-lg-mobile": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "display-lg": ["Plus Jakarta Sans"] }, "fontSize": { "body-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "700" }], "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "700" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "display-lg-mobile": ["34px", { "lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "body-md": ["15px", { "lineHeight": "24px", "fontWeight": "400" }], "label-lg": ["15px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "700" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "500" }], "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }] } } } };</script><style>#bg-wrap{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;will-change:transform;animation:drift 24s ease-in-out infinite alternate}
+.b1{width:56vmax;height:56vmax;left:-16vmax;top:-18vmax;background:radial-gradient(circle,rgba(255,101,132,.42) 0,rgba(255,101,132,0) 66%)}
+.b2{width:50vmax;height:50vmax;right:-14vmax;top:14vh;animation-duration:30s;animation-delay:-7s;background:radial-gradient(circle,rgba(100,252,201,.46) 0,rgba(100,252,201,0) 66%)}
+.b3{width:48vmax;height:48vmax;left:16vw;bottom:-22vmax;animation-duration:27s;animation-delay:-13s;background:radial-gradient(circle,rgba(138,164,255,.42) 0,rgba(138,164,255,0) 66%)}
+.b4{width:34vmax;height:34vmax;right:20vw;top:-12vmax;animation-duration:33s;animation-delay:-3s;background:radial-gradient(circle,rgba(237,193,87,.4) 0,rgba(237,193,87,0) 66%)}
+@keyframes drift{to{transform:translate(7vmax,6vmax) scale(1.14)}}
+#bg-canvas{position:absolute;inset:0;width:100%;height:100%}
+.fchip{position:absolute;bottom:-70px;opacity:.55;will-change:transform;animation:rise linear infinite}
+@keyframes rise{to{transform:translateY(-125vh) rotate(200deg)}}
+@media (prefers-reduced-motion:reduce){.blob,.fchip{animation:none}.fchip{display:none}}
+</style></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary">
+<!-- PROMINENT ANIMATED PASTEL AURORA BACKGROUND & GLOWING CIRCUIT CANVAS -->
+<div class="pointer-events-none fixed inset-0 overflow-hidden z-0">
+<!-- Glowing Pastel Aurora Orbs -->
+<!-- 1. Bubblegum Pink Orb -->
+<div class="animate-aurora-1 absolute -top-24 -left-20 w-[520px] h-[520px] rounded-full bg-[#FF6584]/35 blur-[90px] will-change-transform"></div>
+<!-- 2. Mint Green Orb -->
+<div class="animate-aurora-2 absolute top-1/4 -right-28 w-[580px] h-[580px] rounded-full bg-[#4ECCA3]/35 blur-[100px] will-change-transform"></div>
+<!-- 3. Sunny Yellow Orb -->
+<div class="animate-aurora-3 absolute top-2/3 -left-36 w-[540px] h-[540px] rounded-full bg-[#FFD166]/40 blur-[95px] will-change-transform"></div>
+<!-- 4. Lavender Purple Orb -->
+<div class="animate-aurora-4 absolute bottom-[-100px] right-[15%] w-[500px] h-[500px] rounded-full bg-[#9D80F3]/30 blur-[90px] will-change-transform"></div>
+<!-- Extra Floating High-Contrast Soft Center Glow -->
+<div class="animate-aurora-1 absolute top-[45%] left-[28%] w-[380px] h-[380px] rounded-full bg-[#64fcc9]/25 blur-[80px] will-change-transform" style="animation-delay: -5s;"></div>
+<!-- Animated Glowing Circuit Board Grid with SVG Pulses Traveling on Traces -->
+<svg class="absolute inset-0 w-full h-full opacity-25" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient id="circuit-neon-grad" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#FF6584"></stop>
+<stop offset="50%" stop-color="#4ECCA3"></stop>
+<stop offset="100%" stop-color="#9D80F3"></stop>
+</lineargradient>
+<pattern height="120" id="circuit-master-pattern" patternunits="userSpaceOnUse" width="120">
+<!-- Static background traces -->
+<circle cx="15" cy="15" fill="#006c51" opacity="0.3" r="3"></circle>
+<circle cx="105" cy="105" fill="#b0284b" opacity="0.3" r="3"></circle>
+<circle cx="105" cy="15" fill="#785a00" opacity="0.3" r="2.5"></circle>
+<path d="M 15 15 H 65 V 45 H 105 V 105" fill="none" opacity="0.25" stroke="#2c3041" stroke-dasharray="4 4" stroke-width="1.2"></path>
+<path d="M 45 105 H 15 V 75 H 75" fill="none" opacity="0.25" stroke="#006c51" stroke-width="1.2"></path>
+<!-- Live Traveling Electrical Pulse Lines -->
+<path d="M 15 15 H 65 V 45 H 105 V 105" fill="none" stroke="url(#circuit-neon-grad)" stroke-dasharray="16 120" stroke-linecap="round" stroke-width="2" style="animation: electricPulseFlow 3.5s linear infinite;"></path>
+<path d="M 45 105 H 15 V 75 H 75" fill="none" stroke="#4ECCA3" stroke-dasharray="14 100" stroke-linecap="round" stroke-width="2" style="animation: electricPulseFlow 4.5s linear infinite reverse;"></path>
+</pattern>
+</defs>
+<rect fill="url(#circuit-master-pattern)" height="100%" width="100%"></rect>
+</svg>
+<!-- 12-15 Floating Glowing Circuit Sparks / Micro-particles drifting upward -->
+<div class="spark-particle absolute top-[85%] left-[8%] w-3 h-3 rounded-full bg-[#FF6584] shadow-[0_0_12px_#FF6584]" style="animation-delay: 0s; animation-duration: 7s;"></div>
+<div class="spark-particle absolute top-[70%] left-[18%] w-2.5 h-2.5 rounded-full bg-[#4ECCA3] shadow-[0_0_10px_#4ECCA3]" style="animation-delay: 1.2s; animation-duration: 8.5s;"></div>
+<div class="spark-particle absolute top-[90%] left-[32%] w-3.5 h-3.5 rounded-full bg-[#FFD166] shadow-[0_0_14px_#FFD166]" style="animation-delay: 2.8s; animation-duration: 9s;"></div>
+<div class="spark-particle absolute top-[60%] left-[45%] w-2 h-2 rounded-full bg-[#9D80F3] shadow-[0_0_8px_#9D80F3]" style="animation-delay: 0.5s; animation-duration: 6.5s;"></div>
+<div class="spark-particle absolute top-[78%] left-[58%] w-3 h-3 rounded-full bg-[#64fcc9] shadow-[0_0_12px_#64fcc9]" style="animation-delay: 3.4s; animation-duration: 7.8s;"></div>
+<div class="spark-particle absolute top-[88%] left-[72%] w-2.5 h-2.5 rounded-full bg-[#FF6584] shadow-[0_0_10px_#FF6584]" style="animation-delay: 4.1s; animation-duration: 8.2s;"></div>
+<div class="spark-particle absolute top-[65%] left-[85%] w-3.5 h-3.5 rounded-full bg-[#FFD166] shadow-[0_0_12px_#FFD166]" style="animation-delay: 1.9s; animation-duration: 9.5s;"></div>
+<div class="spark-particle absolute top-[92%] left-[92%] w-2 h-2 rounded-full bg-[#4ECCA3] shadow-[0_0_10px_#4ECCA3]" style="animation-delay: 5s; animation-duration: 6.8s;"></div>
+<div class="spark-particle absolute top-[40%] left-[12%] w-2 h-2 rounded-full bg-[#9D80F3] shadow-[0_0_8px_#9D80F3]" style="animation-delay: 2.3s; animation-duration: 7.2s;"></div>
+<div class="spark-particle absolute top-[30%] left-[64%] w-3 h-3 rounded-full bg-[#4ECCA3] shadow-[0_0_12px_#4ECCA3]" style="animation-delay: 3.8s; animation-duration: 8s;"></div>
+<div class="spark-particle absolute top-[50%] left-[80%] w-2.5 h-2.5 rounded-full bg-[#FF6584] shadow-[0_0_10px_#FF6584]" style="animation-delay: 4.7s; animation-duration: 7.5s;"></div>
+<div class="spark-particle absolute top-[25%] left-[26%] w-2 h-2 rounded-full bg-[#FFD166] shadow-[0_0_10px_#FFD166]" style="animation-delay: 1.5s; animation-duration: 8.8s;"></div>
+<div class="spark-particle absolute top-[15%] left-[78%] w-2.5 h-2.5 rounded-full bg-[#64fcc9] shadow-[0_0_10px_#64fcc9]" style="animation-delay: 0.9s; animation-duration: 9.2s;"></div>
+<div class="spark-particle absolute top-[55%] left-[96%] w-2 h-2 rounded-full bg-[#9D80F3] shadow-[0_0_8px_#9D80F3]" style="animation-delay: 3.1s; animation-duration: 7s;"></div>
+</div>
+<header class="fixed top-0 w-full z-50 bg-surface-container-lowest/80 backdrop-blur-xl shadow-[0_1px_12px_rgba(0,0,0,0.05)] border-b border-surface-container transition-all duration-300"><div class="h-20 max-w-[1280px] mx-auto px-margin md:px-margin-desktop flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-sm group cursor-pointer"><div class="relative overflow-visible"><img alt="ChipPal Robot Mascot Logo" class="h-8 w-auto object-contain transition-transform duration-300 group-hover:scale-115 group-hover:rotate-6" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAgMTUwIj48ZyBzdHJva2U9IiMxNzFiMmIiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIj48cGF0aCBkPSJNNDUgMjhWMTJNNzUgMjhWOE0xMDUgMjhWMTJNNDUgMTIydjE2TTc1IDEyMnYxOE0xMDUgMTIydjE2TTI0IDU1SDhNMjQgOTVIOE0xMjYgNTVoMTZNMTI2IDk1aDE2Ii8+PHJlY3QgeD0iMjQiIHk9IjI4IiB3aWR0aD0iMTAyIiBoZWlnaHQ9Ijk0IiByeD0iMjQiIGZpbGw9IiNmZjY1ODQiLz48L2c+PGNpcmNsZSBjeD0iNTgiIGN5PSI3MCIgcj0iMTIiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSI5MiIgY3k9IjcwIiByPSIxMiIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iNzIiIHI9IjYiIGZpbGw9IiMxNzFiMmIiLz48Y2lyY2xlIGN4PSI5NCIgY3k9IjcyIiByPSI2IiBmaWxsPSIjMTcxYjJiIi8+PHBhdGggZD0iTTYyIDk4cTEzIDEyIDI2IDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzE3MWIyYiIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4="/></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface leading-tight tracking-tight group-hover:text-primary transition-colors">ChipPal</span><span class="font-label-sm text-label-sm text-on-surface-variant">E-Waste AI Detective</span></div></div><nav class="hidden lg:flex items-center gap-space-xs p-space-xs bg-surface-container-low rounded-full shadow-inner" data-active-classes="bg-primary-container text-on-primary font-label-md"><a aria-current="page" class="px-space-md py-space-sm rounded-full transition-all duration-200 bg-primary-container text-on-primary font-label-md shadow-sm hover:scale-105 active:scale-95" data-path="scanner" href="#">Scanner</a><a class="px-space-md py-space-sm rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface hover:scale-105 active:scale-95 transition-all duration-200" data-path="analysis-results" href="#">Analysis Results</a><a class="px-space-md py-space-sm rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface hover:scale-105 active:scale-95 transition-all duration-200" data-path="component-library" href="#">Component Library</a><a class="px-space-md py-space-sm rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface hover:scale-105 active:scale-95 transition-all duration-200" data-path="eco-impact" href="#">Eco Impact</a><a class="px-space-md py-space-sm rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface hover:scale-105 active:scale-95 transition-all duration-200" data-path="history" href="#">History</a></nav><div class="flex items-center gap-space-sm"><div class="hidden sm:flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-tertiary-fixed text-on-tertiary-fixed shadow-[0_2px_4px_rgba(45,49,66,0.04)] hover:scale-105 transition-transform duration-200 cursor-default select-none"><span class="font-label-md text-label-md flex items-center gap-1"><span class="inline-block animate-bounce" id="scan-count">🔥 0 boards scanned</span></span></div><button class="btn-spring flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-primary-container text-on-primary font-label-md text-label-md shadow-[0_4px_0_#b0284b] active:shadow-[0_1px_0_#b0284b]" type="button"><span class="material-symbols-outlined text-[18px]">photo_camera</span><span class="hidden md:inline">Scan Board</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 shadow-[0_2px_4px_rgba(45,49,66,0.08)] hover:scale-110 active:scale-95 transition-transform cursor-pointer"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-surface/85 backdrop-blur-[2px] min-h-[calc(100vh-80px)] relative"><div class="flex flex-col w-full relative">
+<!-- Interactive Top Alert Banner with Live Shimmer Pulse -->
+<div class="w-full bg-secondary-container/45 backdrop-blur-md border-b border-secondary/20 px-margin md:px-margin-desktop py-2.5 relative z-10 transition-colors duration-200 hover:bg-secondary-container/60">
 <div class="max-w-[1280px] mx-auto flex flex-wrap items-center justify-between gap-space-sm">
 <div class="flex items-center gap-space-xs text-on-secondary-container">
-<span class="material-symbols-outlined text-secondary text-[20px]">eco</span>
-<span class="font-label-md text-label-md">Certified Circular Salvage Node #IN-BLR-08 • 1,240 kg E-Waste Prevented this Month!</span>
+<span class="material-symbols-outlined text-secondary text-[20px] animate-pulse">eco</span>
+<span class="font-label-md text-label-md font-semibold">Certified Circular Salvage Node #IN-BLR-08 • 1,240 kg E-Waste Prevented this Month!</span>
 </div>
 <div class="flex items-center gap-space-sm text-secondary">
-<span class="font-label-sm text-label-sm bg-surface-container-lowest px-3 py-1 rounded-full shadow-sm">AI Engine v4.2 Online</span>
-<span class="font-label-sm text-label-sm font-semibold">Fast Detection (0.42s)</span>
+<span class="font-label-sm text-label-sm bg-surface-container-lowest/90 px-3 py-1 rounded-full shadow-sm flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#4ECCA3] shadow-[0_0_8px_#4ECCA3] animate-ping"></span> AI Engine v4.2 Online</span>
+<span class="font-label-sm text-label-sm font-semibold hover:text-on-secondary-container transition-colors">Fast Detection (0.42s)</span>
 </div>
 </div>
 </div>
-<div class="max-w-[1280px] w-full mx-auto px-margin md:px-margin-desktop py-space-xl flex flex-col gap-space-xl">
+<div class="max-w-[1280px] w-full mx-auto px-margin md:px-margin-desktop py-space-xl flex flex-col gap-space-xl relative z-10">
 <!-- SECTION 1: HERO & UPLOAD STUDIO -->
 <section class="flex flex-col gap-space-lg" id="scanner">
 <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
 <div class="flex flex-col gap-space-xs max-w-2xl">
-<div class="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed w-fit shadow-sm">
-<span class="material-symbols-outlined text-[16px]">auto_awesome</span>
-<span class="font-label-sm text-label-sm">E-Waste into E-Treasure</span>
+<div class="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed w-fit shadow-sm hover:scale-105 transition-transform duration-200 cursor-default">
+<span class="material-symbols-outlined text-[16px] text-tertiary animate-spin" style="animation-duration: 8s;">auto_awesome</span>
+<span class="font-label-sm text-label-sm font-bold">E-Waste into E-Treasure</span>
 </div>
 <h1 class="font-display-lg text-display-lg text-on-surface tracking-tight">Turn old PCBs into recovered value &amp; cleaner earth!</h1>
 <p class="font-body-lg text-body-lg text-on-surface-variant">Drop a photo of a dismantled circuit board. I locate the components, estimate what is worth reusing and flag parts that need careful handling.</p>
 </div>
-<!-- Mascot Speech Bubble Card -->
-<div class="flex items-center gap-space-md bg-surface-container-lowest p-space-md rounded-2xl shadow-md border-0 relative">
-<div class="relative w-16 h-16 shrink-0 bg-primary-fixed rounded-2xl p-2 flex items-center justify-center">
-<img alt="ChipPal Robot Mascot Logo" class="w-full h-full object-contain" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAgMTUwIj48ZyBzdHJva2U9IiMxNzFiMmIiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIj48cGF0aCBkPSJNNDUgMjhWMTJNNzUgMjhWOE0xMDUgMjhWMTJNNDUgMTIydjE2TTc1IDEyMnYxOE0xMDUgMTIydjE2TTI0IDU1SDhNMjQgOTVIOE0xMjYgNTVoMTZNMTI2IDk1aDE2Ii8+PHJlY3QgeD0iMjQiIHk9IjI4IiB3aWR0aD0iMTAyIiBoZWlnaHQ9Ijk0IiByeD0iMjQiIGZpbGw9IiNmZjY1ODQiLz48L2c+PGNpcmNsZSBjeD0iNTgiIGN5PSI3MCIgcj0iMTIiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSI5MiIgY3k9IjcwIiByPSIxMiIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iNzIiIHI9IjYiIGZpbGw9IiMxNzFiMmIiLz48Y2lyY2xlIGN4PSI5NCIgY3k9IjcyIiByPSI2IiBmaWxsPSIjMTcxYjJiIi8+PHBhdGggZD0iTTYyIDk4cTEzIDEyIDI2IDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzE3MWIyYiIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4="/>
-<span class="absolute -bottom-1 -right-1 w-4 h-4 bg-secondary-fixed rounded-full ring-2 ring-surface-container-lowest"></span>
+<!-- Mascot Speech Bubble Card with Bouncy Floating Motion, Eye Blink LEDs & Antenna Beacon -->
+<div class="animate-mascot-bouncy flex items-center gap-space-md bg-surface-container-lowest/95 backdrop-blur-md p-space-md rounded-2xl shadow-lg border border-primary/10 relative hover:shadow-2xl transition-all duration-300">
+<div class="relative w-16 h-16 shrink-0 bg-primary-fixed/80 rounded-2xl p-2 flex items-center justify-center shadow-inner cursor-pointer group">
+<!-- Antenna Pulse Beacon at Top Center -->
+<div class="animate-beacon absolute -top-1.5 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-[#4ECCA3] border-2 border-surface-container-lowest shadow-[0_0_10px_#4ECCA3] z-20"></div>
+<!-- Robot Mascot Face with Blinking Eye LEDs Overlay -->
+<div class="relative w-full h-full flex items-center justify-center">
+<img alt="ChipPal Robot Mascot Logo" class="w-full h-full object-contain filter drop-shadow transition-transform group-hover:scale-115" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAgMTUwIj48ZyBzdHJva2U9IiMxNzFiMmIiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIj48cGF0aCBkPSJNNDUgMjhWMTJNNzUgMjhWOE0xMDUgMjhWMTJNNDUgMTIydjE2TTc1IDEyMnYxOE0xMDUgMTIydjE2TTI0IDU1SDhNMjQgOTVIOE0xMjYgNTVoMTZNMTI2IDk1aDE2Ii8+PHJlY3QgeD0iMjQiIHk9IjI4IiB3aWR0aD0iMTAyIiBoZWlnaHQ9Ijk0IiByeD0iMjQiIGZpbGw9IiNmZjY1ODQiLz48L2c+PGNpcmNsZSBjeD0iNTgiIGN5PSI3MCIgcj0iMTIiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSI5MiIgY3k9IjcwIiByPSIxMiIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iNzIiIHI9IjYiIGZpbGw9IiMxNzFiMmIiLz48Y2lyY2xlIGN4PSI5NCIgY3k9IjcyIiByPSI2IiBmaWxsPSIjMTcxYjJiIi8+PHBhdGggZD0iTTYyIDk4cTEzIDEyIDI2IDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzE3MWIyYiIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4="/>
+<!-- Blinking Robot Eye LED Glares -->
+<div class="animate-robot-eye absolute top-[36%] left-[34%] w-1.5 h-1.5 rounded-full bg-[#64fcc9] shadow-[0_0_6px_#64fcc9] pointer-events-none"></div>
+<div class="animate-robot-eye absolute top-[36%] right-[34%] w-1.5 h-1.5 rounded-full bg-[#64fcc9] shadow-[0_0_6px_#64fcc9] pointer-events-none"></div>
 </div>
-<div class="flex flex-col gap-0.5">
+<!-- Live Signal Indicator Bottom Right -->
+<span class="absolute -bottom-1 -right-1 w-4 h-4 bg-[#4ECCA3] rounded-full ring-2 ring-surface-container-lowest animate-ping"></span>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 bg-[#4ECCA3] rounded-full ring-2 ring-surface-container-lowest shadow-[0_0_8px_#4ECCA3]"></span>
+</div>
+<div class="flex flex-col gap-0.5 max-w-[210px]">
 <div class="flex items-center gap-1.5">
-<span class="font-label-md text-label-md text-primary font-bold">ChipPal Buddy</span>
-<span class="font-label-sm text-label-sm bg-surface-container px-2 py-0.5 rounded-full text-on-surface-variant">AI Assistant</span>
+<span class="font-label-md text-label-md text-primary font-bold flex items-center gap-1">ChipPal Buddy <span class="inline-block text-xs">✨</span></span>
+<span class="font-label-sm text-label-sm bg-surface-container px-2 py-0.5 rounded-full text-on-surface-variant">AI Detective</span>
 </div>
 <p class="font-body-sm text-body-sm text-on-surface leading-snug">Tip: a bright, top-down photo helps me spot the tiny parts!</p>
 </div>
@@ -44,30 +321,29 @@
 </div>
 <!-- Upload Dropzone & Controls Bento -->
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md">
-<!-- Main Dropzone Box -->
-<div class="lg:col-span-8 bg-surface-container-lowest rounded-3xl p-space-xl flex flex-col items-center justify-center text-center relative group cursor-pointer transition-all duration-300 hover:shadow-xl shadow-md min-h-[320px]">
-<div class="absolute inset-4 rounded-2xl bg-surface-container-low/50 flex flex-col items-center justify-center p-space-md pointer-events-none"></div>
+<!-- Main Dropzone Box with animated pulse glow -->
+<div class="lg:col-span-8 bg-surface-container-lowest/95 backdrop-blur-md rounded-3xl p-space-xl flex flex-col items-center justify-center text-center relative group cursor-pointer transition-all duration-300 hover:shadow-2xl shadow-md min-h-[320px] overflow-hidden border-2 border-transparent hover:border-primary/40">
+<div class="absolute inset-4 rounded-2xl bg-surface-container-low/50 flex flex-col items-center justify-center p-space-md pointer-events-none transition-all duration-300 group-hover:bg-primary-fixed/20 border-2 border-dashed border-outline-variant/60 group-hover:border-primary"></div>
 <div class="relative z-10 flex flex-col items-center gap-space-md">
-<div class="w-20 h-20 rounded-full bg-primary-container/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
-<span class="material-symbols-outlined text-[42px] text-primary">cloud_upload</span>
-</div>
+<div class="relative flex items-center justify-center"><img alt="ChipPal Upload Mascot" class="w-24 h-24 mx-auto mb-3 filter drop-shadow-md group-hover:scale-110 transition-transform duration-300" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAgMTUwIj48ZyBzdHJva2U9IiMxNzFiMmIiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIj48cGF0aCBkPSJNNDUgMjhWMTJNNzUgMjhWOE0xMDUgMjhWMTJNNDUgMTIydjE2TTc1IDEyMnYxOE0xMDUgMTIydjE2TTI0IDU1SDhNMjQgOTVIOE0xMjYgNTVoMTZNMTI2IDk1aDE2Ii8+PHJlY3QgeD0iMjQiIHk9IjI4IiB3aWR0aD0iMTAyIiBoZWlnaHQ9Ijk0IiByeD0iMjQiIGZpbGw9IiNmZjY1ODQiLz48L2c+PGNpcmNsZSBjeD0iNTgiIGN5PSI3MCIgcj0iMTIiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSI5MiIgY3k9IjcwIiByPSIxMiIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iNzIiIHI9IjYiIGZpbGw9IiMxNzFiMmIiLz48Y2lyY2xlIGN4PSI5NCIgY3k9IjcyIiByPSI2IiBmaWxsPSIjMTcxYjJiIi8+PHBhdGggZD0iTTYyIDk4cTEzIDEyIDI2IDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzE3MWIyYiIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4="/></div>
 <div class="flex flex-col gap-1">
-<span class="font-headline-sm text-headline-sm text-on-surface">Drop your circuit board photo here or browse files</span>
+<span class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors duration-200">Drop your circuit board photo here or browse files</span>
 <span class="font-body-sm text-body-sm text-on-surface-variant">High-resolution overhead snapshots give maximum component identification rate</span>
 </div>
 <div class="flex flex-wrap items-center justify-center gap-space-xs mt-space-xs">
-<span class="px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant">JPG</span>
-<span class="px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant">PNG</span>
-<span class="px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant">HEIC up to 25MB</span>
+<span class="px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant transition-all hover:scale-105 hover:bg-surface-container-high">JPG</span>
+<span class="px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant transition-all hover:scale-105 hover:bg-surface-container-high">PNG</span>
+<span class="px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant transition-all hover:scale-105 hover:bg-surface-container-high">HEIC up to 25MB</span>
 </div>
-<div class="flex items-center gap-space-md mt-space-sm">
-<button class="flex items-center gap-space-xs px-space-lg py-space-sm rounded-full bg-primary-container text-on-primary font-label-lg text-label-lg shadow-[0_4px_0_#b0284b] hover:translate-y-[-1px] active:translate-y-[2px] active:shadow-[0_1px_0_#b0284b] transition-all" id="btn-pick" type="button">
+<div class="flex items-center gap-space-md mt-space-sm flex-wrap justify-center">
+<button class="btn-spring flex items-center gap-space-xs px-space-lg py-space-sm rounded-full bg-primary-container text-on-primary font-label-lg text-label-lg shadow-[0_4px_0_#b0284b] active:shadow-[0_1px_0_#b0284b]" id="btn-pick" type="button">
 <span class="material-symbols-outlined text-[20px]">add_photo_alternate</span>
-<span>Select Board Photo</span>
+<span class="">Select Board Photo</span>
 </button>
-<button class="flex items-center gap-space-xs px-space-lg py-space-sm rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-lg text-label-lg shadow-[0_4px_0_#007256] hover:translate-y-[-1px] active:translate-y-[2px] transition-all" id="btn-snap" type="button">
-<span class="material-symbols-outlined text-[20px]">photo_camera</span>
-<span>Snap Photo via Camera</span>
+<!-- Pulsating 'Snap Photo' camera CTA with a ripple effect -->
+<button class="btn-spring animate-cta-ripple flex items-center gap-space-xs px-space-lg py-space-sm rounded-full bg-[#4ECCA3] text-[#002116] font-label-lg text-label-lg shadow-[0_4px_0_#007256] active:shadow-[0_1px_0_#007256] font-bold" id="btn-snap" type="button">
+<span class="material-symbols-outlined text-[20px] animate-pulse">photo_camera</span>
+<span class="">Snap Photo via Camera</span>
 </button>
 </div>
 </div>
@@ -80,23 +356,23 @@
 <span class="material-symbols-outlined text-primary">tune</span>
 <span class="font-headline-sm text-headline-sm text-on-surface">Inspection Tuning</span>
 </div>
-<span class="font-label-sm text-label-sm bg-tertiary-fixed text-on-tertiary-fixed px-2.5 py-0.5 rounded-full">Live</span>
+<span class="font-label-sm text-label-sm bg-tertiary-fixed text-on-tertiary-fixed px-2.5 py-0.5 rounded-full hover:scale-105 transition-transform cursor-default font-bold">Live</span>
 </div>
 <!-- Sensitivity Slider -->
 <div class="flex flex-col gap-2">
 <div class="flex items-center justify-between">
 <label class="font-label-md text-label-md text-on-surface font-semibold">Detection Sensitivity</label>
-<span class="font-label-md text-label-md text-primary font-bold" id="sensitivity-value">Confidence ≥ 0.25</span>
+<span class="font-label-md text-label-md text-primary font-bold transition-all" id="sensitivity-value">Confidence ≥ 0.25</span>
 </div>
-<input class="w-full accent-primary h-2 bg-surface-container-high rounded-full cursor-pointer" id="sensitivity-slider" max="90" min="5" step="5" type="range" value="25"/>
+<input class="w-full accent-primary h-2 bg-surface-container-high rounded-full cursor-pointer hover:accent-primary-container transition-all" id="sensitivity-slider" max="90" min="5" step="5" type="range" value="25"/>
 <div class="flex justify-between font-label-sm text-label-sm text-on-surface-variant">
-<span>More parts</span>
+<span class="">More parts</span>
 <span class="text-primary font-semibold">Balanced</span>
-<span>Fewer, surer</span>
+<span class="">Fewer, surer</span>
 </div>
 </div>
 <!-- Tiny Parts Toggle -->
-<div class="flex items-center justify-between bg-surface-container-low p-space-md rounded-2xl">
+<div class="flex items-center justify-between bg-surface-container-low p-space-md rounded-2xl transition-all duration-200 hover:bg-surface-container">
 <div class="flex flex-col gap-0.5">
 <div class="flex items-center gap-1">
 <span class="material-symbols-outlined text-[18px] text-secondary">memory</span>
@@ -104,8 +380,8 @@
 </div>
 <span class="font-body-sm text-body-sm text-on-surface-variant">0402/0201 SMD micro-caps &amp; resistors</span>
 </div>
-<button class="w-12 h-7 bg-secondary-fixed rounded-full p-1 transition-colors relative flex items-center justify-end justify-end bg-secondary-fixed" id="tiny-parts-toggle" type="button">
-<div class="w-5 h-5 bg-on-secondary rounded-full shadow-sm flex items-center justify-center">
+<button class="w-12 h-7 bg-secondary-fixed rounded-full p-1 transition-all duration-300 relative flex items-center justify-end hover:scale-105 active:scale-95 focus:outline-none justify-end bg-secondary-fixed" id="tiny-parts-toggle" type="button">
+<div class="w-5 h-5 bg-on-secondary rounded-full shadow-sm flex items-center justify-center transition-transform duration-300">
 <span class="material-symbols-outlined text-secondary text-[12px]">done</span>
 </div>
 </button>
@@ -114,12 +390,7 @@
 <!-- Quick Samples -->
 <div class="flex flex-col gap-space-xs">
 <span class="font-label-sm text-label-sm text-on-surface-variant font-bold uppercase tracking-wider">Preset Sample Boards</span>
-<div class="flex flex-wrap gap-1.5">
-<button class="px-3 py-1.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface hover:bg-primary hover:text-on-primary transition-colors" type="button">Old Motherboard (2008)</button>
-<button class="px-3 py-1.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface hover:bg-primary hover:text-on-primary transition-colors" type="button">Vintage CRT PCB</button>
-<button class="px-3 py-1.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface hover:bg-primary hover:text-on-primary transition-colors" type="button">Broken Smartphone Logic Board</button>
-<button class="px-3 py-1.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface hover:bg-primary hover:text-on-primary transition-colors" type="button">Arduino Clone</button>
-</div>
+<div class="flex flex-wrap gap-1.5"><button class="btn-spring p-1.5 pr-3 rounded-2xl bg-surface-container font-label-sm text-label-sm text-on-surface hover:bg-primary hover:text-on-primary flex items-center gap-2" type="button"><img alt="Motherboard Sample" class="w-8 h-8 rounded-lg object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNjnc4dJ-nY-wk7i14WvufMvqTB4ets7wCw3fle67wyAyY3nrP9TA7UjMar7ggpoantZwIBqeV0o_7MB-2Zk7ad-pGudXeJcn58IBY3m7_HRss7HvezL8xVb_Mg2jP-u0Pw8go-wXjkH5IYySen0cl5ryQneJfNHQYDn8gM6RxDUwt6wtdw0CBIl3B5Swv5jSW-9qP80TO_UWRZzO9rJ3VL3gYLkpQsAUxP20N55SdghD92x4aEND3"/><span class="font-medium">Old Motherboard (2008)</span></button><button class="btn-spring p-1.5 pr-3 rounded-2xl bg-surface-container font-label-sm text-label-sm text-on-surface hover:bg-primary hover:text-on-primary flex items-center gap-2" type="button"><img alt="GPU PCB Sample" class="w-8 h-8 rounded-lg object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMU5tuWYBjYC85O3yYkDHuzCd3XCoZdjJXY2PxC99N1OF-fHK5iH6iUPZULQaf587eCd9afc3suHmDLfKidUxevRMp34u2KVKEuwElODcI062FRls5m75GR9OhmY6tF4dM_N1MTFfn99sEz6Ll0iTczwVA2LcugV2bJDfIOwydFmeVQ1Y2uqvUk5LigPEKN_hMR1F4ymxlInGKPFBW6FXAlYhmxthhReW_wn6xLc23Y9AB-Qqj5KO6"/><span class="font-medium">Gaming GPU PCB</span></button><button class="btn-spring px-3 py-1.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface hover:bg-primary hover:text-on-primary" type="button">Broken Logic Board</button><button class="btn-spring px-3 py-1.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface hover:bg-primary hover:text-on-primary" type="button">Arduino Clone</button></div>
 </div>
 </div>
 </div>
@@ -127,86 +398,89 @@
 <!-- SECTION 2: RESULTS DASHBOARD & INTERACTIVE INSPECTION -->
 <section class="flex flex-col gap-space-lg hidden" id="results">
 <!-- Status Banner -->
-<div class="bg-surface-container-high/80 rounded-2xl p-space-md flex flex-wrap items-center justify-between gap-space-sm shadow-sm">
+<div class="bg-surface-container-high/80 backdrop-blur-md rounded-2xl p-space-md flex flex-wrap items-center justify-between gap-space-sm shadow-sm transition-all hover:shadow border border-surface-container">
 <div class="flex items-center gap-space-sm">
-<div class="w-3 h-3 rounded-full bg-secondary-fixed animate-ping"></div>
+<div class="relative flex items-center justify-center w-3 h-3">
+<div class="w-3 h-3 rounded-full bg-[#4ECCA3] animate-ping absolute"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-secondary relative"></div>
+</div>
 <span class="font-headline-sm text-headline-sm text-on-surface" id="ban-title">Board analysed</span>
-<span class="px-3 py-0.5 rounded-full bg-secondary text-on-secondary font-label-sm text-label-sm" id="ban-conf">99.2% Confidence</span>
+<span class="px-3 py-0.5 rounded-full bg-secondary text-on-secondary font-label-sm text-label-sm shadow-sm hover:scale-105 transition-transform font-bold" id="ban-conf">99.2% Confidence</span>
 </div>
 <div class="flex items-center gap-space-sm text-on-surface-variant font-label-md text-label-md">
 <span class="flex items-center gap-1" id="ban-time"><span class="material-symbols-outlined text-[16px]">schedule</span> 14 mins ago</span>
-<span>•</span>
+<span class="">•</span>
 <span class="flex items-center gap-1" id="ban-size"><span class="material-symbols-outlined text-[16px]">crop</span> 3200 × 2400 px</span>
 </div>
 </div>
-<!-- 4 Punchy Colorful Stat Cards -->
+<!-- 4 Punchy Colorful Stat Cards with Glowing Animated Gradient Borders -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
 <!-- Stat 1 -->
-<div class="bg-surface-container-lowest p-space-lg rounded-3xl shadow-md flex flex-col justify-between gap-space-md hover:translate-y-[-2px] transition-transform">
+<div class="glow-border-card card-spring bg-surface-container-lowest p-space-lg rounded-3xl shadow-md flex flex-col justify-between gap-space-md group cursor-pointer">
 <div class="flex items-center justify-between">
 <span class="font-label-lg text-label-lg text-on-surface-variant font-bold">Parts Found</span>
-<div class="w-10 h-10 rounded-2xl bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed">
+<div class="w-10 h-10 rounded-2xl bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed group-hover:rotate-12 transition-transform duration-300 shadow-sm">
 <span class="material-symbols-outlined text-[22px]">developer_board</span>
 </div>
 </div>
 <div class="flex flex-col gap-1">
 <div class="flex items-baseline gap-2">
-<span class="font-display-lg text-display-lg text-on-surface leading-none" id="st-parts-n">48</span>
+<span class="font-display-lg text-display-lg text-on-surface leading-none group-hover:scale-105 transition-transform origin-left font-extrabold" id="st-parts-n">48</span>
 <span class="font-body-md text-body-md text-on-surface-variant">components</span>
 </div>
-<span class="w-fit font-label-sm text-label-sm bg-tertiary-fixed-dim/40 text-on-tertiary-container px-2.5 py-0.5 rounded-full" id="st-parts-note">+12 tiny SMDs detected</span>
+<span class="w-fit font-label-sm text-label-sm bg-tertiary-fixed-dim/40 text-on-tertiary-container px-2.5 py-0.5 rounded-full group-hover:bg-tertiary-fixed transition-colors font-semibold" id="st-parts-note">+12 tiny SMDs detected</span>
 </div>
 </div>
 <!-- Stat 2 -->
-<div class="bg-surface-container-lowest p-space-lg rounded-3xl shadow-md flex flex-col justify-between gap-space-md hover:translate-y-[-2px] transition-transform">
+<div class="glow-border-card card-spring bg-surface-container-lowest p-space-lg rounded-3xl shadow-md flex flex-col justify-between gap-space-md group cursor-pointer">
 <div class="flex items-center justify-between">
 <span class="font-label-lg text-label-lg text-on-surface-variant font-bold">Reusable Parts</span>
-<div class="w-10 h-10 rounded-2xl bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<div class="w-10 h-10 rounded-2xl bg-secondary-container flex items-center justify-center text-on-secondary-container group-hover:rotate-180 transition-transform duration-500 shadow-sm">
 <span class="material-symbols-outlined text-[22px]">cycle</span>
 </div>
 </div>
 <div class="flex flex-col gap-1">
 <div class="flex items-baseline gap-2">
-<span class="font-display-lg text-display-lg text-secondary leading-none" id="st-reuse-n">31</span>
+<span class="font-display-lg text-display-lg text-[#006c51] leading-none group-hover:scale-105 transition-transform origin-left font-extrabold" id="st-reuse-n">31</span>
 <span class="font-body-md text-body-md text-on-surface-variant">parts</span>
 </div>
-<span class="w-fit font-label-sm text-label-sm bg-secondary-container text-on-secondary-container px-2.5 py-0.5 rounded-full" id="st-reuse-note">64.5% Salvage Rate</span>
+<span class="w-fit font-label-sm text-label-sm bg-secondary-container text-on-secondary-container px-2.5 py-0.5 rounded-full group-hover:bg-secondary-fixed transition-colors font-semibold" id="st-reuse-note">64.5% Salvage Rate</span>
 </div>
 </div>
 <!-- Stat 3 -->
-<div class="bg-surface-container-lowest p-space-lg rounded-3xl shadow-md flex flex-col justify-between gap-space-md hover:translate-y-[-2px] transition-transform">
+<div class="glow-border-card card-spring bg-surface-container-lowest p-space-lg rounded-3xl shadow-md flex flex-col justify-between gap-space-md group cursor-pointer">
 <div class="flex items-center justify-between">
 <span class="font-label-lg text-label-lg text-on-surface-variant font-bold">Estimated Value</span>
-<div class="w-10 h-10 rounded-2xl bg-primary-fixed flex items-center justify-center text-on-primary-fixed-variant">
+<div class="w-10 h-10 rounded-2xl bg-primary-fixed flex items-center justify-center text-on-primary-fixed-variant group-hover:scale-110 transition-transform duration-300 shadow-sm">
 <span class="material-symbols-outlined text-[22px]">payments</span>
 </div>
 </div>
 <div class="flex flex-col gap-1">
 <div class="flex items-baseline gap-1">
-<span class="font-display-lg text-display-lg text-primary leading-none" id="st-value-n">₹ 3,450</span>
+<span class="font-display-lg text-display-lg text-primary leading-none group-hover:scale-105 transition-transform origin-left font-extrabold" id="st-value-n">₹ 3,450</span>
 </div>
-<span class="w-fit font-label-sm text-label-sm bg-primary-fixed text-on-primary-container px-2.5 py-0.5 rounded-full" id="st-value-note">Gold, Tantalum, Working ICs</span>
+<span class="w-fit font-label-sm text-label-sm bg-primary-fixed text-on-primary-container px-2.5 py-0.5 rounded-full group-hover:bg-primary-container group-hover:text-on-primary transition-colors font-semibold" id="st-value-note">Gold, Tantalum, Working ICs</span>
 </div>
 </div>
 <!-- Stat 4 -->
-<div class="bg-surface-container-lowest p-space-lg rounded-3xl shadow-md flex flex-col justify-between gap-space-md hover:translate-y-[-2px] transition-transform">
+<div class="glow-border-card card-spring bg-surface-container-lowest p-space-lg rounded-3xl shadow-md flex flex-col justify-between gap-space-md group cursor-pointer">
 <div class="flex items-center justify-between">
 <span class="font-label-lg text-label-lg text-on-surface-variant font-bold">Estimated Hazardous %</span>
-<div class="w-10 h-10 rounded-2xl bg-error-container flex items-center justify-center text-on-error-container">
+<div class="w-10 h-10 rounded-2xl bg-error-container flex items-center justify-center text-on-error-container group-hover:scale-110 transition-transform duration-300 shadow-sm">
 <span class="material-symbols-outlined text-[22px]">shield_with_heart</span>
 </div>
 </div>
 <div class="flex flex-col gap-1">
 <div class="flex items-baseline gap-2">
-<span class="font-display-lg text-display-lg text-on-surface leading-none" id="st-haz-n">8.2%</span>
+<span class="font-display-lg text-display-lg text-on-surface leading-none group-hover:scale-105 transition-transform origin-left font-extrabold" id="st-haz-n">8.2%</span>
 <span class="font-body-sm text-body-sm text-secondary font-bold" id="st-haz-lvl">Low Hazard</span>
 </div>
-<span class="w-fit font-label-sm text-label-sm bg-error-container text-on-error-container px-2.5 py-0.5 rounded-full" id="st-haz-note">Lead solder &amp; Brominated resin</span>
+<span class="w-fit font-label-sm text-label-sm bg-error-container text-on-error-container px-2.5 py-0.5 rounded-full group-hover:bg-error group-hover:text-on-error transition-colors font-semibold" id="st-haz-note">Lead solder &amp; Brominated resin</span>
 </div>
 </div>
 </div>
-<!-- Before / After Annotated Inspector -->
-<div class="bg-surface-container-lowest rounded-3xl p-space-lg shadow-md flex flex-col gap-space-md">
+<!-- Before / After Annotated Inspector with Sweeping Neon Laser Scanner & Target Reticles -->
+<div class="bg-surface-container-lowest/95 backdrop-blur-md rounded-3xl p-space-lg shadow-xl flex flex-col gap-space-md border border-surface-container">
 <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-space-sm">
 <div class="flex flex-col">
 <span class="font-headline-md text-headline-md text-on-surface">Interactive Circuit Inspector</span>
@@ -214,43 +488,53 @@
 </div>
 <!-- Overlay Filter Controls -->
 <div class="flex flex-wrap items-center gap-space-xs">
-<button class="px-3 py-1.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm flex items-center gap-1 shadow-sm" id="toggle-boxes" type="button">
+<button class="btn-spring px-3 py-1.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm flex items-center gap-1 shadow-sm font-bold" id="toggle-boxes" type="button">
 <span class="material-symbols-outlined text-[16px]">check_box</span>
-<span>Bounding Boxes (48)</span>
+<span class="">Bounding Boxes (48)</span>
 </button>
-<button class="px-3 py-1.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container-high transition-colors flex items-center gap-1 hidden" id="toggle-valuable" type="button">
+<button class="btn-spring px-3 py-1.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container-high transition-colors flex items-center gap-1 hidden" id="toggle-valuable" type="button">
 <span class="material-symbols-outlined text-[16px]">stars</span>
-<span>Filter: High Value Only</span>
+<span class="">Filter: High Value Only</span>
 </button>
-<button class="px-3 py-1.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container-high transition-colors flex items-center gap-1 hidden" type="button">
+<button class="btn-spring px-3 py-1.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant hover:bg-surface-container-high transition-colors flex items-center gap-1 hidden" type="button">
 <span class="material-symbols-outlined text-[16px]">hub</span>
-<span>Show Pinouts</span>
+<span class="">Show Pinouts</span>
 </button>
 </div>
 </div>
-<!-- Draggable Comparison Viewport -->
-<div class="relative w-full h-[460px] md:h-[540px] rounded-2xl overflow-hidden select-none bg-surface-container-highest cursor-ew-resize" id="inspector-canvas">
+<!-- Draggable Comparison Viewport with ACTIVE SWEEPING LASER SCANLINE -->
+<div class="relative w-full h-[460px] md:h-[540px] rounded-2xl overflow-hidden select-none bg-surface-container-highest cursor-ew-resize group/canvas shadow-inner border border-surface-container-high" id="inspector-canvas">
 <!-- Layer 1: Annotated View (Full Background) -->
-<div class="absolute inset-0 w-full h-full bg-cover bg-center" data-alt="Close up high-angle macro photograph of a dense modern green computer motherboard circuit board with detailed copper tracks, integrated circuit chips, capacitors, and electronic components in bright laboratory lighting.">
-<!-- Simulated Bounding Boxes Overlay -->
-<div class="absolute inset-0 pointer-events-none" id="bounding-boxes-container"></div>
-<!-- Top Right Label -->
-<div class="absolute top-4 right-4 bg-surface-container-lowest/90 backdrop-blur-md px-3 py-1 rounded-full font-label-md text-label-md text-on-surface shadow-md">
-              AI Annotated Detection
-            </div>
+<div class="absolute inset-0 w-full h-full bg-cover bg-center" data-alt="Close up high-angle macro photograph of a dense modern green computer motherboard circuit board with detailed copper tracks, integrated circuit chips, capacitors, and electronic components in bright laboratory lighting." >
+<!-- ACTIVE SWEEPING NEON CYAN/MINT LASER SCANNER LINE -->
+<div class="laser-scanline absolute left-0 right-0 h-1 z-30 pointer-events-none bg-gradient-to-r from-transparent via-[#4ECCA3] to-transparent shadow-[0_0_15px_#4ECCA3,0_0_30px_#4ECCA3]">
+<!-- Glowing trailing gradient beam -->
+<div class="absolute -top-12 left-0 right-0 h-12 bg-gradient-to-b from-transparent to-[#4ECCA3]/25 pointer-events-none"></div>
+<div class="absolute top-1 left-0 right-0 h-6 bg-gradient-to-t from-transparent to-[#4ECCA3]/20 pointer-events-none"></div>
+<!-- Central HUD Laser Beacon Tag -->
+<div class="absolute right-6 -top-3 bg-[#002116]/85 backdrop-blur-sm border border-[#4ECCA3] text-[#4ECCA3] text-[9px] font-mono px-2 py-0.5 rounded-full flex items-center gap-1 shadow-md">
+<span class="w-1.5 h-1.5 rounded-full bg-[#4ECCA3] animate-ping"></span>Board inspector</div>
+</div>
+<!-- Simulated Bounding Boxes Overlay with Radar Ping Rings & Target Reticles -->
+<div class="absolute inset-0 pointer-events-none z-20" id="bounding-boxes-container"></div>
+<!-- Top Right Live Status Label -->
+<div class="absolute top-4 right-4 bg-surface-container-lowest/90 backdrop-blur-md px-3.5 py-1 rounded-full font-label-md text-label-md text-on-surface shadow-md flex items-center gap-1.5 z-20">
+<span class="w-2.5 h-2.5 rounded-full bg-[#4ECCA3] shadow-[0_0_8px_#4ECCA3] animate-ping"></span>
+    AI Annotated Detection
+  </div>
 </div>
 <!-- Layer 2: Raw Original View (Clipped by slider) -->
-<div class="absolute inset-y-0 left-0 overflow-hidden w-1/2 border-r-4 border-on-primary shadow-2xl" id="before-layer">
-<div class="w-[1280px] h-[540px] max-w-none bg-cover bg-center" data-alt="Macro view of raw original un-annotated electronics circuit board showing intricate solder tracks, dark silicon integrated circuits, and metallic pins in natural studio daylight without any computer overlays.">
+<div class="absolute inset-y-0 left-0 overflow-hidden w-1/2 border-r-4 border-on-primary shadow-2xl z-20" id="before-layer">
+<div class="w-[1280px] h-[540px] max-w-none bg-cover bg-center" data-alt="Macro view of raw original un-annotated electronics circuit board showing intricate solder tracks, dark silicon integrated circuits, and metallic pins in natural studio daylight without any computer overlays." >
 <!-- Top Left Label -->
-<div class="absolute top-4 left-4 bg-surface-container-lowest/90 backdrop-blur-md px-3 py-1 rounded-full font-label-md text-label-md text-on-surface shadow-md">
-                Original Board Photo
-              </div>
+<div class="absolute top-4 left-4 bg-surface-container-lowest/90 backdrop-blur-md px-3.5 py-1 rounded-full font-label-md text-label-md text-on-surface shadow-md">
+  Original Board Photo
 </div>
 </div>
-<!-- Slider Divider Handle -->
-<div class="absolute inset-y-0 left-1/2 -ml-5 w-10 flex items-center justify-center pointer-events-none" id="slider-handle">
-<div class="w-10 h-10 rounded-full bg-on-primary text-primary shadow-xl flex items-center justify-center border-2 border-primary-container">
+</div>
+<!-- Slider Divider Handle with Pulse Glow Micro-Interaction -->
+<div class="absolute inset-y-0 left-1/2 -ml-5 w-10 flex items-center justify-center pointer-events-none transition-transform group-hover/canvas:scale-110 z-30" id="slider-handle">
+<div class="w-10 h-10 rounded-full bg-on-primary text-primary shadow-xl flex items-center justify-center border-2 border-primary-container shadow-[0_0_16px_rgba(255,101,132,0.6)]">
 <span class="material-symbols-outlined text-[20px]">code</span>
 </div>
 </div>
@@ -258,135 +542,144 @@
 <!-- Legend Pill Markers -->
 <div class="flex flex-wrap items-center gap-space-md pt-space-xs"><span style="display:flex;gap:16px;flex-wrap:wrap;font-size:13px;font-weight:600"><span><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#ef4444;margin-right:6px"></i>High hazard</span><span><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#f59e0b;margin-right:6px"></i>Some care</span><span><i style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#84cc16;margin-right:6px"></i>Low risk</span></span></div>
 </div>
-<!-- Charts & Diagnostics Grid: Value Donut & Hazard Gauge -->
+<!-- Charts & Diagnostics Grid: Value Donut & Hazard Gauge with Glowing Animated Progress Arcs -->
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md">
-<!-- Donut Chart: Value Distribution -->
-<div class="lg:col-span-7 bg-surface-container-lowest rounded-3xl p-space-lg shadow-md flex flex-col justify-between gap-space-md">
+<!-- Donut Chart: Value Distribution with Animated Progress Glow -->
+<div class="glow-border-card lg:col-span-7 bg-surface-container-lowest rounded-3xl p-space-lg shadow-md flex flex-col justify-between gap-space-md hover:shadow-xl transition-shadow">
 <div class="flex items-center justify-between">
 <div class="flex flex-col">
 <span class="font-headline-sm text-headline-sm text-on-surface">Recovered Value Breakdown</span>
 <span class="font-body-sm text-body-sm text-on-surface-variant" id="donut-total">Total estimated yield: ₹ 3,450 INR</span>
 </div>
-<span class="font-label-md text-label-md bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-bold hidden">+18% vs standard scrap</span>
+<span class="font-label-md text-label-md bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-bold hover:scale-105 transition-transform cursor-default shadow-sm hidden">+18% vs standard scrap</span>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-12 items-center gap-space-md" id="donut-body">
-<!-- SVG Donut -->
-<div class="md:col-span-5 flex items-center justify-center relative">
-<svg class="w-48 h-48 -rotate-90" viewbox="0 0 100 100">
-<!-- Slices: total circ = 2 * PI * 40 = 251.32 -->
+<!-- SVG Donut with subtle rotation hover effect and animated glowing stroke pulse -->
+<div class="md:col-span-5 flex items-center justify-center relative group">
+<svg class="w-48 h-48 -rotate-90 group-hover:rotate-[-80deg] transition-transform duration-700 ease-out" viewbox="0 0 100 100">
+<filter height="140%" id="donut-glow" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="blur" stddeviation="2.5"></fegaussianblur>
+<fecomposite in="SourceGraphic" in2="blur" operator="over"></fecomposite>
+</filter>
 <!-- Slice 1: Microcontrollers (54% = 135.7) -->
-<circle class="transition-all duration-500 hover:opacity-90" cx="50" cy="50" fill="transparent" r="40" stroke="#b0284b" stroke-dasharray="135.7 115.6" stroke-dashoffset="0" stroke-width="14"></circle>
+<circle class="transition-all duration-300 hover:stroke-[17] cursor-pointer" cx="50" cy="50" fill="transparent" filter="url(#donut-glow)" r="40" stroke="#b0284b" stroke-dasharray="135.7 115.6" stroke-dashoffset="0" stroke-width="14"></circle>
 <!-- Slice 2: Gold Connectors (24% = 60.3) -->
-<circle class="transition-all duration-500 hover:opacity-90" cx="50" cy="50" fill="transparent" r="40" stroke="#edc157" stroke-dasharray="60.3 191" stroke-dashoffset="-135.7" stroke-width="14"></circle>
+<circle class="transition-all duration-300 hover:stroke-[17] cursor-pointer" cx="50" cy="50" fill="transparent" r="40" stroke="#edc157" stroke-dasharray="60.3 191" stroke-dashoffset="-135.7" stroke-width="14"></circle>
 <!-- Slice 3: Tantalum Capacitors (15% = 37.7) -->
-<circle class="transition-all duration-500 hover:opacity-90" cx="50" cy="50" fill="transparent" r="40" stroke="#006c51" stroke-dasharray="37.7 213.6" stroke-dashoffset="-196" stroke-width="14"></circle>
+<circle class="transition-all duration-300 hover:stroke-[17] cursor-pointer" cx="50" cy="50" fill="transparent" filter="url(#donut-glow)" r="40" stroke="#006c51" stroke-dasharray="37.7 213.6" stroke-dashoffset="-196" stroke-width="14"></circle>
 <!-- Slice 4: Crystals & Relays (7% = 17.6) -->
-<circle class="transition-all duration-500 hover:opacity-90" cx="50" cy="50" fill="transparent" r="40" stroke="#785a00" stroke-dasharray="17.6 233.7" stroke-dashoffset="-233.7" stroke-width="14"></circle>
+<circle class="transition-all duration-300 hover:stroke-[17] cursor-pointer" cx="50" cy="50" fill="transparent" r="40" stroke="#785a00" stroke-dasharray="17.6 233.7" stroke-dashoffset="-233.7" stroke-width="14"></circle>
 </svg>
-<div class="absolute flex flex-col items-center justify-center text-center">
-<span class="font-headline-sm text-headline-sm text-on-surface font-extrabold leading-tight">₹3,450</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Salvage Yield</span>
+<div class="absolute flex flex-col items-center justify-center text-center pointer-events-none">
+<span class="font-headline-sm text-headline-sm text-on-surface font-extrabold leading-tight group-hover:scale-110 transition-transform">₹3,450</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-bold">Salvage Yield</span>
 </div>
 </div>
 <!-- Detailed Legend -->
 <div class="md:col-span-7 flex flex-col gap-space-xs">
-<div class="flex items-center justify-between p-2 rounded-xl hover:bg-surface-container-low transition-colors">
+<div class="flex items-center justify-between p-2 rounded-xl hover:bg-surface-container-low transition-all duration-200 hover:translate-x-1 cursor-pointer">
 <div class="flex items-center gap-2">
-<span class="w-3 h-3 rounded-full bg-primary shrink-0"></span>
+<span class="w-3 h-3 rounded-full bg-primary shrink-0 shadow-[0_0_6px_#b0284b]"></span>
 <div class="flex flex-col">
-<span class="font-label-md text-label-md text-on-surface">Microcontrollers &amp; ICs</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Microcontrollers &amp; ICs</span>
 <span class="font-body-sm text-body-sm text-on-surface-variant">9 functional chips</span>
 </div>
 </div>
 <div class="text-right">
 <span class="font-label-md text-label-md text-on-surface font-bold">₹1,850</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant block">54%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant block font-bold">54%</span>
 </div>
 </div>
-<div class="flex items-center justify-between p-2 rounded-xl hover:bg-surface-container-low transition-colors">
+<div class="flex items-center justify-between p-2 rounded-xl hover:bg-surface-container-low transition-all duration-200 hover:translate-x-1 cursor-pointer">
 <div class="flex items-center gap-2">
-<span class="w-3 h-3 rounded-full bg-tertiary-fixed-dim shrink-0"></span>
+<span class="w-3 h-3 rounded-full bg-tertiary-fixed-dim shrink-0 shadow-[0_0_6px_#edc157]"></span>
 <div class="flex flex-col">
-<span class="font-label-md text-label-md text-on-surface">Gold Edge Connectors</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Gold Edge Connectors</span>
 <span class="font-body-sm text-body-sm text-on-surface-variant">2 high-density bus tabs</span>
 </div>
 </div>
 <div class="text-right">
 <span class="font-label-md text-label-md text-on-surface font-bold">₹820</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant block">24%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant block font-bold">24%</span>
 </div>
 </div>
-<div class="flex items-center justify-between p-2 rounded-xl hover:bg-surface-container-low transition-colors">
+<div class="flex items-center justify-between p-2 rounded-xl hover:bg-surface-container-low transition-all duration-200 hover:translate-x-1 cursor-pointer">
 <div class="flex items-center gap-2">
-<span class="w-3 h-3 rounded-full bg-secondary shrink-0"></span>
+<span class="w-3 h-3 rounded-full bg-secondary shrink-0 shadow-[0_0_6px_#006c51]"></span>
 <div class="flex flex-col">
-<span class="font-label-md text-label-md text-on-surface">Tantalum Capacitors</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Tantalum Capacitors</span>
 <span class="font-body-sm text-body-sm text-on-surface-variant">16 high-purity caps</span>
 </div>
 </div>
 <div class="text-right">
 <span class="font-label-md text-label-md text-on-surface font-bold">₹510</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant block">15%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant block font-bold">15%</span>
 </div>
 </div>
-<div class="flex items-center justify-between p-2 rounded-xl hover:bg-surface-container-low transition-colors">
+<div class="flex items-center justify-between p-2 rounded-xl hover:bg-surface-container-low transition-all duration-200 hover:translate-x-1 cursor-pointer">
 <div class="flex items-center gap-2">
 <span class="w-3 h-3 rounded-full bg-tertiary shrink-0"></span>
 <div class="flex flex-col">
-<span class="font-label-md text-label-md text-on-surface">Quartz Crystals &amp; Relays</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Quartz Crystals &amp; Relays</span>
 <span class="font-body-sm text-body-sm text-on-surface-variant">4 oscillation units</span>
 </div>
 </div>
 <div class="text-right">
 <span class="font-label-md text-label-md text-on-surface font-bold">₹270</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant block">7%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant block font-bold">7%</span>
 </div>
 </div>
 </div>
 </div>
 </div>
-<!-- Hazard Gauge & Eco Safety -->
-<div class="lg:col-span-5 bg-surface-container-lowest rounded-3xl p-space-lg shadow-md flex flex-col justify-between gap-space-md">
+<!-- Hazard Gauge & Eco Safety with Oscillating Active Needle -->
+<div class="glow-border-card lg:col-span-5 bg-surface-container-lowest rounded-3xl p-space-lg shadow-md flex flex-col justify-between gap-space-md hover:shadow-xl transition-shadow">
 <div class="flex items-center justify-between">
 <div class="flex flex-col">
 <span class="font-headline-sm text-headline-sm text-on-surface">Hazard Rating &amp; Safety</span>
 <span class="font-body-sm text-body-sm text-on-surface-variant">Estimated from typical composition</span>
 </div>
-<span class="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed">
+<span class="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed hover:scale-110 transition-transform shadow-sm">
 <span class="material-symbols-outlined text-[18px]">verified_user</span>
 </span>
 </div>
-<!-- Gauge Semi-Circle -->
-<div class="flex flex-col items-center justify-center relative mt-2" id="gauge-body">
+<!-- Gauge Semi-Circle with active glowing arc -->
+<div class="flex flex-col items-center justify-center relative mt-2 group" id="gauge-body">
 <svg class="w-56 h-32" viewbox="0 0 160 90">
+<filter height="140%" id="gauge-glow" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="blur" stddeviation="2"></fegaussianblur>
+<fecomposite in="SourceGraphic" in2="blur" operator="over"></fecomposite>
+</filter>
 <!-- Background Arc -->
 <path d="M 20 80 A 60 60 0 0 1 140 80" fill="none" stroke="#ebedff" stroke-linecap="round" stroke-width="12"></path>
-<!-- Safe green zone -->
-<path d="M 20 80 A 60 60 0 0 1 70 28" fill="none" stroke="#64fcc9" stroke-linecap="round" stroke-width="12"></path>
+<!-- Safe green zone with glow -->
+<path d="M 20 80 A 60 60 0 0 1 70 28" fill="none" filter="url(#gauge-glow)" stroke="#64fcc9" stroke-linecap="round" stroke-width="13"></path>
 <!-- Caution Yellow zone -->
 <path d="M 75 25 A 60 60 0 0 1 110 35" fill="none" stroke="#edc157" stroke-width="12"></path>
 <!-- Toxic Red zone -->
 <path d="M 115 39 A 60 60 0 0 1 140 80" fill="none" stroke="#ffdad6" stroke-linecap="round" stroke-width="12"></path>
-<!-- Needle Pointer (pointing to ~8.2%) -->
+<!-- Actively Oscillating Needle Pointer -->
+<g class="animate-needle-active">
 <circle cx="80" cy="80" fill="#171b2b" r="5"></circle>
 <line stroke="#171b2b" stroke-linecap="round" stroke-width="3.5" x1="80" x2="38" y1="80" y2="42"></line>
+</g>
 </svg>
 <div class="flex flex-col items-center -mt-3">
-<span class="font-headline-md text-headline-md text-on-surface font-extrabold">8.2% Low</span>
+<span class="font-headline-md text-headline-md text-on-surface font-extrabold group-hover:scale-105 transition-transform">8.2% Low</span>
 <span class="font-label-sm text-label-sm text-secondary font-bold">Class B Safe for Workbench Handling</span>
 </div>
 </div>
 <!-- Risk breakdown pills -->
 <div class="flex flex-col gap-space-xs" id="risk-body">
-<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-xl bg-surface-container-low text-on-surface">
+<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container transition-colors">
 <span class="material-symbols-outlined text-tertiary text-[18px]">info</span>
 <span class="font-body-sm text-body-sm">Non-RoHS (Contains Pb Sn60/Pb40 solder traces)</span>
 </div>
-<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-xl bg-surface-container-low text-on-surface">
+<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container transition-colors">
 <span class="material-symbols-outlined text-secondary text-[18px]">check_circle</span>
 <span class="font-body-sm text-body-sm">No toxic Cadmium or Mercury switches found</span>
 </div>
-<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-xl bg-surface-container-low text-on-surface">
+<div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container transition-colors">
 <span class="material-symbols-outlined text-primary text-[18px]">front_hand</span>
 <span class="font-body-sm text-body-sm">Safe handling: Anti-static ESD nitrile gloves advised</span>
 </div>
@@ -395,7 +688,7 @@
 </div>
 </section>
 <!-- SECTION 3: PARTS TABLE WITH ACTION BADGES -->
-<section class="bg-surface-container-lowest rounded-3xl p-space-lg shadow-md flex flex-col gap-space-md hidden" id="parts">
+<section class="bg-surface-container-lowest/95 backdrop-blur-md rounded-3xl p-space-lg shadow-md flex flex-col gap-space-md hover:shadow-xl transition-shadow border border-surface-container hidden" id="parts">
 <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-md">
 <div class="flex flex-col">
 <span class="font-headline-md text-headline-md text-on-surface">Detected Component Inventory</span>
@@ -405,12 +698,12 @@
 <div class="flex flex-wrap items-center gap-space-xs">
 <div class="relative min-w-[220px]">
 <span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-[18px]">search</span>
-<input class="w-full pl-9 pr-4 py-1.5 bg-surface-container-low rounded-full font-body-sm text-body-sm text-on-surface outline-none focus:ring-2 focus:ring-primary transition-all" id="part-search-input" placeholder="Search by name, package..." type="text"/>
+<input class="w-full pl-9 pr-4 py-1.5 bg-surface-container-low rounded-full font-body-sm text-body-sm text-on-surface outline-none focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all" id="part-search-input" placeholder="Search by name, package..." type="text"/>
 </div>
-<button class="part-filter-btn px-4 py-1.5 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm font-bold shadow-sm" data-filter="all" type="button">All (48)</button>
-<button class="part-filter-btn px-4 py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-bold hover:bg-secondary-fixed hover:text-on-secondary-fixed transition-colors" data-filter="reuse" type="button">Reuse (31)</button>
-<button class="part-filter-btn px-4 py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-bold hover:bg-surface-container-high transition-colors" data-filter="recycle" type="button">Recycle (13)</button>
-<button class="part-filter-btn px-4 py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-bold hover:bg-error-container hover:text-on-error-container transition-colors" data-filter="handle" type="button">Handle Carefully (4)</button>
+<button class="part-filter-btn btn-spring px-4 py-1.5 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm font-bold shadow-sm" data-filter="all" type="button">All (48)</button>
+<button class="part-filter-btn btn-spring px-4 py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-bold hover:bg-secondary-fixed hover:text-on-secondary-fixed transition-colors" data-filter="reuse" type="button">Reuse (31)</button>
+<button class="part-filter-btn btn-spring px-4 py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-bold hover:bg-surface-container-high transition-colors" data-filter="recycle" type="button">Recycle (13)</button>
+<button class="part-filter-btn btn-spring px-4 py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-bold hover:bg-error-container hover:text-on-error-container transition-colors" data-filter="handle" type="button">Handle Carefully (4)</button>
 </div>
 </div>
 <!-- Inventory Table -->
@@ -429,75 +722,75 @@
 </thead>
 <tbody class="divide-y-0 text-on-surface font-body-sm text-body-sm" id="inventory-table-body">
 <!-- Row 1 -->
-<tr class="hover:bg-surface-container-low/60 transition-colors" data-category="reuse">
-<td class="py-3 px-4 font-label-md text-label-md text-primary font-mono">U1-MCU</td>
+<tr class="hover:bg-surface-container-low/80 hover:translate-x-0.5 transition-all duration-150" data-category="reuse">
+<td class="py-3 px-4 font-label-md text-label-md text-primary font-mono font-bold">U1-MCU</td>
 <td class="py-3 px-4 font-semibold text-on-surface">ATmega328P-PU Microcontroller</td>
 <td class="py-3 px-4"><span class="bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-mono">DIP-28</span></td>
 <td class="py-3 px-4"><span class="text-secondary font-semibold">Grade A (Mint)</span></td>
-<td class="py-3 px-4"><span class="px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">Reuse</span></td>
+<td class="py-3 px-4"><span class="px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold shadow-sm inline-block hover:scale-105 transition-transform">Reuse</span></td>
 <td class="py-3 px-4 font-headline-sm text-[16px] text-on-surface font-bold">₹ 320</td>
 <td class="py-3 px-4 text-right">
-<button class="px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface hover:bg-primary-container hover:text-on-primary transition-colors" type="button">Catalog Part</button>
+<button class="btn-spring px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface hover:bg-primary-container hover:text-on-primary transition-colors font-semibold" type="button">Catalog Part</button>
 </td>
 </tr>
 <!-- Row 2 -->
-<tr class="hover:bg-surface-container-low/60 transition-colors" data-category="reuse">
-<td class="py-3 px-4 font-label-md text-label-md text-primary font-mono">U4-MEM</td>
+<tr class="hover:bg-surface-container-low/80 hover:translate-x-0.5 transition-all duration-150" data-category="reuse">
+<td class="py-3 px-4 font-label-md text-label-md text-primary font-mono font-bold">U4-MEM</td>
 <td class="py-3 px-4 font-semibold text-on-surface">Samsung DDR3 DRAM 4Gb</td>
 <td class="py-3 px-4"><span class="bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-mono">FBGA-96</span></td>
 <td class="py-3 px-4"><span class="text-secondary font-semibold">Grade A (Working)</span></td>
-<td class="py-3 px-4"><span class="px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">Reuse</span></td>
+<td class="py-3 px-4"><span class="px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold shadow-sm inline-block hover:scale-105 transition-transform">Reuse</span></td>
 <td class="py-3 px-4 font-headline-sm text-[16px] text-on-surface font-bold">₹ 450</td>
 <td class="py-3 px-4 text-right">
-<button class="px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface hover:bg-primary-container hover:text-on-primary transition-colors" type="button">Catalog Part</button>
+<button class="btn-spring px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface hover:bg-primary-container hover:text-on-primary transition-colors font-semibold" type="button">Catalog Part</button>
 </td>
 </tr>
 <!-- Row 3 -->
-<tr class="hover:bg-surface-container-low/60 transition-colors" data-category="recycle">
-<td class="py-3 px-4 font-label-md text-label-md text-tertiary-container font-mono">CONN-01</td>
+<tr class="hover:bg-surface-container-low/80 hover:translate-x-0.5 transition-all duration-150" data-category="recycle">
+<td class="py-3 px-4 font-label-md text-label-md text-tertiary-container font-mono font-bold">CONN-01</td>
 <td class="py-3 px-4 font-semibold text-on-surface">Gold Finger Edge Connector (0.8g Au equiv)</td>
 <td class="py-3 px-4"><span class="bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-mono">PCI-e Bus</span></td>
 <td class="py-3 px-4"><span class="text-on-surface-variant">Grade B (Oxidized tabs)</span></td>
-<td class="py-3 px-4"><span class="px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">Recycle</span></td>
+<td class="py-3 px-4"><span class="px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold shadow-sm inline-block hover:scale-105 transition-transform">Recycle</span></td>
 <td class="py-3 px-4 font-headline-sm text-[16px] text-on-surface font-bold">₹ 680</td>
 <td class="py-3 px-4 text-right">
-<button class="px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface hover:bg-tertiary-fixed hover:text-on-tertiary-fixed transition-colors" type="button">Refine Gold</button>
+<button class="btn-spring px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface hover:bg-tertiary-fixed hover:text-on-tertiary-fixed transition-colors font-semibold" type="button">Refine Gold</button>
 </td>
 </tr>
 <!-- Row 4 -->
-<tr class="hover:bg-surface-container-low/60 transition-colors" data-category="handle">
-<td class="py-3 px-4 font-label-md text-label-md text-error font-mono">C12-PWR</td>
+<tr class="hover:bg-surface-container-low/80 hover:translate-x-0.5 transition-all duration-150" data-category="handle">
+<td class="py-3 px-4 font-label-md text-label-md text-error font-mono font-bold">C12-PWR</td>
 <td class="py-3 px-4 font-semibold text-on-surface">Electrolytic Capacitor 1000uF 25V</td>
 <td class="py-3 px-4"><span class="bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-mono">Radial Can</span></td>
 <td class="py-3 px-4"><span class="text-error font-semibold">Bulging Top (Hazardous)</span></td>
-<td class="py-3 px-4"><span class="px-3 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">Handle Carefully</span></td>
+<td class="py-3 px-4"><span class="px-3 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold shadow-sm inline-block hover:scale-105 transition-transform">Handle Carefully</span></td>
 <td class="py-3 px-4 font-headline-sm text-[16px] text-error font-bold">₹ 0 (Scrap)</td>
 <td class="py-3 px-4 text-right">
-<button class="px-3 py-1 rounded-full bg-error-container font-label-sm text-label-sm text-on-error-container hover:opacity-80 transition-opacity" type="button">Discharge &amp; Bag</button>
+<button class="btn-spring px-3 py-1 rounded-full bg-error-container font-label-sm text-label-sm text-on-error-container hover:opacity-80 transition-opacity font-semibold" type="button">Discharge &amp; Bag</button>
 </td>
 </tr>
 <!-- Row 5 -->
-<tr class="hover:bg-surface-container-low/60 transition-colors" data-category="reuse">
-<td class="py-3 px-4 font-label-md text-label-md text-primary font-mono">C24-TAN</td>
+<tr class="hover:bg-surface-container-low/80 hover:translate-x-0.5 transition-all duration-150" data-category="reuse">
+<td class="py-3 px-4 font-label-md text-label-md text-primary font-mono font-bold">C24-TAN</td>
 <td class="py-3 px-4 font-semibold text-on-surface">Tantalum SMD Capacitor 100uF 16V</td>
 <td class="py-3 px-4"><span class="bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-mono">Case D (7343)</span></td>
 <td class="py-3 px-4"><span class="text-secondary font-semibold">Grade A (High stability)</span></td>
-<td class="py-3 px-4"><span class="px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">Reuse</span></td>
+<td class="py-3 px-4"><span class="px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold shadow-sm inline-block hover:scale-105 transition-transform">Reuse</span></td>
 <td class="py-3 px-4 font-headline-sm text-[16px] text-on-surface font-bold">₹ 140</td>
 <td class="py-3 px-4 text-right">
-<button class="px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface hover:bg-primary-container hover:text-on-primary transition-colors" type="button">Catalog Part</button>
+<button class="btn-spring px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface hover:bg-primary-container hover:text-on-primary transition-colors font-semibold" type="button">Catalog Part</button>
 </td>
 </tr>
 <!-- Row 6 -->
-<tr class="hover:bg-surface-container-low/60 transition-colors" data-category="handle">
-<td class="py-3 px-4 font-label-md text-label-md text-tertiary-container font-mono">SOL-BUS</td>
+<tr class="hover:bg-surface-container-low/80 hover:translate-x-0.5 transition-all duration-150" data-category="handle">
+<td class="py-3 px-4 font-label-md text-label-md text-tertiary-container font-mono font-bold">SOL-BUS</td>
 <td class="py-3 px-4 font-semibold text-on-surface">Lead Solder Bus &amp; Wave Joint Area</td>
 <td class="py-3 px-4"><span class="bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-mono">Alloy Sn60Pb40</span></td>
 <td class="py-3 px-4"><span class="text-on-surface-variant">Bulk Solder (34g)</span></td>
-<td class="py-3 px-4"><span class="px-3 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">Handle Carefully</span></td>
+<td class="py-3 px-4"><span class="px-3 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold shadow-sm inline-block hover:scale-105 transition-transform">Handle Carefully</span></td>
 <td class="py-3 px-4 font-headline-sm text-[16px] text-on-surface font-bold">₹ 45</td>
 <td class="py-3 px-4 text-right">
-<button class="px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface hover:bg-surface-container-high transition-colors" type="button">Extract Pot</button>
+<button class="btn-spring px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface hover:bg-surface-container-high transition-colors font-semibold" type="button">Extract Pot</button>
 </td>
 </tr>
 </tbody>
@@ -505,28 +798,28 @@
 </div>
 </section>
 <!-- SECTION 4: CHIP IDENTIFICATION & SILICON DEEP-DIVE TABLE -->
-<section class="bg-surface-container-lowest rounded-3xl p-space-lg shadow-md flex flex-col gap-space-md hidden" id="chips-sec"></section>
+<section class="bg-surface-container-lowest/95 backdrop-blur-md rounded-3xl p-space-lg shadow-md flex flex-col gap-space-md hover:shadow-xl transition-shadow border border-surface-container hidden" id="chips-sec"></section>
 <!-- SECTION 5: EXPORT & ACTION CENTER -->
-<section class="bg-surface-container-low rounded-3xl p-space-xl flex flex-col gap-space-lg shadow-sm hidden" id="exports">
+<section class="bg-surface-container-low/90 backdrop-blur-md rounded-3xl p-space-xl flex flex-col gap-space-lg shadow-sm border border-surface-container hidden" id="exports">
 <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
 <div class="flex flex-col gap-1 max-w-xl">
 <div class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary font-bold">
-<span class="material-symbols-outlined text-[16px]">local_shipping</span>
-<span>Salvage Workflows</span>
+<span class="material-symbols-outlined text-[16px] animate-bounce">local_shipping</span>
+<span class="">Salvage Workflows</span>
 </div>
 <span class="font-headline-md text-headline-md text-on-surface">Export your results</span>
 <p class="font-body-md text-body-md text-on-surface-variant">Download the report or the inventory spreadsheet for this board.</p>
 </div>
-<div class="flex items-center gap-space-xs bg-surface-container-lowest px-4 py-2 rounded-2xl shadow-sm hidden">
-<span class="material-symbols-outlined text-tertiary-container text-[20px]">workspace_premium</span>
+<div class="flex items-center gap-space-xs bg-surface-container-lowest px-4 py-2 rounded-2xl shadow-sm hover:scale-105 transition-transform cursor-pointer hidden">
+<span class="material-symbols-outlined text-tertiary-container text-[20px] animate-spin" style="animation-duration: 12s;">workspace_premium</span>
 <span class="font-label-md text-label-md text-on-surface font-semibold">Earned 240 Green Circular Credits</span>
 </div>
 </div>
-<!-- Action Buttons Grid -->
+<!-- Action Buttons Grid with Playful Spring Feedback -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
 <!-- Download PDF -->
-<button class="flex flex-col items-start justify-between p-space-lg rounded-2xl bg-primary-container text-on-primary shadow-[0_4px_0_#b0284b] hover:translate-y-[-2px] active:translate-y-[2px] active:shadow-[0_1px_0_#b0284b] transition-all text-left group" id="btn-pdf" type="button">
-<div class="w-12 h-12 rounded-xl bg-on-primary/20 flex items-center justify-center mb-space-sm group-hover:scale-110 transition-transform">
+<button class="btn-spring flex flex-col items-start justify-between p-space-lg rounded-2xl bg-primary-container text-on-primary shadow-[0_4px_0_#b0284b] active:shadow-[0_1px_0_#b0284b] text-left group" id="btn-pdf" type="button">
+<div class="w-12 h-12 rounded-xl bg-on-primary/20 flex items-center justify-center mb-space-sm group-hover:scale-115 group-hover:rotate-6 transition-transform">
 <span class="material-symbols-outlined text-[28px]">picture_as_pdf</span>
 </div>
 <div class="flex flex-col">
@@ -535,18 +828,18 @@
 </div>
 </button>
 <!-- Export CSV -->
-<button class="flex flex-col items-start justify-between p-space-lg rounded-2xl bg-secondary-fixed text-on-secondary-fixed shadow-[0_4px_0_#007256] hover:translate-y-[-2px] active:translate-y-[2px] transition-all text-left group" id="btn-csv" type="button">
-<div class="w-12 h-12 rounded-xl bg-on-secondary/20 flex items-center justify-center mb-space-sm group-hover:scale-110 transition-transform">
+<button class="btn-spring flex flex-col items-start justify-between p-space-lg rounded-2xl bg-[#4ECCA3] text-[#002116] shadow-[0_4px_0_#007256] active:shadow-[0_1px_0_#007256] text-left group" id="btn-csv" type="button">
+<div class="w-12 h-12 rounded-xl bg-on-secondary/20 flex items-center justify-center mb-space-sm group-hover:scale-115 group-hover:-rotate-6 transition-transform">
 <span class="material-symbols-outlined text-[28px]">table_view</span>
 </div>
 <div class="flex flex-col">
 <span class="font-label-lg text-label-lg font-bold">Export Inventory CSV</span>
-<span class="font-body-sm text-body-sm text-on-secondary-fixed/80 mt-1">One row per detected component</span>
+<span class="font-body-sm text-body-sm text-[#002116]/80 mt-1 font-medium">One row per detected component</span>
 </div>
 </button>
 <!-- Print Bin Labels -->
-<button class="flex flex-col items-start justify-between p-space-lg rounded-2xl bg-surface-container-lowest text-on-surface shadow-md hover:translate-y-[-2px] transition-all text-left group hidden" type="button">
-<div class="w-12 h-12 rounded-xl bg-tertiary-fixed flex items-center justify-center mb-space-sm group-hover:scale-110 transition-transform text-on-tertiary-fixed">
+<button class="btn-spring flex flex-col items-start justify-between p-space-lg rounded-2xl bg-surface-container-lowest text-on-surface shadow-md text-left group hidden" type="button">
+<div class="w-12 h-12 rounded-xl bg-tertiary-fixed flex items-center justify-center mb-space-sm group-hover:scale-115 group-hover:rotate-6 transition-transform text-on-tertiary-fixed">
 <span class="material-symbols-outlined text-[28px]">label</span>
 </div>
 <div class="flex flex-col">
@@ -555,8 +848,8 @@
 </div>
 </button>
 <!-- Connect to Recycler -->
-<button class="flex flex-col items-start justify-between p-space-lg rounded-2xl bg-surface-container-lowest text-on-surface shadow-md hover:translate-y-[-2px] transition-all text-left group hidden" type="button">
-<div class="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center mb-space-sm group-hover:scale-110 transition-transform text-on-secondary-container">
+<button class="btn-spring flex flex-col items-start justify-between p-space-lg rounded-2xl bg-surface-container-lowest text-on-surface shadow-md text-left group hidden" type="button">
+<div class="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center mb-space-sm group-hover:scale-115 group-hover:-rotate-6 transition-transform text-on-secondary-container">
 <span class="material-symbols-outlined text-[28px]">near_me</span>
 </div>
 <div class="flex flex-col">
@@ -573,12 +866,12 @@
 <span class="font-headline-md text-headline-md text-on-surface">Recent Analysis History</span>
 <span class="font-body-sm text-body-sm text-on-surface-variant">Easily review past scanned circuit boards, component logs, and audit trails</span>
 </div>
-<button class="px-space-md py-space-sm rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface hover:bg-primary-container hover:text-on-primary transition-colors flex items-center gap-1 shadow-sm hidden" type="button">
-<span>View All 34 Past Scans</span>
-<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+<button class="btn-spring px-space-md py-space-sm rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface hover:bg-primary-container hover:text-on-primary transition-colors flex items-center gap-1 shadow-sm font-bold hidden" type="button">
+<span class="">View All 34 Past Scans</span>
+<span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
 </button>
 </div>
-<!-- History Grid -->
+<!-- History Grid with Card Springs & Subtle Glowing Border -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-space-md" id="history-grid"></div>
 </section>
 </div>
@@ -716,7 +1009,8 @@
       });
     }
   </script>
-</div></main><footer class="w-full bg-surface-container-low mt-space-xl"><div class="max-w-[1280px] mx-auto px-margin md:px-margin-desktop py-space-xl flex flex-col md:flex-row items-center justify-between gap-space-md text-center md:text-left"><div class="flex items-center gap-space-sm"><img alt="ChipPal Robot Mascot Logo" class="h-6 w-auto object-contain opacity-80" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAgMTUwIj48ZyBzdHJva2U9IiMxNzFiMmIiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIj48cGF0aCBkPSJNNDUgMjhWMTJNNzUgMjhWOE0xMDUgMjhWMTJNNDUgMTIydjE2TTc1IDEyMnYxOE0xMDUgMTIydjE2TTI0IDU1SDhNMjQgOTVIOE0xMjYgNTVoMTZNMTI2IDk1aDE2Ii8+PHJlY3QgeD0iMjQiIHk9IjI4IiB3aWR0aD0iMTAyIiBoZWlnaHQ9Ijk0IiByeD0iMjQiIGZpbGw9IiNmZjY1ODQiLz48L2c+PGNpcmNsZSBjeD0iNTgiIGN5PSI3MCIgcj0iMTIiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSI5MiIgY3k9IjcwIiByPSIxMiIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iNzIiIHI9IjYiIGZpbGw9IiMxNzFiMmIiLz48Y2lyY2xlIGN4PSI5NCIgY3k9IjcyIiByPSI2IiBmaWxsPSIjMTcxYjJiIi8+PHBhdGggZD0iTTYyIDk4cTEzIDEyIDI2IDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzE3MWIyYiIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4="/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface">ChipPal</span><span class="font-body-sm text-body-sm text-on-surface-variant">Turn old solder into salvager gold. Empowering circular hardware hacking.</span></div></div><div class="flex items-center gap-space-md"><span class="font-label-sm text-label-sm text-on-surface-variant">ChipPal: hackathon prototype. Values and hazard levels are estimates.</span></div></div></footer><script>(()=>{
+</div></main><footer class="w-full bg-surface-container-low/90 backdrop-blur-md mt-space-xl border-t border-surface-container transition-colors relative z-10"><div class="max-w-[1280px] mx-auto px-margin md:px-margin-desktop py-space-xl flex flex-col md:flex-row items-center justify-between gap-space-md text-center md:text-left"><div class="flex items-center gap-space-sm group cursor-pointer"><img alt="ChipPal Robot Mascot Logo" class="h-6 w-auto object-contain opacity-80 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAgMTUwIj48ZyBzdHJva2U9IiMxNzFiMmIiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIj48cGF0aCBkPSJNNDUgMjhWMTJNNzUgMjhWOE0xMDUgMjhWMTJNNDUgMTIydjE2TTc1IDEyMnYxOE0xMDUgMTIydjE2TTI0IDU1SDhNMjQgOTVIOE0xMjYgNTVoMTZNMTI2IDk1aDE2Ii8+PHJlY3QgeD0iMjQiIHk9IjI4IiB3aWR0aD0iMTAyIiBoZWlnaHQ9Ijk0IiByeD0iMjQiIGZpbGw9IiNmZjY1ODQiLz48L2c+PGNpcmNsZSBjeD0iNTgiIGN5PSI3MCIgcj0iMTIiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSI5MiIgY3k9IjcwIiByPSIxMiIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iNzIiIHI9IjYiIGZpbGw9IiMxNzFiMmIiLz48Y2lyY2xlIGN4PSI5NCIgY3k9IjcyIiByPSI2IiBmaWxsPSIjMTcxYjJiIi8+PHBhdGggZD0iTTYyIDk4cTEzIDEyIDI2IDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzE3MWIyYiIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4="/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">ChipPal</span><span class="font-body-sm text-body-sm text-on-surface-variant font-medium">Turn old solder into salvager gold. Empowering circular hardware hacking.</span></div></div><div class="flex items-center gap-space-md"><span class="font-label-sm text-label-sm text-on-surface-variant">ChipPal: hackathon prototype. Values and hazard levels are estimates.</span></div></div></footer>
+<script>(()=>{
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const setT=(s,t)=>{const e=$(s);if(e)e.textContent=t;};
@@ -913,5 +1207,46 @@ renderHist();
 // nav
 const ids=['scanner','results','parts','chips-sec','history'],names=['Scanner','Results','Parts','Chips','History'];
 $$('nav a[data-path]').forEach((a,i)=>{a.textContent=names[i];a.onclick=e=>{e.preventDefault();const t=document.getElementById(ids[i]);if(t&&!t.classList.contains('hidden'))t.scrollIntoView({behavior:'smooth'});};});
+})();
+</script><script>(()=>{
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const wrap=document.createElement('div');wrap.id='bg-wrap';
+wrap.innerHTML='<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div><canvas id="bg-canvas"></canvas>';
+document.body.prepend(wrap);
+// floating chips
+const COL=['#ff6584','#2fb67c','#8aa4ff','#edc157'];
+const svg=c=>'<svg viewBox="0 0 40 40" width="100%" height="100%"><g stroke="'+c+'" stroke-width="3" stroke-linecap="round"><path d="M12 4v5M20 4v5M28 4v5M12 31v5M20 31v5M28 31v5M4 12h5M4 20h5M4 28h5M31 12h5M31 20h5M31 28h5"/><rect x="9" y="9" width="22" height="22" rx="6" fill="'+c+'" fill-opacity=".25"/></g><circle cx="16" cy="18" r="2.2" fill="'+c+'"/><circle cx="24" cy="18" r="2.2" fill="'+c+'"/></svg>';
+const n=innerWidth<700?6:11;
+for(let i=0;i<n;i++){const d=document.createElement('div'),s=22+Math.random()*30;d.className='fchip';
+  d.style.cssText='left:'+Math.random()*96+'%;width:'+s+'px;height:'+s+'px;animation-duration:'+(30+Math.random()*34)+'s;animation-delay:-'+Math.random()*50+'s';
+  d.innerHTML=svg(COL[i%4]);wrap.append(d);}
+// circuit traces with travelling pulses
+const cv=wrap.querySelector('canvas'),cx=cv.getContext('2d');
+let W=0,H=0,traces=[],pulses=[],last=0,raf=0;const G=48;
+function build(){
+  const dpr=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0);
+  traces=[];pulses=[];const count=Math.max(7,Math.min(24,Math.round(W*H/80000)));
+  for(let i=0;i<count;i++){
+    let x=Math.round(Math.random()*W/G)*G,y=Math.round(Math.random()*H/G)*G,dir=Math.random()<.5?0:1;const pts=[[x,y]],L=[];let total=0;
+    for(let s=0,k=3+Math.floor(Math.random()*4);s<k;s++){const len=(2+Math.floor(Math.random()*5))*G*(Math.random()<.5?-1:1);
+      if(dir===0)x+=len;else y+=len;pts.push([x,y]);L.push(Math.abs(len));total+=Math.abs(len);dir=1-dir;}
+    const tr={pts,L,total,col:COL[i%4]};traces.push(tr);pulses.push({d:Math.random()*total,sp:45+Math.random()*55,tr});
+  }
+}
+function pos(tr,d){let k=0;while(k<tr.L.length-1&&d>tr.L[k]){d-=tr.L[k];k++;}const a=tr.pts[k],b=tr.pts[k+1],t=Math.min(d/tr.L[k],1);return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];}
+function draw(dt){
+  cx.clearRect(0,0,W,H);cx.lineJoin='round';cx.lineWidth=2;
+  traces.forEach(tr=>{cx.globalAlpha=.2;cx.strokeStyle=tr.col;cx.beginPath();tr.pts.forEach((p,i)=>i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1]));cx.stroke();
+    [tr.pts[0],tr.pts[tr.pts.length-1]].forEach(p=>{cx.beginPath();cx.arc(p[0],p[1],5,0,6.283);cx.stroke();});});
+  if(reduce)return;
+  pulses.forEach(p=>{p.d+=p.sp*dt;if(p.d>p.tr.total)p.d-=p.tr.total;const[x,y]=pos(p.tr,p.d);
+    cx.fillStyle=p.tr.col;cx.globalAlpha=.22;cx.beginPath();cx.arc(x,y,10,0,6.283);cx.fill();cx.globalAlpha=.9;cx.beginPath();cx.arc(x,y,3.6,0,6.283);cx.fill();});
+  cx.globalAlpha=1;
+}
+function loop(t){const dt=Math.min((t-last)/1000||0,.05);last=t;draw(dt);raf=requestAnimationFrame(loop);}
+function start(){cancelAnimationFrame(raf);last=performance.now();if(reduce)draw(0);else raf=requestAnimationFrame(loop);}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelAnimationFrame(raf);else start();});
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(Math.abs(innerWidth-W)>40||Math.abs(innerHeight-H)>200){build();start();}},250);});
+build();start();
 })();
 </script></body></html>
