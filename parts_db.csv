@@ -1,0 +1,28 @@
+part_number,description,value_inr
+ATMEGA328P,Microcontroller (Arduino Uno chip),250
+ATMEGA2560,Microcontroller (Arduino Mega chip),700
+STM32F103C8T6,ARM Cortex-M3 microcontroller,300
+ESP8266,Wi-Fi SoC,150
+ESP32,Wi-Fi + Bluetooth SoC,300
+PIC16F877A,8-bit microcontroller,250
+AT89S52,8051 microcontroller,100
+NE555,Timer IC,10
+LM358,Dual op-amp,10
+LM324,Quad op-amp,15
+LM393,Dual comparator,10
+LM317,Adjustable voltage regulator,15
+LM7805,5V regulator,10
+AMS1117,3.3V LDO regulator,10
+LM2596,Buck converter,40
+TP4056,Li-ion charger IC,15
+74HC595,Shift register,15
+CD4017,Decade counter,15
+ULN2003,Darlington driver array,15
+L293D,Motor driver,60
+L298N,Dual H-bridge motor driver,120
+MAX232,RS-232 level converter,40
+CH340,USB-serial converter,30
+CP2102,USB-UART bridge,60
+FT232,USB-UART bridge,250
+AT24C256,I2C EEPROM,40
+W25Q32,SPI flash memory,50

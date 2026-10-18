@@ -1,0 +1,18 @@
+class,value_inr,mass_g,hazard_fraction,verdict
+IC,15,0.8,0.05,Reuse / recover metals
+LED,1,0.1,0.02,Recycle
+button,2,0.5,0.02,Reuse
+capacitor,2,0.5,0.10,Handle carefully
+clock,4,0.3,0.02,Reuse
+connector,5,2.0,0.03,Reuse
+diode,0.8,0.2,0.03,Recycle
+display,50,20,0.15,Handle carefully
+emi filter,1,0.2,0.02,Recycle
+ferrite bead,0.3,0.1,0.01,Recycle
+fuse,0.5,0.2,0.05,Recycle
+inductor,3,1.0,0.02,Reuse
+jumper,0.2,0.1,0.01,Reuse
+potentiometer,3,1.5,0.02,Reuse
+resistor,0.3,0.05,0.02,Recycle
+switch,2,0.8,0.02,Reuse
+transistor,1.5,0.3,0.03,Reuse
