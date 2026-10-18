@@ -1,12 +1,12 @@
---extra-index-url https://download.pytorch.org/whl/cpu
-torch
-torchvision
-ultralytics
-sahi
-easyocr
-rapidfuzz
-fpdf2
-streamlit
-pandas
-pillow
-opencv-python-headless
+   fastapi
+   uvicorn
+   python-multipart
+   ultralytics
+   sahi
+   easyocr
+   rapidfuzz
+   fpdf2
+   pandas
+   pillow
+   numpy
+   opencv-python-headless

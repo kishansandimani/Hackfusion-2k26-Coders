@@ -1,5 +1,7 @@
 import io
 import json
+import os
+import threading
 import base64
 import uuid
 from collections import OrderedDict
@@ -51,6 +53,7 @@ DEFAULT = {"value_inr": 1.0, "mass_g": 0.3, "hazard_fraction": 0.03,
            "verdict": "Check manually"}
 COLORS = {"high": "red", "medium": "orange", "low": "lime"}
 JOBS = OrderedDict()
+DETECT_LOCK = threading.Lock()  # one detection or OCR job at a time (several users)
 
 
 def level(h):
@@ -213,8 +216,14 @@ def analyze(file: UploadFile = File(...), conf: float = Form(0.2),
             Image.open(io.BytesIO(file.file.read()))).convert("RGB")
     except Exception:
         raise HTTPException(400, "That file is not a readable image.")
-    orig.save("temp.jpg")
-    dets = detect_tiled("temp.jpg", conf, tile) if tiled else detect_normal("temp.jpg", conf)
+    path = f"temp_{uuid.uuid4().hex[:8]}.jpg"
+    orig.save(path)
+    try:
+        with DETECT_LOCK:
+            dets = detect_tiled(path, conf, tile) if tiled else detect_normal(path, conf)
+    finally:
+        if os.path.exists(path):
+            os.remove(path)
     if not dets:
         raise HTTPException(422, "No components found. Try a lower confidence.")
     return finalize(orig, dets, "tiled" if tiled else "standard")
@@ -243,10 +252,11 @@ def chips(job_id: str = Form(...)):
         raise HTTPException(404, "This analysis expired. Please analyze the photo again.")
     ics = sorted([d for d in job["dets"] if d["name"].lower().strip() == "ic"],
                  key=lambda d: -d["conf"])[:12]
-    reader = get_ocr()
+    with DETECT_LOCK:
+        reader = get_ocr()
+        reads = [read_chip(job["orig"], d["box"], reader) for d in ics]
     out = []
-    for i, d in enumerate(ics):
-        text, part, score = read_chip(job["orig"], d["box"], reader)
+    for i, (text, part, score) in enumerate(reads):
         if part:
             p = PARTS[part]
             out.append({"n": i + 1, "text": text, "part": p["part_number"],
