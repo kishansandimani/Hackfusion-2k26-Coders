@@ -14,10 +14,11 @@ from fastapi import APIRouter, Form, HTTPException, Request, Response
 DB_FILE = "users.db"
 COOKIE = "chippal_session"
 SESSION_SECONDS = 7 * 24 * 3600
-# People need this code to create an account. Change it, or set CHIPPAL_INVITE.
-INVITE_CODE = os.environ.get("CHIPPAL_INVITE", "CHIPPAL2026")
+# Open sign-up by default. Set CHIPPAL_INVITE to require an access code.
+INVITE_CODE = os.environ.get("CHIPPAL_INVITE", "")  # empty = anyone can sign up
 NAME_RE = re.compile(r"^[A-Za-z0-9_.-]{3,20}$")
 FAILS = {}  # (ip, username) -> [count, locked_until]
+HITS = {}   # (ip, action) -> list of timestamps (sign-up / guest limits)
 router = APIRouter()
 
 
@@ -90,6 +91,29 @@ def _check_locked(key):
         raise HTTPException(429, "Too many attempts. Wait a minute and try again.")
 
 
+def _rate(key, limit, per=3600):
+    now = time.time()
+    hits = [t for t in HITS.get(key, []) if now - t < per]
+    if len(hits) >= limit:
+        raise HTTPException(429, "Too many new accounts from this network. Try again later.")
+    hits.append(now)
+    HITS[key] = hits
+
+
+def is_guest(name):
+    return str(name).startswith("guest-")
+
+
+def verify_password(name, password):
+    row = _db().execute("SELECT salt, hash FROM users WHERE name = ?", (name,)).fetchone()
+    return bool(row) and hmac.compare_digest(hash_pw(password, row[0]), row[1])
+
+
+def delete_user(name):
+    with _db() as con:
+        con.execute("DELETE FROM users WHERE name = ?", (name,))
+
+
 def _fail(key):
     rec = FAILS.setdefault(key, [0, 0])
     rec[0] += 1
@@ -99,12 +123,15 @@ def _fail(key):
 
 @router.post("/api/register")
 def register(request: Request, response: Response, username: str = Form(...),
-             password: str = Form(...), invite: str = Form(...)):
+             password: str = Form(...), invite: str = Form("")):
     ip = request.client.host if request.client else "?"
     _check_locked((ip, "register"))
-    if not hmac.compare_digest(invite.strip(), INVITE_CODE):
+    if INVITE_CODE and not hmac.compare_digest(invite.strip(), INVITE_CODE):
         _fail((ip, "register"))
-        raise HTTPException(403, "That team code is not correct.")
+        raise HTTPException(403, "That access code is not correct.")
+    _rate((ip, "signup"), 10)
+    if is_guest(username):
+        raise HTTPException(400, "That username is reserved.")
     if not NAME_RE.match(username):
         raise HTTPException(400, "Username: 3 to 20 letters, numbers, dot, dash or underscore.")
     if len(password) < 8:
@@ -134,6 +161,19 @@ def login(request: Request, response: Response, username: str = Form(...), passw
     FAILS.pop(key, None)
     _set_cookie(request, response, row[0])
     return {"name": row[0]}
+
+
+@router.post("/api/guest")
+def guest(request: Request, response: Response):
+    _rate((request.client.host if request.client else "?", "guest"), 30)
+    name = "guest-" + secrets.token_hex(3)
+    _set_cookie(request, response, name)
+    return {"name": name}
+
+
+@router.get("/api/config")
+def config():
+    return {"invite_required": bool(INVITE_CODE)}
 
 
 @router.post("/api/logout")

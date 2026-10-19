@@ -2,6 +2,7 @@ import io
 import json
 import os
 import threading
+import time
 import base64
 import uuid
 from collections import OrderedDict
@@ -16,7 +17,8 @@ from sahi import AutoDetectionModel
 from sahi.predict import get_sliced_prediction
 from ultralytics import YOLO
 
-from auth import current_user, optional_user, router as auth_router
+from auth import (COOKIE, current_user, delete_user, is_guest, optional_user,
+                  router as auth_router, verify_password)
 from report import make_pdf
 
 WEIGHTS = "weights/best.pt"
@@ -59,6 +61,34 @@ DETECT_LOCK = threading.Lock()  # one detection or OCR job at a time (several us
 
 def level(h):
     return "high" if h >= 0.10 else "medium" if h >= 0.04 else "low"
+
+
+def purge_old(max_age=3600):
+    """Forget analyses (and their photos) after an hour."""
+    now = time.time()
+    for k in [k for k, v in JOBS.items() if now - v.get("ts", now) > max_age]:
+        JOBS.pop(k, None)
+
+
+def quality_tips(orig):
+    """Friendly photo advice. Simple heuristics, not a guarantee."""
+    tips = []
+    w, h = orig.size
+    if min(w, h) < 800:
+        tips.append(f"Low resolution ({w} x {h} px). Use your phone camera at full resolution to catch more small parts.")
+    g = orig.convert("L")
+    g.thumbnail((1000, 1000))
+    a = np.asarray(g, dtype="float32")
+    if a.shape[0] > 2 and a.shape[1] > 2:
+        lap = a[:-2, 1:-1] + a[2:, 1:-1] + a[1:-1, :-2] + a[1:-1, 2:] - 4 * a[1:-1, 1:-1]
+        if lap.var() < 40:
+            tips.append("The photo looks blurry. Hold the phone steady, tap to focus and try again.")
+    m = float(a.mean())
+    if m < 60:
+        tips.append("The photo is dark. Use bright, even light.")
+    elif m > 220:
+        tips.append("The photo is washed out. Avoid glare from lamps and flash.")
+    return tips
 
 
 # ---------------- detection ----------------
@@ -154,6 +184,7 @@ def build_plan(summary, df, hazard_pct, mass):
 
 # ---------------- API ----------------
 def finalize(orig, dets, mode, job_id=None, owner=None):
+    purge_old()
     img = orig.copy()
     draw = ImageDraw.Draw(img)
     lw = max(2, max(img.size) // 500)
@@ -181,7 +212,8 @@ def finalize(orig, dets, mode, job_id=None, owner=None):
 
     job_id = job_id or uuid.uuid4().hex[:10]
     W, H = orig.size
-    JOBS[job_id] = {"owner": owner, "orig": orig, "img": img, "dets": dets, "df": df,
+    pl = build_plan(summary, df, hazard_pct, mass)
+    JOBS[job_id] = {"owner": owner, "ts": time.time(), "plan": pl, "orig": orig, "img": img, "dets": dets, "df": df,
                     "summary": summary, "metrics": metrics, "mode": mode}
     while len(JOBS) > 20:
         JOBS.popitem(last=False)
@@ -201,7 +233,7 @@ def finalize(orig, dets, mode, job_id=None, owner=None):
         "metrics": {"components": len(df), "reusable": reusable,
                     "value": round(float(df.value_inr.sum())),
                     "hazard": round(float(hazard_pct), 1)},
-        **build_plan(summary, df, hazard_pct, mass),
+        **pl, "quality": quality_tips(orig),
         "summary": [{"class": str(r["class"]), "count": int(r["count"]),
                      "value": round(float(r["value_inr"]), 1), "verdict": str(r["verdict"]),
                      "level": level(INFO.get(str(r["class"]).lower().strip(), DEFAULT)["hazard_fraction"])}
@@ -269,6 +301,7 @@ def chips(job_id: str = Form(...), user: str = Depends(current_user)):
 
 
 def _job(job_id, user):
+    purge_old()
     job = JOBS.get(job_id)
     if not job or job.get("owner") != user:
         raise HTTPException(404, "This analysis expired. Please analyze the photo again.")
@@ -278,7 +311,8 @@ def _job(job_id, user):
 @app.get("/api/report/{job_id}.pdf")
 def report_pdf(job_id: str, user: str = Depends(current_user)):
     j = _job(job_id, user)
-    pdf = make_pdf(j["img"], j["summary"], j["metrics"], j["mode"])
+    pdf = make_pdf(j["img"], j["summary"], j["metrics"], j["mode"],
+                   plan=j["plan"]["plan"], score=j["plan"]["score"])
     return Response(pdf, media_type="application/pdf",
                     headers={"Content-Disposition": 'attachment; filename="ewaste_report.pdf"'})
 
@@ -288,6 +322,25 @@ def report_csv(job_id: str, user: str = Depends(current_user)):
     j = _job(job_id, user)
     return Response(j["df"].to_csv(index=False), media_type="text/csv",
                     headers={"Content-Disposition": 'attachment; filename="ewaste_report.csv"'})
+
+
+@app.post("/api/delete/{job_id}")
+def delete_scan(job_id: str, user: str = Depends(current_user)):
+    _job(job_id, user)
+    JOBS.pop(job_id, None)
+    return {"ok": True}
+
+
+@app.post("/api/delete-account")
+def delete_account(response: Response, password: str = Form(""), user: str = Depends(current_user)):
+    if not is_guest(user):
+        if not verify_password(user, password):
+            raise HTTPException(403, "That password is not correct.")
+        delete_user(user)
+    for k in [k for k, v in JOBS.items() if v.get("owner") == user]:
+        JOBS.pop(k, None)
+    response.delete_cookie(COOKIE)
+    return {"ok": True}
 
 
 # ---------------- pages ----------------
