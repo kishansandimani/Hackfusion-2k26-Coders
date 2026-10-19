@@ -525,7 +525,7 @@
 </div>
 <!-- Layer 2: Raw Original View (Clipped by slider) -->
 <div class="absolute inset-y-0 left-0 overflow-hidden w-1/2 border-r-4 border-on-primary shadow-2xl z-20" id="before-layer">
-<div class="w-[1280px] h-[540px] max-w-none bg-cover bg-center" data-alt="Macro view of raw original un-annotated electronics circuit board showing intricate solder tracks, dark silicon integrated circuits, and metallic pins in natural studio daylight without any computer overlays." >
+<div class="w-[1280px] h-[540px] max-w-none bg-cover bg-center" data-alt="Macro view of raw original un-annotated electronics circuit board showing intricate solder tracks, dark silicon integrated circuits, and metallic pins in natural studio daylight without any computer overlays.">
 <!-- Top Left Label -->
 <div class="absolute top-4 left-4 bg-surface-container-lowest/90 backdrop-blur-md px-3.5 py-1 rounded-full font-label-md text-label-md text-on-surface shadow-md">
   Original Board Photo
@@ -1014,7 +1014,23 @@
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const setT=(s,t)=>{const e=$(s);if(e)e.textContent=t;};
-let job=null,annot=null,plain=null,boxesOn=true;
+let job=null,annot=null,plain=null,boxesOn=true,HK=null;
+// sign-in: send people to the login page if the session ends
+const _fetch=window.fetch.bind(window);
+window.fetch=async(...a)=>{const r=await _fetch(...a);if(r.status===401&&!String(a[0]).includes('/api/login'))location.href='/login';return r;};
+function setupUser(name){
+  HK='chippal_hist_'+name;renderHist();
+  const av=$$('header div').find(d=>d.classList.contains('rounded-full')&&d.textContent.trim()==='person');if(!av)return;
+  av.style.cursor='pointer';av.setAttribute('role','button');av.setAttribute('tabindex','0');av.title='Signed in as '+name;
+  const m=document.createElement('div');m.style.cssText='position:fixed;top:76px;right:16px;background:#fff;border:2px solid #b9e6cf;border-radius:20px;padding:14px 18px;display:none;z-index:60;box-shadow:0 12px 34px rgba(0,0,0,.14);font-weight:700';
+  m.innerHTML='<div style="font-size:12px;opacity:.65">Signed in as</div><div style="margin-bottom:10px">'+esc(name)+'</div><button id="logout" style="border:0;border-radius:999px;padding:9px 18px;background:#ffd0de;font-weight:800;cursor:pointer">Log out</button>';
+  document.body.append(m);
+  const tog=e=>{e.stopPropagation();m.style.display=m.style.display==='none'?'block':'none';};
+  av.onclick=tog;av.onkeydown=e=>{if(e.key==='Enter'||e.key===' ')tog(e);};
+  document.addEventListener('click',()=>{m.style.display='none';});m.onclick=e=>e.stopPropagation();
+  m.querySelector('#logout').onclick=async()=>{await _fetch('/api/logout',{method:'POST'});location.href='/login';};
+}
+fetch('/api/me').then(r=>r.json()).then(u=>{if(u&&u.name)setupUser(u.name);}).catch(()=>{});
 const mk=(a)=>Object.assign(document.createElement('input'),a);
 const fi=mk({type:'file',accept:'image/*',hidden:true}),ci=mk({type:'file',accept:'image/*',hidden:true});
 ci.setAttribute('capture','environment');document.body.append(fi,ci);
@@ -1198,8 +1214,8 @@ async function recalc(){
   }catch(e){toast(e.message);}
 }
 // history (stored in this browser only)
-function hist(){try{return JSON.parse(localStorage.getItem('chippal_hist')||'[]');}catch(e){return[];}}
-function history_add(x){if(!x.thumb)return;const h=hist();h.unshift(x);try{localStorage.setItem('chippal_hist',JSON.stringify(h.slice(0,8)));}catch(e){}renderHist();}
+function hist(){if(!HK)return[];try{return JSON.parse(localStorage.getItem(HK)||'[]');}catch(e){return[];}}
+function history_add(x){if(!x.thumb)return;const h=hist();h.unshift(x);try{localStorage.setItem(HK,JSON.stringify(h.slice(0,8)));}catch(e){}renderHist();}
 function renderHist(){const h=hist(),g=$('#history-grid');setT('#scan-count','🔥 '+h.length+(h.length===1?' board':' boards')+' scanned');
   g.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px';
   g.innerHTML=h.length?h.map((x,i)=>'<div class="bg-surface-container-lowest rounded-3xl p-space-md shadow-md"><img src="'+x.thumb+'" style="width:100%;height:130px;object-fit:cover;border-radius:16px"><div style="margin-top:10px;font-weight:800">Scan '+(h.length-i)+'</div><div style="font-size:13px;opacity:.75">'+new Date(x.t).toLocaleString()+'</div><div style="margin-top:6px;font-weight:600;font-size:13px">'+x.parts+' parts · ₹'+x.value+' · '+x.hazard+'% hazardous</div></div>').join(''):'<p style="opacity:.7">Your scans will show up here (saved in this browser only).</p>';}

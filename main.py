@@ -9,18 +9,19 @@ from collections import OrderedDict
 import numpy as np
 import pandas as pd
 from PIL import Image, ImageDraw, ImageOps
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.responses import Response
-from fastapi.staticfiles import StaticFiles
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
+from fastapi.responses import FileResponse, RedirectResponse, Response
 from rapidfuzz import fuzz, process
 from sahi import AutoDetectionModel
 from sahi.predict import get_sliced_prediction
 from ultralytics import YOLO
 
+from auth import current_user, optional_user, router as auth_router
 from report import make_pdf
 
 WEIGHTS = "weights/best.pt"
 app = FastAPI(title="ChipPal API")
+app.include_router(auth_router)
 
 # ---------------- AI models (loaded once) ----------------
 model = YOLO(WEIGHTS)
@@ -152,7 +153,7 @@ def build_plan(summary, df, hazard_pct, mass):
 
 
 # ---------------- API ----------------
-def finalize(orig, dets, mode, job_id=None):
+def finalize(orig, dets, mode, job_id=None, owner=None):
     img = orig.copy()
     draw = ImageDraw.Draw(img)
     lw = max(2, max(img.size) // 500)
@@ -180,7 +181,7 @@ def finalize(orig, dets, mode, job_id=None):
 
     job_id = job_id or uuid.uuid4().hex[:10]
     W, H = orig.size
-    JOBS[job_id] = {"orig": orig, "img": img, "dets": dets, "df": df,
+    JOBS[job_id] = {"owner": owner, "orig": orig, "img": img, "dets": dets, "df": df,
                     "summary": summary, "metrics": metrics, "mode": mode}
     while len(JOBS) > 20:
         JOBS.popitem(last=False)
@@ -210,7 +211,8 @@ def finalize(orig, dets, mode, job_id=None):
 
 @app.post("/api/analyze")
 def analyze(file: UploadFile = File(...), conf: float = Form(0.2),
-            tiled: bool = Form(True), tile: int = Form(640)):
+            tiled: bool = Form(True), tile: int = Form(640),
+            user: str = Depends(current_user)):
     try:
         orig = ImageOps.exif_transpose(
             Image.open(io.BytesIO(file.file.read()))).convert("RGB")
@@ -226,12 +228,12 @@ def analyze(file: UploadFile = File(...), conf: float = Form(0.2),
             os.remove(path)
     if not dets:
         raise HTTPException(422, "No components found. Try a lower confidence.")
-    return finalize(orig, dets, "tiled" if tiled else "standard")
+    return finalize(orig, dets, "tiled" if tiled else "standard", owner=user)
 
 
 @app.post("/api/recompute")
-def recompute(job_id: str = Form(...), dets: str = Form(...)):
-    job = _job(job_id)
+def recompute(job_id: str = Form(...), dets: str = Form(...), user: str = Depends(current_user)):
+    job = _job(job_id, user)
     W, H = job["orig"].size
     try:
         items = json.loads(dets)
@@ -242,14 +244,12 @@ def recompute(job_id: str = Form(...), dets: str = Form(...)):
         raise HTTPException(400, "Bad edit data.")
     if not new:
         raise HTTPException(422, "No components left. Add one or undo your edits.")
-    return finalize(job["orig"], new, job["mode"], job_id)
+    return finalize(job["orig"], new, job["mode"], job_id, owner=user)
 
 
 @app.post("/api/chips")
-def chips(job_id: str = Form(...)):
-    job = JOBS.get(job_id)
-    if not job:
-        raise HTTPException(404, "This analysis expired. Please analyze the photo again.")
+def chips(job_id: str = Form(...), user: str = Depends(current_user)):
+    job = _job(job_id, user)
     ics = sorted([d for d in job["dets"] if d["name"].lower().strip() == "ic"],
                  key=lambda d: -d["conf"])[:12]
     with DETECT_LOCK:
@@ -268,27 +268,38 @@ def chips(job_id: str = Form(...)):
     return {"results": out}
 
 
-def _job(job_id):
+def _job(job_id, user):
     job = JOBS.get(job_id)
-    if not job:
+    if not job or job.get("owner") != user:
         raise HTTPException(404, "This analysis expired. Please analyze the photo again.")
     return job
 
 
 @app.get("/api/report/{job_id}.pdf")
-def report_pdf(job_id: str):
-    j = _job(job_id)
+def report_pdf(job_id: str, user: str = Depends(current_user)):
+    j = _job(job_id, user)
     pdf = make_pdf(j["img"], j["summary"], j["metrics"], j["mode"])
     return Response(pdf, media_type="application/pdf",
                     headers={"Content-Disposition": 'attachment; filename="ewaste_report.pdf"'})
 
 
 @app.get("/api/csv/{job_id}.csv")
-def report_csv(job_id: str):
-    j = _job(job_id)
+def report_csv(job_id: str, user: str = Depends(current_user)):
+    j = _job(job_id, user)
     return Response(j["df"].to_csv(index=False), media_type="text/csv",
                     headers={"Content-Disposition": 'attachment; filename="ewaste_report.csv"'})
 
 
-# The frontend (static/index.html) is served from the same server.
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+# ---------------- pages ----------------
+@app.get("/", include_in_schema=False)
+def home(request: Request):
+    if not optional_user(request):
+        return RedirectResponse("/login")
+    return FileResponse("static/index.html")
+
+
+@app.get("/login", include_in_schema=False)
+def login_page(request: Request):
+    if optional_user(request):
+        return RedirectResponse("/")
+    return FileResponse("static/login.html")
