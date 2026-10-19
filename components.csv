@@ -1,18 +1,22 @@
-class,value_inr,mass_g,hazard_fraction,verdict
-IC,15,0.8,0.05,Reuse / recover metals
-LED,1,0.1,0.02,Recycle
-button,2,0.5,0.02,Reuse
-capacitor,2,0.5,0.10,Handle carefully
-clock,4,0.3,0.02,Reuse
-connector,5,2.0,0.03,Reuse
-diode,0.8,0.2,0.03,Recycle
-display,50,20,0.15,Handle carefully
-emi filter,1,0.2,0.02,Recycle
-ferrite bead,0.3,0.1,0.01,Recycle
-fuse,0.5,0.2,0.05,Recycle
-inductor,3,1.0,0.02,Reuse
-jumper,0.2,0.1,0.01,Reuse
-potentiometer,3,1.5,0.02,Reuse
-resistor,0.3,0.05,0.02,Recycle
-switch,2,0.8,0.02,Reuse
-transistor,1.5,0.3,0.03,Reuse
+class,value_inr,mass_g,hazard_fraction,verdict,value_low,value_high,source
+IC,15,0.8,0.05,Reuse / recover metals,9,22,rough estimate - verify before demo
+microcontroller,40,1.0,0.05,Reuse / recover metals,24,60,rough estimate - verify before demo
+LED,1,0.1,0.02,Recycle,0.6,1.5,rough estimate - verify before demo
+button,2,0.5,0.02,Reuse,1.2,3,rough estimate - verify before demo
+capacitor,2,0.5,0.10,Handle carefully,1.2,3,rough estimate - verify before demo
+clock,4,0.3,0.02,Reuse,2.4,6,rough estimate - verify before demo
+connector,5,2.0,0.03,Reuse,3,7.5,rough estimate - verify before demo
+diode,0.8,0.2,0.03,Recycle,0.5,1.2,rough estimate - verify before demo
+transistor,1.5,0.3,0.03,Reuse,0.9,2.2,rough estimate - verify before demo
+transistor_diode,1.2,0.25,0.03,Reuse,0.7,1.8,rough estimate - verify before demo
+display,50,20,0.15,Handle carefully,30,75,rough estimate - verify before demo
+emi filter,1,0.2,0.02,Recycle,0.6,1.5,rough estimate - verify before demo
+ferrite bead,0.3,0.1,0.01,Recycle,0.2,0.5,rough estimate - verify before demo
+fuse,0.5,0.2,0.05,Recycle,0.3,0.8,rough estimate - verify before demo
+inductor,3,1.0,0.02,Reuse,1.8,4.5,rough estimate - verify before demo
+jumper,0.2,0.1,0.01,Reuse,0.1,0.3,rough estimate - verify before demo
+potentiometer,3,1.5,0.02,Reuse,1.8,4.5,rough estimate - verify before demo
+resistor,0.3,0.05,0.02,Recycle,0.2,0.5,rough estimate - verify before demo
+switch,2,0.8,0.02,Reuse,1.2,3,rough estimate - verify before demo
+battery,10,10,0.40,Handle carefully,6,15,rough estimate - verify before demo
+crystal,4,0.3,0.02,Reuse,2.4,6,rough estimate - verify before demo

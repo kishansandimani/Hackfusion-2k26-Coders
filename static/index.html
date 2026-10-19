@@ -505,7 +505,7 @@
 <!-- Draggable Comparison Viewport with ACTIVE SWEEPING LASER SCANLINE -->
 <div class="relative w-full h-[460px] md:h-[540px] rounded-2xl overflow-hidden select-none bg-surface-container-highest cursor-ew-resize group/canvas shadow-inner border border-surface-container-high" id="inspector-canvas">
 <!-- Layer 1: Annotated View (Full Background) -->
-<div class="absolute inset-0 w-full h-full bg-cover bg-center" data-alt="Close up high-angle macro photograph of a dense modern green computer motherboard circuit board with detailed copper tracks, integrated circuit chips, capacitors, and electronic components in bright laboratory lighting." >
+<div class="absolute inset-0 w-full h-full bg-cover bg-center" data-alt="Close up high-angle macro photograph of a dense modern green computer motherboard circuit board with detailed copper tracks, integrated circuit chips, capacitors, and electronic components in bright laboratory lighting." style="">
 <!-- ACTIVE SWEEPING NEON CYAN/MINT LASER SCANNER LINE -->
 <div class="laser-scanline absolute left-0 right-0 h-1 z-30 pointer-events-none bg-gradient-to-r from-transparent via-[#4ECCA3] to-transparent shadow-[0_0_15px_#4ECCA3,0_0_30px_#4ECCA3]">
 <!-- Glowing trailing gradient beam -->
@@ -525,7 +525,7 @@
 </div>
 <!-- Layer 2: Raw Original View (Clipped by slider) -->
 <div class="absolute inset-y-0 left-0 overflow-hidden w-1/2 border-r-4 border-on-primary shadow-2xl z-20" id="before-layer">
-<div class="w-[1280px] h-[540px] max-w-none bg-cover bg-center" data-alt="Macro view of raw original un-annotated electronics circuit board showing intricate solder tracks, dark silicon integrated circuits, and metallic pins in natural studio daylight without any computer overlays.">
+<div class="w-[1280px] h-[540px] max-w-none bg-cover bg-center" data-alt="Macro view of raw original un-annotated electronics circuit board showing intricate solder tracks, dark silicon integrated circuits, and metallic pins in natural studio daylight without any computer overlays." style="">
 <!-- Top Left Label -->
 <div class="absolute top-4 left-4 bg-surface-container-lowest/90 backdrop-blur-md px-3.5 py-1 rounded-full font-label-md text-label-md text-on-surface shadow-md">
   Original Board Photo
@@ -1023,12 +1023,17 @@ function setupUser(name){
   const av=$$('header div').find(d=>d.classList.contains('rounded-full')&&d.textContent.trim()==='person');if(!av)return;
   av.style.cursor='pointer';av.setAttribute('role','button');av.setAttribute('tabindex','0');av.title='Signed in as '+name;
   const m=document.createElement('div');m.style.cssText='position:fixed;top:76px;right:16px;background:#fff;border:2px solid #b9e6cf;border-radius:20px;padding:14px 18px;display:none;z-index:60;box-shadow:0 12px 34px rgba(0,0,0,.14);font-weight:700';
-  m.innerHTML='<div style="font-size:12px;opacity:.65">Signed in as</div><div style="margin-bottom:10px">'+esc(name)+'</div><button id="logout" style="border:0;border-radius:999px;padding:9px 18px;background:#ffd0de;font-weight:800;cursor:pointer">Log out</button>';
+  const gst=name.startsWith('guest-');
+  m.innerHTML='<div style="font-size:12px;opacity:.65">'+(gst?'Guest session':'Signed in as')+'</div><div style="margin-bottom:10px">'+(gst?'Guest':esc(name))+'</div><button id="logout" style="border:0;border-radius:999px;padding:9px 18px;background:#ddd3ff;font-weight:800;cursor:pointer">Log out</button><div style="margin-top:12px"><button id="del-acct" style="border:0;background:transparent;color:#b4234f;font-weight:800;cursor:pointer;padding:4px 0;text-decoration:underline">Delete my account</button></div><div id="del-form" style="display:none;margin-top:8px;max-width:230px"><div style="font-size:12px;opacity:.75;margin-bottom:6px">This removes your account and scans. It cannot be undone.</div>'+(gst?'':'<input id="del-pw" type="password" placeholder="Your password" autocomplete="current-password" style="width:100%;padding:8px 12px;border-radius:14px;border:2px solid #d9d6ee;margin-bottom:8px">')+'<button id="del-go" style="border:0;border-radius:999px;padding:8px 16px;background:#ff6584;color:#fff;font-weight:800;cursor:pointer">Delete everything</button></div>';
   document.body.append(m);
   const tog=e=>{e.stopPropagation();m.style.display=m.style.display==='none'?'block':'none';};
   av.onclick=tog;av.onkeydown=e=>{if(e.key==='Enter'||e.key===' ')tog(e);};
   document.addEventListener('click',()=>{m.style.display='none';});m.onclick=e=>e.stopPropagation();
   m.querySelector('#logout').onclick=async()=>{await _fetch('/api/logout',{method:'POST'});location.href='/login';};
+  m.querySelector('#del-acct').onclick=()=>{const f=m.querySelector('#del-form');f.style.display=f.style.display==='none'?'block':'none';};
+  m.querySelector('#del-go').onclick=async()=>{const fd=new FormData(),pw=m.querySelector('#del-pw');if(pw)fd.append('password',pw.value);
+    try{const r=await _fetch('/api/delete-account',{method:'POST',body:fd}),d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(typeof d.detail==='string'?d.detail:'Could not delete the account.');
+      try{localStorage.removeItem(HK);}catch(e){}location.href='/login';}catch(e){toast(e.message);}};
 }
 fetch('/api/me').then(r=>r.json()).then(u=>{if(u&&u.name)setupUser(u.name);}).catch(()=>{});
 const mk=(a)=>Object.assign(document.createElement('input'),a);
@@ -1111,7 +1116,7 @@ async function show(d,sm,first=true){
   const m=d.metrics;
   setT('#st-parts-n',m.components);setT('#st-parts-note',d.mode==='tiled'?'Tiled detection on':'Standard detection');
   setT('#st-reuse-n',m.reusable);setT('#st-reuse-note',Math.round(100*m.reusable/Math.max(1,m.components))+'% of parts');
-  setT('#st-value-n','₹ '+m.value.toLocaleString('en-IN'));setT('#st-value-note','Estimate, not a measurement');
+  setT('#st-value-n','₹ '+m.value.toLocaleString('en-IN'));setT('#st-value-note','Range ₹'+m.value_low.toLocaleString('en-IN')+' to ₹'+m.value_high.toLocaleString('en-IN'));
   setT('#st-haz-n',m.hazard+'%');setT('#st-haz-lvl',lvlOf(m.hazard));setT('#st-haz-note','Typical composition per part type');
   setT('#ban-title','Board analysed');setT('#ban-conf',d.low+' low-confidence');
   const bt=$('#ban-time');if(bt)bt.lastChild.textContent=' just now';
@@ -1164,18 +1169,41 @@ async function show(d,sm,first=true){
    '<div style="display:flex;gap:28px;flex-wrap:wrap;align-items:center;margin-bottom:20px"><div style="width:130px;height:130px;border-radius:50%;background:conic-gradient('+scc+' '+sc+'%,#e4e7fe 0);display:grid;place-items:center"><div style="width:96px;height:96px;border-radius:50%;background:#fff;display:grid;place-items:center;font-weight:800;font-size:30px">'+sc+'<span style="font-size:12px;font-weight:600;opacity:.7"> /100</span></div></div>'+
    '<div style="flex:1;min-width:240px;font-weight:600;line-height:1.7">Salvage score: '+sc+'<br>'+d.reuse_share+'% of the estimated value is in reusable parts<br>About '+d.haz_g+' g of hazardous material to handle properly (of roughly '+d.mass_g+' g estimated)<br><span style="font-weight:500;opacity:.7;font-size:13px">The score is our own simple index: 60% share of value in reusable parts, 40% low hazard. It is not an official standard.</span></div></div>'+
    '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">'+d.plan.map(p=>'<div style="background:'+bgc[p.id]+';border-radius:22px;padding:16px 18px"><div style="font-weight:800;font-size:17px">'+esc(p.title)+'</div><div style="font-size:13px;opacity:.75;margin:2px 0 10px">'+esc(p.note)+'</div>'+(p.items.length?p.items.map(i=>'<div style="display:flex;justify-content:space-between;gap:10px;padding:4px 0;font-weight:600"><span>'+esc(i.class)+' ×'+i.count+'</span><span>₹'+i.value+'</span></div>').join(''):'<div style="opacity:.6">Nothing in this group.</div>')+'</div>').join('')+'</div>';
-  if(first){history_add({t:Date.now(),thumb:await shrinkURL(annot,260),parts:m.components,value:m.value,hazard:m.hazard});initEdit(d);$('#results').scrollIntoView({behavior:'smooth'});}
+  fillAssumptions(d.assumptions||[]);
+  const qt=d.quality||[];qBox.style.display=qt.length?'block':'none';qBox.innerHTML=qt.length?'<b>Photo tips</b><ul style="margin:6px 0 0 18px">'+qt.map(t=>'<li>'+esc(t)+'</li>').join('')+'</ul>':'';
+  if(first){history_add({t:Date.now(),id:job,thumb:await shrinkURL(annot,260),parts:m.components,value:m.value,hazard:m.hazard});initEdit(d);$('#results').scrollIntoView({behavior:'smooth'});}
+}
+function renderChips(results){
+  const f=results.filter(x=>x.match>0).length,mc=results.filter(x=>x.kind==='microcontroller').length;
+  $('#chip-out').innerHTML='<p style="font-weight:700;margin-bottom:8px">Identified '+f+' of '+results.length+' chips'+(mc?', '+mc+' counted as microcontrollers in your inventory':'')+'</p><table style="width:100%;text-align:left;font-size:14px"><thead><tr><th>Chip</th><th>Text read</th><th>Identified as</th><th>Type</th><th>Value (INR)</th></tr></thead><tbody>'+
+   results.map(x=>'<tr style="border-top:1px solid #dee1f8"><td style="padding:8px 4px">'+x.n+'</td><td>'+esc(x.text)+'</td><td><b>'+esc(x.part)+'</b><br><span style="opacity:.7">'+esc(x.desc)+'</span></td><td>'+esc(x.kind)+'</td><td>'+x.value+'</td></tr>').join('')+'</tbody></table>';
 }
 async function chips(){
   const b=$('#chip-go');b.disabled=true;b.textContent='Reading chips, this can take a minute...';busy(true,'Reading chip markings...');
   try{const fd=new FormData();fd.append('job_id',job);
     const r=await fetch('/api/chips',{method:'POST',body:fd}),d=await r.json();if(!r.ok)throw new Error(d.detail||r.status);
-    const f=d.results.filter(x=>x.match>0).length;
-    $('#chip-out').innerHTML='<p style="font-weight:700;margin-bottom:8px">Identified '+f+' of '+d.results.length+' chips</p><table style="width:100%;text-align:left;font-size:14px"><thead><tr><th>Chip</th><th>Text read</th><th>Identified as</th><th>Value (INR)</th></tr></thead><tbody>'+d.results.map(x=>'<tr style="border-top:1px solid #dee1f8"><td style="padding:8px 4px">'+x.n+'</td><td>'+esc(x.text)+'</td><td><b>'+esc(x.part)+'</b><br><span style="opacity:.7">'+esc(x.desc)+'</span></td><td>'+x.value+'</td></tr>').join('')+'</tbody></table>';
-  }catch(e){toast(e.message);}
-  b.disabled=false;b.textContent='Read chip markings again';busy(false);
+    await show(d.analysis,null,false);
+    boxes=d.analysis.boxes.map(x=>({...x}));drawEdit();
+    renderChips(d.results);
+  }catch(e){toast(e.message);const b2=$('#chip-go');if(b2){b2.disabled=false;b2.textContent='Try reading chips again';}}
+  busy(false);
 }
-
+// how estimates are made (transparency)
+const asm=document.createElement('details');asm.style.cssText='margin-top:18px;padding:14px 18px;border-radius:20px;background:#f4f2ff';
+asm.innerHTML='<summary style="cursor:pointer;font-weight:800">How values and hazards are estimated</summary><div id="asm-body" style="margin-top:10px;overflow-x:auto"></div>';$('#parts').append(asm);
+function fillAssumptions(list){
+  $('#asm-body').innerHTML='<table style="width:100%;font-size:13px;text-align:left;border-collapse:collapse"><thead><tr><th>Part</th><th>Value (₹)</th><th>Range (₹)</th><th>Typical weight (g)</th><th>Hazardous share</th><th>Source</th></tr></thead><tbody>'+
+   list.map(a=>'<tr style="border-top:1px solid #dcd8f2"><td style="padding:6px 4px"><b>'+esc(a.class)+'</b></td><td>'+a.value+'</td><td>'+a.low+' to '+a.high+'</td><td>'+a.mass+'</td><td>'+a.hazard+'%</td><td>'+esc(a.source)+'</td></tr>').join('')+
+   '</tbody></table><p style="margin:10px 0 0;font-size:13px;opacity:.8">These are rough per-part figures (typical second-hand prices, typical weights and composition). They are estimates, not measurements, and the totals above are sums of them. Chips identified by their printed marking use that chip\'s own price.</p>';
+}
+// photo tips + delete this scan
+const qBox=document.createElement('div');qBox.style.cssText='display:none;margin:0 0 16px;padding:14px 18px;border-radius:20px;background:#fff3c4;font-weight:600';$('#results').prepend(qBox);
+const delBox=document.createElement('div');delBox.style.cssText='margin-top:18px;padding:14px 18px;border-radius:20px;background:#fff0f4;display:flex;gap:14px;flex-wrap:wrap;align-items:center';
+delBox.innerHTML='<button id="del-scan" style="border:0;border-radius:999px;padding:10px 20px;background:#ff6584;color:#fff;font-weight:800;cursor:pointer">Delete this scan</button><span style="flex:1;min-width:220px;font-size:13px;opacity:.8">Your photo is analysed in memory and is not kept on the server. Delete it now, or it is removed automatically after about an hour.</span>';
+$('#exports').append(delBox);
+$('#del-scan').onclick=async()=>{if(!job||!confirm('Delete this scan and its photo from the server?'))return;const id=job;
+  try{const r=await _fetch('/api/delete/'+id,{method:'POST'});if(!r.ok&&r.status!==404)throw new Error('Could not delete. Try again.');
+    const h=hist().filter(x=>x.id!==id);saveHist(h);resetUI();renderHist();okToast('Scan deleted.');}catch(e){toast(e.message);}};
 // ---- review and correct (human in the loop)
 const editSec=document.createElement('section');editSec.id='edit';editSec.className=$('#parts').className;$('#results').after(editSec);
 let boxes=[],boxes0=[],classes=[],sel=-1,addMode=false,tmr=null,lastCls=null;
@@ -1191,7 +1219,7 @@ function drawEdit(){
   boxes.map((b,i)=>'<div data-i="'+i+'" style="position:absolute;left:'+b.b[0]*100+'%;top:'+b.b[1]*100+'%;width:'+(b.b[2]-b.b[0])*100+'%;height:'+(b.b[3]-b.b[1])*100+'%;box-sizing:border-box;border:'+(i===sel?'3px solid #ff6584':b.m?'2px solid #5b7cff':b.p<0.4?'2px dashed #f59e0b':'2px solid #84cc16')+';'+(i===sel?'background:rgba(255,101,132,.2);':'')+'pointer-events:'+(addMode?'none':'auto')+';cursor:pointer"></div>').join('')+'</div>';
   $$('#ed-wrap [data-i]').forEach(e=>e.onclick=()=>{sel=+e.dataset.i;drawEdit();});
   $('#ed-add').onclick=()=>{addMode=!addMode;sel=-1;drawEdit();};
-  const c=$('#ed-cls');if(c)c.onchange=()=>{boxes[sel].c=c.value;lastCls=c.value;queue();drawEdit();};
+  const c=$('#ed-cls');if(c)c.onchange=()=>{boxes[sel].c=c.value;boxes[sel].v=null;lastCls=c.value;queue();drawEdit();};
   const dl=$('#ed-del');if(dl)dl.onclick=()=>{boxes.splice(sel,1);sel=-1;queue();drawEdit();};
   const un=$('#ed-undo');if(un)un.onclick=()=>{boxes=boxes0.map(b=>({...b}));sel=-1;queue();drawEdit();};
   const w=$('#ed-wrap');
@@ -1207,7 +1235,7 @@ function drawEdit(){
 function queue(){clearTimeout(tmr);const st=$('#ed-st');if(st)st.textContent='Recalculating...';tmr=setTimeout(recalc,450);}
 async function recalc(){
   try{const fd=new FormData();fd.append('job_id',job);
-    fd.append('dets',JSON.stringify(boxes.map(b=>({name:b.c,conf:b.p,box:b.b}))));
+    fd.append('dets',JSON.stringify(boxes.map(b=>({name:b.c,conf:b.p,box:b.b,v:b.v}))));
     const r=await fetch('/api/recompute',{method:'POST',body:fd}),d=await r.json();
     if(!r.ok)throw new Error(d.detail||r.status);
     await show(d,null,false);const st=$('#ed-st');if(st)st.textContent='Updated';
@@ -1215,10 +1243,17 @@ async function recalc(){
 }
 // history (stored in this browser only)
 function hist(){if(!HK)return[];try{return JSON.parse(localStorage.getItem(HK)||'[]');}catch(e){return[];}}
-function history_add(x){if(!x.thumb)return;const h=hist();h.unshift(x);try{localStorage.setItem(HK,JSON.stringify(h.slice(0,8)));}catch(e){}renderHist();}
+function history_add(x){if(!x.thumb)return;const h=hist();h.unshift(x);saveHist(h);renderHist();}
+function saveHist(h){try{localStorage.setItem(HK,JSON.stringify(h.slice(0,8)));}catch(e){}}
+const srvDel=id=>{if(id)_fetch('/api/delete/'+id,{method:'POST'}).catch(()=>{});};
+function okToast(m){const t=document.createElement('div');t.textContent=m;t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1f8f5f;color:#fff;padding:12px 20px;border-radius:999px;z-index:100;font-weight:700;max-width:90vw';document.body.append(t);setTimeout(()=>t.remove(),4000);}
+function resetUI(){['#results','#parts','#chips-sec','#exports','#plan','#edit'].forEach(x=>{const e=$(x);if(e)e.classList.add('hidden');});job=null;annot=plain=null;$('#scanner').scrollIntoView({behavior:'smooth'});}
+function delHist(i){const h=hist(),x=h[i];if(!x||!confirm('Delete this scan from your history?'))return;h.splice(i,1);saveHist(h);srvDel(x.id);if(x.id&&x.id===job)resetUI();renderHist();}
+function clearHist(){if(!confirm('Delete all your saved scans?'))return;hist().forEach(x=>srvDel(x.id));try{localStorage.removeItem(HK);}catch(e){}if(job)resetUI();renderHist();}
 function renderHist(){const h=hist(),g=$('#history-grid');setT('#scan-count','🔥 '+h.length+(h.length===1?' board':' boards')+' scanned');
   g.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px';
-  g.innerHTML=h.length?h.map((x,i)=>'<div class="bg-surface-container-lowest rounded-3xl p-space-md shadow-md"><img src="'+x.thumb+'" style="width:100%;height:130px;object-fit:cover;border-radius:16px"><div style="margin-top:10px;font-weight:800">Scan '+(h.length-i)+'</div><div style="font-size:13px;opacity:.75">'+new Date(x.t).toLocaleString()+'</div><div style="margin-top:6px;font-weight:600;font-size:13px">'+x.parts+' parts · ₹'+x.value+' · '+x.hazard+'% hazardous</div></div>').join(''):'<p style="opacity:.7">Your scans will show up here (saved in this browser only).</p>';}
+  g.innerHTML=h.length?h.map((x,i)=>'<div class="bg-surface-container-lowest rounded-3xl p-space-md shadow-md"><img src="'+x.thumb+'" alt="Scan thumbnail" style="width:100%;height:130px;object-fit:cover;border-radius:16px"><div style="margin-top:10px;font-weight:800">Scan '+(h.length-i)+'</div><div style="font-size:13px;opacity:.75">'+new Date(x.t).toLocaleString()+'</div><div style="margin-top:6px;font-weight:600;font-size:13px">'+x.parts+' parts · ₹'+x.value+' · '+x.hazard+'% hazardous</div><button data-del="'+i+'" style="margin-top:10px;border:0;border-radius:999px;padding:7px 16px;background:#ffd0de;font-weight:800;cursor:pointer">Delete</button></div>').join('')+'<div style="grid-column:1/-1"><button id="hist-clear" style="border:0;border-radius:999px;padding:9px 18px;background:#ddd3ff;font-weight:800;cursor:pointer">Clear all history</button></div>':'<p style="opacity:.7">Your scans will show up here (saved in this browser only).</p>';
+  $$('[data-del]').forEach(b=>b.onclick=()=>delHist(+b.dataset.del));const hc=$('#hist-clear');if(hc)hc.onclick=clearHist;}
 renderHist();
 // nav
 const ids=['scanner','results','parts','chips-sec','history'],names=['Scanner','Results','Parts','Chips','History'];

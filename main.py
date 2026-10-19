@@ -54,6 +54,27 @@ _pt["key"] = _pt["part_number"].apply(norm)
 PARTS = _pt.set_index("key").to_dict("index")
 DEFAULT = {"value_inr": 1.0, "mass_g": 0.3, "hazard_fraction": 0.03,
            "verdict": "Check manually"}
+for _k, _v in {
+    "microcontroller": {"value_inr": 40.0, "mass_g": 1.0, "hazard_fraction": 0.05,
+                        "verdict": "Reuse / recover metals"},
+    "transistor_diode": {"value_inr": 1.2, "mass_g": 0.25, "hazard_fraction": 0.03,
+                         "verdict": "Reuse"},
+}.items():
+    INFO.setdefault(_k, _v)
+
+
+def _fill(v):
+    """Make sure every class has a value range and a source note."""
+    val = float(v["value_inr"])
+    lo, hi, src = v.get("value_low"), v.get("value_high"), v.get("source")
+    v["value_low"] = float(lo) if lo is not None and not pd.isna(lo) else round(val * 0.6, 2)
+    v["value_high"] = float(hi) if hi is not None and not pd.isna(hi) else round(val * 1.5, 2)
+    v["source"] = str(src) if src is not None and not pd.isna(src) else "rough estimate, not verified"
+    return v
+
+
+INFO = {k: _fill(dict(v)) for k, v in INFO.items()}
+DEFAULT = _fill(DEFAULT)
 COLORS = {"high": "red", "medium": "orange", "low": "lime"}
 JOBS = OrderedDict()
 DETECT_LOCK = threading.Lock()  # one detection or OCR job at a time (several users)
@@ -192,8 +213,11 @@ def finalize(orig, dets, mode, job_id=None, owner=None):
     for d in dets:
         info = INFO.get(d["name"].lower().strip(), DEFAULT)
         draw.rectangle(d["box"], outline=COLORS[level(info["hazard_fraction"])], width=lw)
+        val = float(d.get("value", info["value_inr"]))  # a chip-specific price overrides the class price
+        k = val / info["value_inr"] if info["value_inr"] else 1.0
         rows.append({"class": d["name"], "confidence": round(d["conf"], 2),
-                     "value_inr": info["value_inr"], "mass_g": info["mass_g"],
+                     "value_inr": val, "value_low": info["value_low"] * k,
+                     "value_high": info["value_high"] * k, "mass_g": info["mass_g"],
                      "hazard_mass_g": info["mass_g"] * info["hazard_fraction"],
                      "verdict": info["verdict"]})
     df = pd.DataFrame(rows)
@@ -207,6 +231,7 @@ def finalize(orig, dets, mode, job_id=None, owner=None):
                  .reset_index().sort_values("count", ascending=False))
     metrics = {"Components detected": len(df), "Reusable parts": reusable,
                "Estimated value (INR)": f"{df.value_inr.sum():.0f}",
+               "Estimated value range (INR)": f"{df.value_low.sum():.0f} to {df.value_high.sum():.0f}",
                "Estimated hazardous content": f"{hazard_pct:.1f}%",
                "Low-confidence detections": low}
 
@@ -225,15 +250,24 @@ def finalize(orig, dets, mode, job_id=None, owner=None):
     return {
         "job_id": job_id,
         "image": "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode(),
-        "classes": sorted(set(model.names.values())),
-        "boxes": [{"c": d["name"], "p": round(d["conf"], 3), "m": d["conf"] >= 1.0,
+        "classes": sorted(set(model.names.values()) | {"microcontroller"}),
+        "boxes": [{"c": d["name"], "p": round(d["conf"], 3), "m": d["conf"] >= 1.0, "v": d.get("value"),
                    "b": [round(d["box"][0] / W, 5), round(d["box"][1] / H, 5),
                          round(d["box"][2] / W, 5), round(d["box"][3] / H, 5)]} for d in dets],
-        "mode": mode, "low": low, "ics": sum(1 for d in dets if d["name"].lower() == "ic"),
+        "mode": mode, "low": low, "ics": sum(1 for d in dets if d["name"].lower() in ("ic", "microcontroller")),
         "metrics": {"components": len(df), "reusable": reusable,
                     "value": round(float(df.value_inr.sum())),
+                    "value_low": round(float(df.value_low.sum())),
+                    "value_high": round(float(df.value_high.sum())),
                     "hazard": round(float(hazard_pct), 1)},
         **pl, "quality": quality_tips(orig),
+        "assumptions": [{"class": str(c), "value": INFO.get(str(c).lower().strip(), DEFAULT)["value_inr"],
+                         "low": INFO.get(str(c).lower().strip(), DEFAULT)["value_low"],
+                         "high": INFO.get(str(c).lower().strip(), DEFAULT)["value_high"],
+                         "mass": INFO.get(str(c).lower().strip(), DEFAULT)["mass_g"],
+                         "hazard": round(100 * INFO.get(str(c).lower().strip(), DEFAULT)["hazard_fraction"], 1),
+                         "source": INFO.get(str(c).lower().strip(), DEFAULT)["source"]}
+                        for c in summary["class"]],
         "summary": [{"class": str(r["class"]), "count": int(r["count"]),
                      "value": round(float(r["value_inr"]), 1), "verdict": str(r["verdict"]),
                      "level": level(INFO.get(str(r["class"]).lower().strip(), DEFAULT)["hazard_fraction"])}
@@ -270,7 +304,8 @@ def recompute(job_id: str = Form(...), dets: str = Form(...), user: str = Depend
     try:
         items = json.loads(dets)
         new = [{"name": str(i["name"]), "conf": float(i.get("conf", 1.0)),
-                "box": (i["box"][0] * W, i["box"][1] * H, i["box"][2] * W, i["box"][3] * H)}
+                "box": (i["box"][0] * W, i["box"][1] * H, i["box"][2] * W, i["box"][3] * H),
+                **({"value": float(i["v"])} if i.get("v") is not None else {})}
                for i in items]
     except Exception:
         raise HTTPException(400, "Bad edit data.")
@@ -282,22 +317,28 @@ def recompute(job_id: str = Form(...), dets: str = Form(...), user: str = Depend
 @app.post("/api/chips")
 def chips(job_id: str = Form(...), user: str = Depends(current_user)):
     job = _job(job_id, user)
-    ics = sorted([d for d in job["dets"] if d["name"].lower().strip() == "ic"],
+    ics = sorted([d for d in job["dets"] if d["name"].lower().strip() in ("ic", "microcontroller")],
                  key=lambda d: -d["conf"])[:12]
     with DETECT_LOCK:
         reader = get_ocr()
         reads = [read_chip(job["orig"], d["box"], reader) for d in ics]
     out = []
-    for i, (text, part, score) in enumerate(reads):
+    for i, (d, (text, part, score)) in enumerate(zip(ics, reads)):
         if part:
             p = PARTS[part]
-            out.append({"n": i + 1, "text": text, "part": p["part_number"],
+            kind = str(p.get("category", "ic")).lower()
+            if kind == "nan":
+                kind = "ic"
+            d["value"] = float(p["value_inr"])          # use the chip's own price
+            d["name"] = "microcontroller" if kind == "microcontroller" else "ic"
+            out.append({"n": i + 1, "text": text, "part": p["part_number"], "kind": kind,
                         "desc": p["description"], "value": float(p["value_inr"]), "match": score})
         else:
             out.append({"n": i + 1, "text": text or "(unreadable)", "part": "Not recognised",
-                        "desc": "Generic IC value used",
-                        "value": float(INFO.get("ic", DEFAULT)["value_inr"]), "match": 0})
-    return {"results": out}
+                        "kind": str(d["name"]).lower(), "desc": "Generic value used",
+                        "value": float(INFO.get(d["name"].lower(), DEFAULT)["value_inr"]), "match": 0})
+    analysis = finalize(job["orig"], job["dets"], job["mode"], job_id, owner=user)
+    return {"results": out, "analysis": analysis}
 
 
 def _job(job_id, user):
