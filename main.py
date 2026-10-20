@@ -19,6 +19,9 @@ from ultralytics import YOLO
 
 from auth import (COOKIE, current_user, delete_user, is_guest, optional_user,
                   router as auth_router, verify_password)
+from compliance import audit
+from enhance import enhance_if_needed
+from repair import equiv_for, guides_for
 from report import make_pdf
 
 WEIGHTS = "weights/best.pt"
@@ -204,8 +207,12 @@ def build_plan(summary, df, hazard_pct, mass):
 
 
 # ---------------- API ----------------
-def finalize(orig, dets, mode, job_id=None, owner=None):
+def finalize(orig, dets, mode, job_id=None, owner=None, enhanced=None):
     purge_old()
+    prev = JOBS.get(job_id, {}) if job_id else {}
+    reads = prev.get("reads", [])
+    if enhanced is None:
+        enhanced = prev.get("enhanced", [])
     img = orig.copy()
     draw = ImageDraw.Draw(img)
     lw = max(2, max(img.size) // 500)
@@ -238,7 +245,7 @@ def finalize(orig, dets, mode, job_id=None, owner=None):
     job_id = job_id or uuid.uuid4().hex[:10]
     W, H = orig.size
     pl = build_plan(summary, df, hazard_pct, mass)
-    JOBS[job_id] = {"owner": owner, "ts": time.time(), "plan": pl, "orig": orig, "img": img, "dets": dets, "df": df,
+    JOBS[job_id] = {"owner": owner, "ts": time.time(), "plan": pl, "reads": reads, "enhanced": enhanced, "orig": orig, "img": img, "dets": dets, "df": df,
                     "summary": summary, "metrics": metrics, "mode": mode}
     while len(JOBS) > 20:
         JOBS.popitem(last=False)
@@ -252,15 +259,19 @@ def finalize(orig, dets, mode, job_id=None, owner=None):
         "image": "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode(),
         "classes": sorted(set(model.names.values()) | {"microcontroller"}),
         "boxes": [{"c": d["name"], "p": round(d["conf"], 3), "m": d["conf"] >= 1.0, "v": d.get("value"),
+                   "val": round(rows[n]["value_inr"], 1), "mass": rows[n]["mass_g"], "hz": round(rows[n]["hazard_mass_g"], 4),
                    "b": [round(d["box"][0] / W, 5), round(d["box"][1] / H, 5),
-                         round(d["box"][2] / W, 5), round(d["box"][3] / H, 5)]} for d in dets],
+                         round(d["box"][2] / W, 5), round(d["box"][3] / H, 5)]} for n, d in enumerate(dets)],
         "mode": mode, "low": low, "ics": sum(1 for d in dets if d["name"].lower() in ("ic", "microcontroller")),
         "metrics": {"components": len(df), "reusable": reusable,
                     "value": round(float(df.value_inr.sum())),
                     "value_low": round(float(df.value_low.sum())),
                     "value_high": round(float(df.value_high.sum())),
                     "hazard": round(float(hazard_pct), 1)},
-        **pl, "quality": quality_tips(orig),
+        **pl, "quality": quality_tips(orig), "enhanced": enhanced,
+        "compliance": audit(list(summary["class"])),
+        "repair": guides_for(list(summary["class"])),
+        "equiv": [e for e in (equiv_for(r["part"]) for r in reads if r.get("part") != "Not recognised") if e],
         "assumptions": [{"class": str(c), "value": INFO.get(str(c).lower().strip(), DEFAULT)["value_inr"],
                          "low": INFO.get(str(c).lower().strip(), DEFAULT)["value_low"],
                          "high": INFO.get(str(c).lower().strip(), DEFAULT)["value_high"],
@@ -277,15 +288,16 @@ def finalize(orig, dets, mode, job_id=None, owner=None):
 
 @app.post("/api/analyze")
 def analyze(file: UploadFile = File(...), conf: float = Form(0.2),
-            tiled: bool = Form(True), tile: int = Form(640),
+            tiled: bool = Form(True), tile: int = Form(640), enhance: bool = Form(True),
             user: str = Depends(current_user)):
     try:
         orig = ImageOps.exif_transpose(
             Image.open(io.BytesIO(file.file.read()))).convert("RGB")
     except Exception:
         raise HTTPException(400, "That file is not a readable image.")
+    work, steps = enhance_if_needed(orig) if enhance else (orig, [])
     path = f"temp_{uuid.uuid4().hex[:8]}.jpg"
-    orig.save(path)
+    work.save(path)
     try:
         with DETECT_LOCK:
             dets = detect_tiled(path, conf, tile) if tiled else detect_normal(path, conf)
@@ -294,7 +306,7 @@ def analyze(file: UploadFile = File(...), conf: float = Form(0.2),
             os.remove(path)
     if not dets:
         raise HTTPException(422, "No components found. Try a lower confidence.")
-    return finalize(orig, dets, "tiled" if tiled else "standard", owner=user)
+    return finalize(orig, dets, "tiled" if tiled else "standard", owner=user, enhanced=steps)
 
 
 @app.post("/api/recompute")
@@ -337,6 +349,7 @@ def chips(job_id: str = Form(...), user: str = Depends(current_user)):
             out.append({"n": i + 1, "text": text or "(unreadable)", "part": "Not recognised",
                         "kind": str(d["name"]).lower(), "desc": "Generic value used",
                         "value": float(INFO.get(d["name"].lower(), DEFAULT)["value_inr"]), "match": 0})
+    job["reads"] = out
     analysis = finalize(job["orig"], job["dets"], job["mode"], job_id, owner=user)
     return {"results": out, "analysis": analysis}
 

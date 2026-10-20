@@ -505,7 +505,7 @@
 <!-- Draggable Comparison Viewport with ACTIVE SWEEPING LASER SCANLINE -->
 <div class="relative w-full h-[460px] md:h-[540px] rounded-2xl overflow-hidden select-none bg-surface-container-highest cursor-ew-resize group/canvas shadow-inner border border-surface-container-high" id="inspector-canvas">
 <!-- Layer 1: Annotated View (Full Background) -->
-<div class="absolute inset-0 w-full h-full bg-cover bg-center" data-alt="Close up high-angle macro photograph of a dense modern green computer motherboard circuit board with detailed copper tracks, integrated circuit chips, capacitors, and electronic components in bright laboratory lighting." style="">
+<div class="absolute inset-0 w-full h-full bg-cover bg-center" data-alt="Close up high-angle macro photograph of a dense modern green computer motherboard circuit board with detailed copper tracks, integrated circuit chips, capacitors, and electronic components in bright laboratory lighting.">
 <!-- ACTIVE SWEEPING NEON CYAN/MINT LASER SCANNER LINE -->
 <div class="laser-scanline absolute left-0 right-0 h-1 z-30 pointer-events-none bg-gradient-to-r from-transparent via-[#4ECCA3] to-transparent shadow-[0_0_15px_#4ECCA3,0_0_30px_#4ECCA3]">
 <!-- Glowing trailing gradient beam -->
@@ -525,7 +525,7 @@
 </div>
 <!-- Layer 2: Raw Original View (Clipped by slider) -->
 <div class="absolute inset-y-0 left-0 overflow-hidden w-1/2 border-r-4 border-on-primary shadow-2xl z-20" id="before-layer">
-<div class="w-[1280px] h-[540px] max-w-none bg-cover bg-center" data-alt="Macro view of raw original un-annotated electronics circuit board showing intricate solder tracks, dark silicon integrated circuits, and metallic pins in natural studio daylight without any computer overlays." style="">
+<div class="w-[1280px] h-[540px] max-w-none bg-cover bg-center" data-alt="Macro view of raw original un-annotated electronics circuit board showing intricate solder tracks, dark silicon integrated circuits, and metallic pins in natural studio daylight without any computer overlays.">
 <!-- Top Left Label -->
 <div class="absolute top-4 left-4 bg-surface-container-lowest/90 backdrop-blur-md px-3.5 py-1 rounded-full font-label-md text-label-md text-on-surface shadow-md">
   Original Board Photo
@@ -1101,7 +1101,7 @@ async function run(file){
   try{
     const sm=await shrink(file,1600);plain=sm.url;
     const fd=new FormData();fd.append('file',file);fd.append('conf',sl.value/100);
-    fd.append('tiled',$('#tiny-parts-toggle').classList.contains('justify-end'));fd.append('tile',640);
+    fd.append('tiled',$('#tiny-parts-toggle').classList.contains('justify-end'));fd.append('tile',640);fd.append('enhance',window.CP_ENHANCE!==false);
     const r=await fetch('/api/analyze',{method:'POST',body:fd}),d=await r.json();
     if(!r.ok)throw new Error(d.detail||r.status);
     await show(d,sm);
@@ -1171,7 +1171,8 @@ async function show(d,sm,first=true){
    '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">'+d.plan.map(p=>'<div style="background:'+bgc[p.id]+';border-radius:22px;padding:16px 18px"><div style="font-weight:800;font-size:17px">'+esc(p.title)+'</div><div style="font-size:13px;opacity:.75;margin:2px 0 10px">'+esc(p.note)+'</div>'+(p.items.length?p.items.map(i=>'<div style="display:flex;justify-content:space-between;gap:10px;padding:4px 0;font-weight:600"><span>'+esc(i.class)+' ×'+i.count+'</span><span>₹'+i.value+'</span></div>').join(''):'<div style="opacity:.6">Nothing in this group.</div>')+'</div>').join('')+'</div>';
   fillAssumptions(d.assumptions||[]);
   const qt=d.quality||[];qBox.style.display=qt.length?'block':'none';qBox.innerHTML=qt.length?'<b>Photo tips</b><ul style="margin:6px 0 0 18px">'+qt.map(t=>'<li>'+esc(t)+'</li>').join('')+'</ul>':'';
-  if(first){history_add({t:Date.now(),id:job,thumb:await shrinkURL(annot,260),parts:m.components,value:m.value,hazard:m.hazard});initEdit(d);$('#results').scrollIntoView({behavior:'smooth'});}
+  document.dispatchEvent(new CustomEvent('chippal:result',{detail:{d,plain,first}}));
+  if(first){if(!window.__noHist)history_add({t:Date.now(),id:job,thumb:await shrinkURL(annot,260),parts:m.components,value:m.value,hazard:m.hazard});initEdit(d);$('#results').scrollIntoView({behavior:'smooth'});}
 }
 function renderChips(results){
   const f=results.filter(x=>x.match>0).length,mc=results.filter(x=>x.kind==='microcontroller').length;
@@ -1255,9 +1256,124 @@ function renderHist(){const h=hist(),g=$('#history-grid');setT('#scan-count','�
   g.innerHTML=h.length?h.map((x,i)=>'<div class="bg-surface-container-lowest rounded-3xl p-space-md shadow-md"><img src="'+x.thumb+'" alt="Scan thumbnail" style="width:100%;height:130px;object-fit:cover;border-radius:16px"><div style="margin-top:10px;font-weight:800">Scan '+(h.length-i)+'</div><div style="font-size:13px;opacity:.75">'+new Date(x.t).toLocaleString()+'</div><div style="margin-top:6px;font-weight:600;font-size:13px">'+x.parts+' parts · ₹'+x.value+' · '+x.hazard+'% hazardous</div><button data-del="'+i+'" style="margin-top:10px;border:0;border-radius:999px;padding:7px 16px;background:#ffd0de;font-weight:800;cursor:pointer">Delete</button></div>').join('')+'<div style="grid-column:1/-1"><button id="hist-clear" style="border:0;border-radius:999px;padding:9px 18px;background:#ddd3ff;font-weight:800;cursor:pointer">Clear all history</button></div>':'<p style="opacity:.7">Your scans will show up here (saved in this browser only).</p>';
   $$('[data-del]').forEach(b=>b.onclick=()=>delHist(+b.dataset.del));const hc=$('#hist-clear');if(hc)hc.onclick=clearHist;}
 renderHist();
+document.addEventListener('chippal:open',async e=>{const x=e.detail;plain=x.plain;window.__noHist=true;try{await show(x.d,{w:x.w,h:x.h},true);}finally{window.__noHist=false;}});
 // nav
 const ids=['scanner','results','parts','chips-sec','history'],names=['Scanner','Results','Parts','Chips','History'];
 $$('nav a[data-path]').forEach((a,i)=>{a.textContent=names[i];a.onclick=e=>{e.preventDefault();const t=document.getElementById(ids[i]);if(t&&!t.classList.contains('hidden'))t.scrollIntoView({behavior:'smooth'});};});
+})();
+</script><script>(()=>{
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const FLIP=q=>'https://www.flipkart.com/search?q='+encodeURIComponent(q);
+const QF={ic:'IC chip',microcontroller:'microcontroller chip',capacitor:'capacitor assorted',resistor:'SMD resistor assorted',connector:'PCB connector',led:'LED assorted',diode:'diode assorted',transistor:'transistor assorted'};
+const qFor=c=>QF[String(c).toLowerCase()]||String(c)+' electronic component';
+const mkSec=(id,after,show)=>{const s=document.createElement('section');s.id=id;s.className=$('#parts').className.replace(/\bhidden\b/g,'').trim()+(show?'':' hidden');$(after).after(s);return s;};
+const H2=t=>'<h2 style="font-size:24px;font-weight:800">'+t+'</h2>';
+const btn=(bg,c)=>'border:0;border-radius:999px;padding:9px 18px;font-weight:800;cursor:pointer;background:'+bg+';color:'+(c||'#171b2b');
+let U='anon';fetch('/api/me').then(r=>r.json()).then(u=>{if(u&&u.name)U=u.name;}).catch(()=>{});
+let last=null;
+// ---------- voice ----------
+const SS=window.speechSynthesis;let voiceOn=false;
+const vb=document.createElement('button');vb.style.cssText=btn('#171b2b','#fff')+';position:fixed;left:16px;bottom:16px;z-index:70;box-shadow:0 8px 24px rgba(0,0,0,.2)';vb.textContent='🔊 Voice: off';
+if(!SS){vb.disabled=true;vb.textContent='🔇 Voice not supported';}
+document.body.append(vb);
+function say(t){if(!voiceOn||!SS)return;try{SS.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-IN';SS.speak(u);}catch(e){}}
+function speakResult(d){const m=d.metrics,care=d.summary.filter(r=>/^Handle/i.test(r.verdict)||r.level==='high').map(r=>r.class),rich=d.summary.filter(r=>r.count&&r.value/r.count>=20).map(r=>r.class);
+  let t='Analysis complete. '+m.components+' parts found. ';if(rich.length)t+='Valuable parts found: '+rich.join(', ')+'. ';if(care.length)t+='Hazardous parts, handle carefully: '+care.join(', ')+'. ';say(t+'Estimated value '+m.value+' rupees.');}
+vb.onclick=()=>{voiceOn=!voiceOn;vb.textContent='🔊 Voice: '+(voiceOn?'on':'off');if(!voiceOn&&SS)SS.cancel();else if(last)speakResult(last);else say('Voice is on.');};
+// ---------- auto-enhance switch ----------
+window.CP_ENHANCE=true;
+const sl=$('#sensitivity-slider'),lab=document.createElement('label');lab.style.cssText='display:flex;gap:8px;align-items:center;margin-top:10px;font-weight:700;font-size:14px;cursor:pointer';
+lab.innerHTML='<input type="checkbox" id="enh" checked> Auto-enhance dark or blurry photos';sl.parentElement.after(lab);$('#enh').onchange=e=>{window.CP_ENHANCE=e.target.checked;};
+const enhBox=document.createElement('div');enhBox.style.cssText='display:none;margin:0 0 16px;padding:14px 18px;border-radius:20px;background:#dff7ec;font-weight:600';$('#results').prepend(enhBox);
+// ---------- Flipkart links ----------
+function linkify(){
+  $$('#inventory-table-body tr').forEach(tr=>{const td=tr.children[5];if(!td||td.querySelector('a'))return;const c=tr.children[1].textContent.trim();
+    td.innerHTML='<a href="'+FLIP(qFor(c))+'" target="_blank" rel="noopener" title="Search '+esc(c)+' on Flipkart" style="text-decoration:underline;font-weight:700">'+esc(td.textContent.trim())+' ↗</a>';});
+  $$('#chip-out tbody tr').forEach(tr=>{const td=tr.children[4],b=tr.children[2]&&tr.children[2].querySelector('b');if(!td||td.querySelector('a'))return;
+    const q=b&&b.textContent!=='Not recognised'?b.textContent:'IC chip';td.innerHTML='<a href="'+FLIP(q)+'" target="_blank" rel="noopener" title="Search on Flipkart" style="text-decoration:underline;font-weight:700">'+esc(td.textContent.trim())+' ↗</a>';});
+}
+let lt;const lk=()=>{clearTimeout(lt);lt=setTimeout(linkify,60);};
+new MutationObserver(lk).observe($('#inventory-table-body'),{childList:true});
+new MutationObserver(lk).observe($('#chips-sec'),{childList:true,subtree:true});
+// ---------- eco-law ----------
+const eco=mkSec('eco','#plan'),rep=mkSec('repair','#eco'),sell=mkSec('sell','#repair'),sv=mkSec('salvage','#edit');
+function renderEco(d){const c=d.compliance,col={High:'#ff6584',Medium:'#edc157',Low:'#2fb67c'};eco.classList.remove('hidden');
+  eco.innerHTML=H2('Eco-law check')+'<p style="opacity:.8;margin:4px 0 14px">Disposal pointers for the part types on this board. Overall disposal risk: <b style="color:'+col[c.overall]+'">'+c.overall+'</b></p><div style="overflow-x:auto"><table style="width:100%;text-align:left;font-size:14px;border-collapse:collapse"><thead><tr><th>Part</th><th>Risk</th><th>Why</th><th>Rules to check</th><th>What to do</th></tr></thead><tbody>'+
+  c.rows.map(r=>'<tr style="border-top:1px solid #e4e1f5;vertical-align:top"><td style="padding:8px 6px"><b>'+esc(r.class)+'</b></td><td><span style="background:'+col[r.risk]+';border-radius:999px;padding:2px 10px;font-weight:800;font-size:12px">'+r.risk+'</span></td><td>'+esc(r.why)+'</td><td>'+r.rules.map(esc).join('<br>')+'</td><td>'+esc(r.action)+'</td></tr>').join('')+'</tbody></table></div><ul style="margin:14px 0 0 18px;font-size:14px">'+c.general.map(g=>'<li style="margin-bottom:6px">'+esc(g)+'</li>').join('')+'</ul><p style="margin:10px 0 0;font-size:12px;opacity:.75">'+esc(c.disclaimer)+'</p>';}
+// ---------- repair guide ----------
+function renderRepair(d){rep.classList.remove('hidden');
+  rep.innerHTML=H2('Repair guide')+'<p style="opacity:.8;margin:4px 0 14px">Replacement advice for the part types found. These are written guides per part type, not generated for this board. Read the exact value or part number off the part or its datasheet.</p>'+
+  d.repair.map(g=>'<details style="margin-bottom:10px;padding:12px 16px;border-radius:18px;background:#f4f2ff"><summary style="cursor:pointer;font-weight:800">'+esc(g.class)+' <span style="font-weight:500;opacity:.7">- if it is damaged</span></summary><p style="margin:8px 0"><b>Signs:</b> '+esc(g.when)+'</p><p style="margin:8px 0"><b>Replace with:</b> '+esc(g.replace)+'</p><ol style="margin:8px 0 8px 20px">'+g.steps.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol><p style="margin:8px 0;font-size:13px;opacity:.8"><b>Safety:</b> '+esc(g.safety)+'</p><a href="'+FLIP(qFor(g.class))+'" target="_blank" rel="noopener" style="font-weight:800;text-decoration:underline">Search replacements on Flipkart ↗</a></details>').join('')+
+  (d.equiv&&d.equiv.length?'<div style="margin-top:14px;padding:12px 16px;border-radius:18px;background:#dff7ec"><b>Chips identified on this board</b><ul style="margin:6px 0 0 18px">'+d.equiv.map(e=>'<li>'+esc(e.part)+' - possible equivalent: <b>'+esc(e.equiv)+'</b>. '+esc(e.note)+'</li>').join('')+'</ul></div>':'');}
+// ---------- sell timing ----------
+let selCls=null;
+const PK=()=>'chippal_prices_'+U,prices=()=>{try{return JSON.parse(localStorage.getItem(PK())||'{}');}catch(e){return{};}};
+function advice(l){if(l.length<3)return{t:'Add at least 3 price checks, on different days, to get advice.',c:'#5d6178'};
+  const ref=l.slice(Math.max(0,l.length-8),-1),avg=ref.reduce((a,b)=>a+b.p,0)/ref.length,diff=(l[l.length-1].p-avg)/avg*100;
+  if(diff>=5)return{t:'Your latest price is '+diff.toFixed(0)+'% above your recent average. A good moment to sell.',c:'#1f8f5f'};
+  if(diff<=-5)return{t:'Your latest price is '+Math.abs(diff).toFixed(0)+'% below your recent average. Consider holding for now.',c:'#b4234f'};
+  return{t:'Your latest price is close to your recent average ('+diff.toFixed(0)+'%). No strong signal either way.',c:'#5d6178'};}
+function renderSell(d){sell.classList.remove('hidden');const cl=d.summary.map(r=>r.class);if(!selCls||!cl.includes(selCls))selCls=cl[0];drawSell(d,cl);}
+function drawSell(d,cl){const all=prices(),l=all[selCls]||[],a=advice(l),mx=Math.max(...l.map(x=>x.p),1),mn=Math.min(...l.map(x=>x.p),0);
+  const pts=l.map((x,i)=>(l.length>1?i/(l.length-1)*240:120)+','+(60-(mx===mn?30:(x.p-mn)/(mx-mn)*50)-5)).join(' ');const est=(d.assumptions.find(x=>x.class===selCls)||{}).value;
+  sell.innerHTML=H2('Sell timing')+'<p style="opacity:.8;margin:4px 0 14px">Log the price you see for a part (for example after checking Flipkart). ChipPal compares your latest price with your recent average and says whether it looks like a good time to sell. This uses only prices <b>you</b> enter. It is not a market forecast.</p>'+
+  '<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><select id="sl-c" style="padding:9px 14px;border-radius:999px;border:2px solid #d9d6ee;font-weight:700">'+cl.map(c=>'<option'+(c===selCls?' selected':'')+'>'+esc(c)+'</option>').join('')+'</select><input id="sl-p" type="number" min="0" step="0.5" placeholder="Price per piece (₹)" style="padding:9px 14px;border-radius:999px;border:2px solid #d9d6ee;width:180px"><button id="sl-add" style="'+btn('#ff6584','#fff')+'">Save price</button><a href="'+FLIP(qFor(selCls))+'" target="_blank" rel="noopener" style="font-weight:800;text-decoration:underline">Check on Flipkart ↗</a></div>'+
+  '<p style="margin:12px 0 4px;font-size:14px">ChipPal\'s estimate for '+esc(selCls)+': ₹'+(est!==undefined?est:'-')+'. Your logged prices: '+(l.length?l.map(x=>'₹'+x.p).join(', '):'none yet')+'</p>'+
+  (l.length>1?'<svg viewBox="0 0 240 60" style="width:240px;height:60px;display:block"><polyline points="'+pts+'" fill="none" stroke="#2fb67c" stroke-width="3" stroke-linejoin="round"/></svg>':'')+
+  '<p style="margin-top:8px;font-weight:800;color:'+a.c+'">'+a.t+'</p>';
+  $('#sl-c').onchange=e=>{selCls=e.target.value;drawSell(d,cl);};
+  $('#sl-add').onclick=()=>{const v=parseFloat($('#sl-p').value);if(!(v>=0))return;const p=prices();(p[selCls]=p[selCls]||[]).push({t:Date.now(),p:v});p[selCls]=p[selCls].slice(-20);try{localStorage.setItem(PK(),JSON.stringify(p));}catch(e){}drawSell(d,cl);};}
+// ---------- drag and detach ----------
+let SV=null;
+function pad(x,x1,y1,w,h,i){x.fillStyle='#0e3b2e';x.fillRect(x1,y1,w,h);x.fillStyle='#e6b84a';x.strokeStyle='#e6b84a';const n=3+(i%2),pw=Math.max(2,Math.min(w,h)*.22);x.lineWidth=Math.max(1,pw*.35);
+  for(let k=0;k<n;k++){const px=x1+w*(.12+.76*k/(n-1)),py=k%2?y1+h*.2:y1+h*.8;x.fillRect(px-pw/2,py-pw/2,pw,pw);x.beginPath();x.moveTo(px,py);x.lineTo(px,y1+h*.5);x.lineTo(x1+w*.5,y1+h*.5);x.stroke();}}
+function renderSalvage(d,plain,first){sv.classList.remove('hidden');
+  if(!SV||first||SV.d.job_id!==d.job_id||SV.d.boxes.length!==d.boxes.length){SV={d,removed:new Set(),drag:null,thumbs:{},img:new Image()};SV.img.onload=()=>drawSV();SV.img.src=plain;}else SV.d=d;buildSV();}
+function svStats(){const b=SV.d.boxes;let left=0,out=0,m=0,hz=0,nl=0;b.forEach((x,i)=>{if(SV.removed.has(i))out+=x.val;else{left+=x.val;m+=x.mass;hz+=x.hz;nl++;}});return{left,out,hp:m?100*hz/m:0,nl,no:SV.removed.size};}
+function buildSV(){sv.innerHTML=H2('Detach and salvage')+'<p style="opacity:.8;margin:4px 0 12px">Drag a detected part off the photo and drop it in the tray. The pads underneath are a drawing (we cannot see the real layer), and the board value updates as you go.</p><div id="sv-stats" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px"></div><canvas id="sv-c" style="width:100%;border-radius:18px;touch-action:none;cursor:grab;display:block;background:#10151f"></canvas><div id="sv-tray" style="margin-top:12px;min-height:84px;border:3px dashed #b9e6cf;border-radius:20px;padding:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center"></div><div style="margin-top:10px"><button id="sv-reset" style="'+btn('#ddd3ff')+'">Put everything back</button></div>';
+  const c=$('#sv-c');c.onpointerdown=e=>{const p=pos(e);let best=-1,ba=1e18;SV.d.boxes.forEach((b,i)=>{if(SV.removed.has(i))return;const[x1,y1,x2,y2]=px(b);if(p.x>=x1-3&&p.x<=x2+3&&p.y>=y1-3&&p.y<=y2+3){const a=(x2-x1)*(y2-y1);if(a<ba){ba=a;best=i;}}});if(best<0)return;SV.drag={i:best,x:p.x,y:p.y};c.setPointerCapture(e.pointerId);c.style.cursor='grabbing';drawSV();};
+  c.onpointermove=e=>{if(!SV.drag)return;const p=pos(e);SV.drag.x=p.x;SV.drag.y=p.y;drawSV();};
+  c.onpointerup=e=>{if(!SV.drag)return;const t=document.elementFromPoint(e.clientX,e.clientY),i=SV.drag.i;SV.drag=null;c.style.cursor='grab';if(t!==c)detach(i);drawSV();};
+  $('#sv-reset').onclick=()=>{SV.removed.clear();drawSV();};drawSV();}
+const pos=e=>{const c=$('#sv-c'),r=c.getBoundingClientRect();return{x:(e.clientX-r.left)*c.width/r.width,y:(e.clientY-r.top)*c.height/r.height};};
+const px=b=>{const c=$('#sv-c');return[b.b[0]*c.width,b.b[1]*c.height,b.b[2]*c.width,b.b[3]*c.height];};
+function detach(i){SV.removed.add(i);const b=SV.d.boxes[i];say('Removed '+b.c+'. Hazardous share left on board '+svStats().hp.toFixed(1)+' percent.');}
+function thumb(i){if(SV.thumbs[i])return SV.thumbs[i];const b=SV.d.boxes[i],im=SV.img,sx=b.b[0]*im.naturalWidth,sy=b.b[1]*im.naturalHeight,sw=Math.max(1,(b.b[2]-b.b[0])*im.naturalWidth),sh=Math.max(1,(b.b[3]-b.b[1])*im.naturalHeight),k=Math.min(48/sw,48/sh),t=document.createElement('canvas');t.width=Math.max(8,sw*k);t.height=Math.max(8,sh*k);t.getContext('2d').drawImage(im,sx,sy,sw,sh,0,0,t.width,t.height);return SV.thumbs[i]=t.toDataURL('image/jpeg',.8);}
+function drawSV(){if(!SV||!SV.img.naturalWidth)return;const c=$('#sv-c');if(!c)return;const w=Math.min(c.parentElement.clientWidth||900,1100);if(c.width!==Math.round(w)){c.width=Math.round(w);c.height=Math.round(w*SV.img.naturalHeight/SV.img.naturalWidth);}
+  const x=c.getContext('2d'),W=c.width,Hh=c.height;x.drawImage(SV.img,0,0,W,Hh);
+  SV.d.boxes.forEach((b,i)=>{const[x1,y1,x2,y2]=px(b);if(SV.removed.has(i))pad(x,x1,y1,x2-x1,y2-y1,i);else{x.strokeStyle=b.mass&&b.hz/b.mass>=.1?'#ef4444':'#84cc16';x.lineWidth=1.5;x.strokeRect(x1,y1,x2-x1,y2-y1);}});
+  if(SV.drag){const b=SV.d.boxes[SV.drag.i],im=SV.img,sx=b.b[0]*im.naturalWidth,sy=b.b[1]*im.naturalHeight,sw=Math.max(1,(b.b[2]-b.b[0])*im.naturalWidth),sh=Math.max(1,(b.b[3]-b.b[1])*im.naturalHeight),k=Math.max(1,44/Math.max(sw,sh)),dw=sw*k,dh=sh*k;
+    x.save();x.shadowColor='rgba(0,0,0,.5)';x.shadowBlur=14;x.shadowOffsetY=6;x.drawImage(im,sx,sy,sw,sh,SV.drag.x-dw/2,SV.drag.y-dh/2,dw,dh);x.strokeStyle='#ff6584';x.lineWidth=3;x.strokeRect(SV.drag.x-dw/2,SV.drag.y-dh/2,dw,dh);x.restore();}
+  const s=svStats();$('#sv-stats').innerHTML=[['Value left on board','₹'+Math.round(s.left),'#c8f3dc'],['Salvaged','₹'+Math.round(s.out)+' ('+s.no+' parts)','#ffe69a'],['Hazardous share left',s.hp.toFixed(1)+'%','#ffd0de'],['Parts left',s.nl,'#ddd3ff']].map(a=>'<div style="background:'+a[2]+';border-radius:18px;padding:10px 16px;font-weight:800">'+a[1]+'<div style="font-size:12px;font-weight:600;opacity:.75">'+a[0]+'</div></div>').join('');
+  const tr=$('#sv-tray');tr.innerHTML=SV.removed.size?[...SV.removed].map(i=>{const b=SV.d.boxes[i];return'<div style="display:flex;gap:8px;align-items:center;background:#f4fff9;border-radius:16px;padding:6px 10px"><img src="'+thumb(i)+'" alt="" style="height:40px;border-radius:8px"><div style="font-size:13px;font-weight:700">'+esc(b.c)+'<br><a href="'+FLIP(qFor(b.c))+'" target="_blank" rel="noopener" style="text-decoration:underline">₹'+b.val+' ↗</a></div><button data-back="'+i+'" style="'+btn('#ddd3ff')+';padding:5px 10px;font-size:12px">Put back</button></div>';}).join(''):'<span style="opacity:.6">Drop detached parts here</span>';
+  $$('[data-back]').forEach(b=>b.onclick=()=>{SV.removed.delete(+b.dataset.back);drawSV();});}
+window.addEventListener('resize',()=>{if(SV)drawSV();});
+// ---------- batch ----------
+const B=mkSec('batch','#scanner',true);
+B.innerHTML=H2('Batch scan')+'<p style="opacity:.8;margin:4px 0 12px">Add several board photos at once. ChipPal analyses them one after another and totals the whole lot. Speed depends on your computer, and the measured speed is shown at the end.</p><button id="b-pick" style="'+btn('#ffe69a')+'">Choose photos (up to 12)</button><input id="b-in" type="file" accept="image/*" multiple hidden><div id="b-prog" style="margin-top:10px;font-weight:700"></div><div id="b-out"></div>';
+$('#b-pick').onclick=()=>$('#b-in').click();
+const shrink=f=>new Promise((ok,no)=>{const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{const k=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok({url:c.toDataURL('image/jpeg',.85),w:im.width,h:im.height});};im.onerror=()=>no(new Error('Unreadable image'));im.src=u;});
+$('#b-in').onchange=async e=>{const files=[...e.target.files].slice(0,12);e.target.value='';if(!files.length)return;const t0=performance.now(),res=[];$('#b-pick').disabled=true;
+  for(let i=0;i<files.length;i++){$('#b-prog').textContent='Analysing '+(i+1)+' of '+files.length+'...';
+    try{const sm=await shrink(files[i]),fd=new FormData();fd.append('file',files[i]);fd.append('conf',sl.value/100);fd.append('tiled',$('#tiny-parts-toggle').classList.contains('justify-end'));fd.append('tile',640);fd.append('enhance',window.CP_ENHANCE!==false);
+      const r=await fetch('/api/analyze',{method:'POST',body:fd}),d=await r.json();if(!r.ok)throw new Error(d.detail||r.status);res.push({name:files[i].name,d,sm});}
+    catch(err){res.push({name:files[i].name,err:err.message});}}
+  $('#b-pick').disabled=false;const sec=(performance.now()-t0)/1000;$('#b-prog').textContent='';showBatch(res,sec);};
+function showBatch(res,sec){const ok=res.filter(r=>r.d),tot={n:0,re:0,v:0,lo:0,hi:0,m:0,hz:0},cls={};
+  ok.forEach(r=>{const d=r.d;tot.n+=d.metrics.components;tot.re+=d.metrics.reusable;tot.v+=d.metrics.value;tot.lo+=d.metrics.value_low;tot.hi+=d.metrics.value_high;tot.m+=d.mass_g;tot.hz+=d.haz_g;d.summary.forEach(s=>cls[s.class]=(cls[s.class]||0)+s.count);});
+  const hp=tot.m?100*tot.hz/tot.m:0,top=Object.entries(cls).sort((a,b)=>b[1]-a[1]).slice(0,8).map(a=>esc(a[0])+' ×'+a[1]).join(', ');
+  $('#b-out').innerHTML='<div style="display:flex;gap:10px;flex-wrap:wrap;margin:14px 0"><div style="background:#ddd3ff;border-radius:18px;padding:10px 16px;font-weight:800">'+ok.length+' boards<div style="font-size:12px;font-weight:600">'+tot.n+' parts</div></div><div style="background:#ffe69a;border-radius:18px;padding:10px 16px;font-weight:800">₹'+tot.v+'<div style="font-size:12px;font-weight:600">lot value, range ₹'+tot.lo+' to ₹'+tot.hi+'</div></div><div style="background:#ffd0de;border-radius:18px;padding:10px 16px;font-weight:800">'+hp.toFixed(1)+'%<div style="font-size:12px;font-weight:600">hazardous (weighted)</div></div><div style="background:#c8f3dc;border-radius:18px;padding:10px 16px;font-weight:800">'+(sec?(ok.length/sec*60).toFixed(1):0)+' boards/min<div style="font-size:12px;font-weight:600">measured: '+sec.toFixed(0)+' s total</div></div></div>'+
+   '<div style="overflow-x:auto"><table style="width:100%;text-align:left;font-size:14px;border-collapse:collapse"><thead><tr><th>Photo</th><th>Parts</th><th>Reusable</th><th>Value (range)</th><th>Hazard</th><th>Score</th><th></th></tr></thead><tbody>'+
+   res.map((r,i)=>r.d?'<tr style="border-top:1px solid #e4e1f5"><td style="padding:8px 4px">'+esc(r.name)+'</td><td>'+r.d.metrics.components+'</td><td>'+r.d.metrics.reusable+'</td><td>₹'+r.d.metrics.value+' (₹'+r.d.metrics.value_low+' to ₹'+r.d.metrics.value_high+')</td><td>'+r.d.metrics.hazard+'%</td><td>'+r.d.score+'</td><td><button data-open="'+i+'" style="'+btn('#ddd3ff')+';padding:5px 12px">Open</button></td></tr>':'<tr style="border-top:1px solid #e4e1f5"><td style="padding:8px 4px">'+esc(r.name)+'</td><td colspan="6" style="color:#b4234f">Failed: '+esc(r.err)+'</td></tr>').join('')+'</tbody></table></div><p style="margin:10px 0">Most common parts in the lot: '+(top||'-')+'</p><button id="b-csv" style="'+btn('#ff6584','#fff')+'">Download lot CSV</button>';
+  $$('[data-open]').forEach(b=>b.onclick=()=>{const r=res[+b.dataset.open];document.dispatchEvent(new CustomEvent('chippal:open',{detail:{d:r.d,plain:r.sm.url,w:r.sm.w,h:r.sm.h}}));});
+  $('#b-csv').onclick=()=>{const rows=[['photo','parts','reusable','value_inr','value_low','value_high','hazard_pct','score']].concat(ok.map(r=>[r.name,r.d.metrics.components,r.d.metrics.reusable,r.d.metrics.value,r.d.metrics.value_low,r.d.metrics.value_high,r.d.metrics.hazard,r.d.score]),[[],['part type','count']],Object.entries(cls));
+    const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='chippal_lot.csv';a.click();};
+  say('Batch finished. '+ok.length+' boards. Total estimated value '+tot.v+' rupees.');}
+// ---------- on every result ----------
+document.addEventListener('chippal:result',e=>{const{d,plain,first}=e.detail;last=d;
+  enhBox.style.display=d.enhanced&&d.enhanced.length?'block':'none';enhBox.innerHTML=d.enhanced&&d.enhanced.length?'<b>Photo auto-enhanced:</b> '+d.enhanced.map(esc).join(', ')+'. This helps dim or soft photos, but it cannot recreate detail the camera did not capture.':'';
+  renderEco(d);renderRepair(d);renderSell(d);renderSalvage(d,plain,first);linkify();if(first)speakResult(d);});
 })();
 </script><script>(()=>{
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;

@@ -4,7 +4,7 @@
 2. Make testset/truth.csv with one row per photo (count each part type yourself):
        image,ic,capacitor,connector,resistor
        board1.jpg,4,31,3,45
-3. Run:  python evaluate.py
+3. Run:  python evaluate.py        (then python evaluate.py --enhance to compare)
 Class names in the header must match your model's class names (upper or lower case).
 """
 import argparse
@@ -30,6 +30,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--weights", default="weights/best.pt")
     ap.add_argument("--conf", type=float, default=0.2)
+    ap.add_argument("--enhance", action="store_true", help="clean up dark or blurry photos first")
     args = ap.parse_args()
     model = AutoDetectionModel.from_pretrained(
         model_type="ultralytics", model_path=args.weights,
@@ -39,8 +40,15 @@ def main():
     sum_true, sum_pred, accs = Counter(), Counter(), []
     for r in rows:
         truth = {c: int(r.get(c) or r.get(c.upper()) or 0) for c in classes}
+        path = str(FOLDER / r["image"])
+        if args.enhance:
+            from PIL import Image
+            from enhance import enhance_if_needed
+            fixed, _ = enhance_if_needed(Image.open(path).convert("RGB"))
+            path = "_eval_tmp.jpg"
+            fixed.save(path)
         res = get_sliced_prediction(
-            str(FOLDER / r["image"]), model, slice_height=TILE, slice_width=TILE,
+            path, model, slice_height=TILE, slice_width=TILE,
             overlap_height_ratio=0.2, overlap_width_ratio=0.2, verbose=0)
         found = Counter(p.category.name.lower() for p in res.object_prediction_list)
         pred = {c: found.get(c, 0) for c in classes}
