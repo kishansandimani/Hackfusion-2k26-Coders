@@ -2,6 +2,7 @@ import hashlib
 import io
 import json
 import os
+import re
 import threading
 import traceback
 import time
@@ -25,7 +26,8 @@ from compliance import audit
 from enhance import enhance_if_needed
 from repair import equiv_for, guides_for
 from report import make_pdf
-from scores import award, delete as delete_scores, router as scores_router
+from scores import award, delete as delete_scores, profile as score_profile, router as scores_router
+import history
 
 WEIGHTS = "weights/best.pt"
 app = FastAPI(title="ChipPal API")
@@ -85,6 +87,18 @@ DEFAULT = _fill(DEFAULT)
 COLORS = {"high": "red", "medium": "orange", "low": "lime"}
 JOBS = OrderedDict()
 DETECT_LOCK = threading.Lock()  # one detection or OCR job at a time (several users)
+PROGRESS = OrderedDict()        # progress id -> {"pct", "stage", "owner", "ts"}: how far an analysis has got
+PID_RE = re.compile(r"^[A-Za-z0-9_-]{6,40}$")
+
+
+def _prog(pid, owner, pct, stage):
+    """Report analysis progress. The page polls /api/progress/<id> and shows a percentage."""
+    if not pid or not PID_RE.match(pid):
+        return
+    now = time.time()
+    for k in [k for k, v in PROGRESS.items() if now - v["ts"] > 600]:
+        PROGRESS.pop(k, None)
+    PROGRESS[pid] = {"pct": round(min(100, max(0, pct))), "stage": stage, "owner": owner, "ts": now}
 
 
 def level(h):
@@ -130,11 +144,38 @@ def detect_normal(path, conf):
     return out
 
 
-def detect_tiled(path, conf, tile):
+def detect_tiled(path, conf, tile, on_progress=None):
     sahi_model.confidence_threshold = conf
-    result = get_sliced_prediction(
-        path, sahi_model, slice_height=tile, slice_width=tile,
-        overlap_height_ratio=0.2, overlap_width_ratio=0.2, verbose=0)
+    counted_total, patched = 0, False
+    if on_progress:      # count finished tiles so the page can show a real percentage
+        try:
+            from sahi.slicing import get_slice_bboxes
+            with Image.open(path) as im:
+                W, H = im.size
+            n = len(get_slice_bboxes(H, W, slice_height=tile, slice_width=tile,
+                                     overlap_height_ratio=0.2, overlap_width_ratio=0.2))
+            counted_total = n + (1 if n > 1 else 0)   # SAHI also makes one pass over the whole photo
+            real_infer, state = sahi_model.perform_inference, {"done": 0}
+
+            def counted(*a, **k):
+                out = real_infer(*a, **k)
+                state["done"] += 1
+                on_progress(min(state["done"], counted_total), counted_total)
+                return out
+            sahi_model.perform_inference = counted
+            patched = True
+        except Exception:
+            patched = False   # progress then falls back to estimated steps on the page
+    try:
+        result = get_sliced_prediction(
+            path, sahi_model, slice_height=tile, slice_width=tile,
+            overlap_height_ratio=0.2, overlap_width_ratio=0.2, verbose=0)
+    finally:
+        if patched:
+            try:
+                del sahi_model.perform_inference    # put the original method back
+            except Exception:
+                pass
     out = []
     for p in result.object_prediction_list:
         bb = p.bbox
@@ -253,6 +294,9 @@ def finalize(orig, dets, mode, job_id=None, owner=None, enhanced=None):
                     "summary": summary, "metrics": metrics, "mode": mode}
     while len(JOBS) > 20:
         JOBS.popitem(last=False)
+    if owner:   # keep a permanent copy so the scan can be opened again from History
+        history.save(job_id, owner, orig, img, dets, mode, reads, enhanced,
+                     len(df), float(df.value_inr.sum()), float(hazard_pct), pl["score"])
 
     shown = img.copy()
     shown.thumbnail((1600, 1600))
@@ -293,7 +337,8 @@ def finalize(orig, dets, mode, job_id=None, owner=None, enhanced=None):
 @app.post("/api/analyze")
 def analyze(file: UploadFile = File(...), conf: float = Form(0.2),
             tiled: bool = Form(True), tile: int = Form(640), enhance: bool = Form(True),
-            user: str = Depends(current_user)):
+            progress_id: str = Form(""), user: str = Depends(current_user)):
+    _prog(progress_id, user, 4, "Photo received")
     raw = file.file.read()
     img_hash = hashlib.sha256(raw).hexdigest()
     try:
@@ -301,20 +346,37 @@ def analyze(file: UploadFile = File(...), conf: float = Form(0.2),
             Image.open(io.BytesIO(raw))).convert("RGB")
     except Exception:
         raise HTTPException(400, "That file is not a readable image.")
+    _prog(progress_id, user, 8, "Cleaning up the photo" if enhance else "Preparing the photo")
     work, steps = enhance_if_needed(orig) if enhance else (orig, [])
     path = f"temp_{uuid.uuid4().hex[:8]}.jpg"
     work.save(path)
+    _prog(progress_id, user, 12, "Getting ready to look for components")
+
+    def tile_done(done, total):
+        _prog(progress_id, user, 15 + 70 * done / total, f"Finding components (step {done} of {total})")
     try:
         with DETECT_LOCK:
-            dets = detect_tiled(path, conf, tile) if tiled else detect_normal(path, conf)
+            _prog(progress_id, user, 15, "Finding components")
+            dets = detect_tiled(path, conf, tile, tile_done) if tiled else detect_normal(path, conf)
     finally:
         if os.path.exists(path):
             os.remove(path)
     if not dets:
         raise HTTPException(422, "No components found. Try a lower confidence.")
+    _prog(progress_id, user, 88, "Estimating value and hazard")
     result = finalize(orig, dets, "tiled" if tiled else "standard", owner=user, enhanced=steps)
+    _prog(progress_id, user, 97, "Almost done")
+    result["salvage"] = result.get("score")   # salvage score 0-100, kept before "score" becomes the points profile
     result["score"] = award(user, img_hash)  # 10 points for each new board that finishes scanning
     return result
+
+
+@app.get("/api/progress/{pid}")
+def progress(pid: str, user: str = Depends(current_user)):
+    p = PROGRESS.get(pid)
+    if not p or p["owner"] != user:
+        raise HTTPException(404, "No progress yet.")
+    return {"pct": p["pct"], "stage": p["stage"]}
 
 
 @app.post("/api/recompute")
@@ -362,12 +424,56 @@ def chips(job_id: str = Form(...), user: str = Depends(current_user)):
     return {"results": out, "analysis": analysis}
 
 
+def restore_job(job_id, user):
+    """Rebuild a saved scan from disk into memory. Returns the full analysis or None."""
+    rec = history.load(job_id, user)
+    if not rec:
+        return None
+    orig = Image.open(rec["orig_path"]).convert("RGB")
+    dets = [{**d, "box": tuple(d["box"])} for d in rec["dets"]]
+    JOBS[job_id] = {"owner": user, "ts": time.time(), "reads": rec["reads"],
+                    "enhanced": rec["enhanced"]}
+    return finalize(orig, dets, rec["mode"], job_id, owner=user, enhanced=rec["enhanced"])
+
+
 def _job(job_id, user):
     purge_old()
     job = JOBS.get(job_id)
+    if not job:
+        restore_job(job_id, user)      # saved earlier? load it back from disk
+        job = JOBS.get(job_id)
     if not job or job.get("owner") != user:
-        raise HTTPException(404, "This analysis expired. Please analyze the photo again.")
+        raise HTTPException(404, "This scan was not found. Please analyze the photo again.")
     return job
+
+
+@app.get("/api/history")
+def history_list(user: str = Depends(current_user)):
+    return {"scans": history.list_for(user)}
+
+
+@app.get("/api/scan-image/{job_id}")
+def scan_image(job_id: str, user: str = Depends(current_user)):
+    """The saved original photo of a scan (used as the 'before' picture when a scan is reopened)."""
+    rec = history.load(job_id, user)
+    if not rec:
+        raise HTTPException(404, "This scan was not found.")
+    return FileResponse(rec["orig_path"], media_type="image/jpeg")
+
+
+@app.post("/api/open/{job_id}")
+def open_scan(job_id: str, user: str = Depends(current_user)):
+    """Return the full results of a saved scan (same shape as /api/analyze). No points are given."""
+    try:
+        analysis = restore_job(job_id, user)
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(500, f"Could not rebuild this scan: {e}")
+    if not analysis:
+        raise HTTPException(404, "This scan was not found. It may have been deleted.")
+    analysis["salvage"] = analysis.get("score")
+    analysis["score"] = score_profile(user)
+    return analysis
 
 
 @app.get("/api/report/{job_id}.pdf")
@@ -392,8 +498,13 @@ def report_csv(job_id: str, user: str = Depends(current_user)):
 
 @app.post("/api/delete/{job_id}")
 def delete_scan(job_id: str, user: str = Depends(current_user)):
-    _job(job_id, user)
-    JOBS.pop(job_id, None)
+    """Remove a scan from memory and from the saved history (photo and data)."""
+    job = JOBS.get(job_id)
+    in_memory = bool(job) and job.get("owner") == user
+    if in_memory:
+        JOBS.pop(job_id, None)
+    if not history.delete(job_id, user) and not in_memory:
+        raise HTTPException(404, "This scan was not found.")
     return {"ok": True}
 
 
@@ -404,6 +515,7 @@ def delete_account(response: Response, password: str = Form(""), user: str = Dep
             raise HTTPException(403, "That password is not correct.")
         delete_user(user)
     delete_scores(user)
+    history.delete_all(user)
     for k in [k for k, v in JOBS.items() if v.get("owner") == user]:
         JOBS.pop(k, None)
     response.delete_cookie(COOKIE)

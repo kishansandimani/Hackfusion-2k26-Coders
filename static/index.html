@@ -216,6 +216,79 @@
 .fchip{position:absolute;bottom:-70px;opacity:.55;will-change:transform;animation:rise linear infinite}
 @keyframes rise{to{transform:translateY(-125vh) rotate(200deg)}}
 @media (prefers-reduced-motion:reduce){.blob,.fchip{animation:none}.fchip{display:none}}
+</style><style id="cp-extra">
+/* cute voice button */
+.vbtn{display:flex;align-items:center;gap:8px;border:3px solid #ffd0de;border-radius:999px;background:#fff;color:#171b2b;font-weight:800;font-size:14px;padding:5px 16px 5px 8px;cursor:pointer;box-shadow:0 8px 24px rgba(255,101,132,.25);transition:transform .15s,box-shadow .15s,border-color .15s}
+.vbtn:hover{transform:translateY(-3px) rotate(-1.5deg)}
+.vbtn:disabled{opacity:.6;cursor:not-allowed}
+.vbtn .vicon{width:50px;height:38px;overflow:visible;animation:cpBob 2.6s ease-in-out infinite}
+.vbtn .mouth{transform-box:fill-box;transform-origin:center}
+.vbtn:not(.on) .mouth{transform:scaleY(.35)}
+.vbtn:not(.on) .waves{opacity:0}
+.vbtn.on{border-color:#4ECCA3;box-shadow:0 8px 24px rgba(78,204,163,.38)}
+.vbtn.on .mouth{animation:cpTalk .35s ease-in-out infinite alternate}
+.vbtn.on .waves path{animation:cpWave 1s ease-in-out infinite}
+.vbtn.on .waves .w2{animation-delay:.25s}
+@keyframes cpTalk{to{transform:scaleY(1.6)}}
+@keyframes cpWave{0%,100%{opacity:.2}50%{opacity:1}}
+@keyframes cpBob{50%{transform:translateY(-3px)}}
+/* history cards */
+.cp-hcard{transition:transform .2s,box-shadow .2s}
+.cp-hcard:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(255,101,132,.18)}
+.cp-thumb{cursor:pointer}
+.cp-hact{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.cp-open,.cp-del{border:0;border-radius:999px;padding:7px 16px;font-weight:800;cursor:pointer;transition:transform .1s}
+.cp-open{background:#4ECCA3;color:#002116}.cp-del{background:#ffd0de;color:#171b2b}
+.cp-open:active,.cp-del:active{transform:scale(.95)}
+.cp-old{font-size:12px;opacity:.6}
+.cp-empty{grid-column:1/-1;display:flex;align-items:center;gap:18px;background:rgba(255,255,255,.9);border:3px dashed #ffd0de;border-radius:24px;padding:22px;color:#171b2b}
+.cp-empty img{width:76px;height:76px;flex:none}
+.cp-bob{animation:cpBob 2.4s ease-in-out infinite}
+/* how it works + tips strip */
+.cp-how{display:flex;flex-direction:column;gap:18px}
+.cp-h2{display:block;font-size:26px;font-weight:800;color:#171b2b}
+.cp-sub{display:block;opacity:.7;color:#171b2b}
+.cp-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+.cp-step{position:relative;overflow:hidden;background:rgba(255,255,255,.92);border:3px solid #ffd0de;border-radius:24px;padding:20px;color:#171b2b;transition:transform .2s}
+.cp-step:nth-child(2){border-color:#ddd3ff}.cp-step:nth-child(3){border-color:#b9e6cf}
+.cp-step:hover{transform:translateY(-5px) rotate(-.6deg)}
+.cp-step .n{position:absolute;right:14px;top:2px;font-size:60px;font-weight:800;opacity:.08}
+.cp-ico{width:52px;height:52px;border-radius:16px;background:#fff0f4;display:grid;place-items:center;font-size:28px;margin-bottom:8px;animation:cpBob 3s ease-in-out infinite;animation-delay:var(--d,0s)}
+.cp-step p{margin:4px 0 0;opacity:.75;font-size:14px}
+.cp-ticker{overflow:hidden;background:#171b2b;color:#fff;border-radius:999px;white-space:nowrap;font-weight:700}
+.cp-ticker div{display:inline-block;padding:10px 0;animation:cpTick 45s linear infinite}
+.cp-ticker span{margin:0 26px}
+.cp-ticker:hover div{animation-play-state:paused}
+@keyframes cpTick{to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.vbtn *,.cp-ico,.cp-bob,.cp-ticker div,.cp-hcard,.cp-step{animation:none!important;transition:none!important}}
+
+/* progress overlay */
+.cp-pwrap{display:none;width:min(380px,82vw);text-align:center}
+#cp-ov.cp-prog .cp-pwrap{display:block}
+.cp-pbar{height:16px;border-radius:99px;background:rgba(255,255,255,.25);overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,.25)}
+.cp-pbar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#ff6584,#ffb86b,#4ECCA3,#ff6584);background-size:200% 100%;animation:cpShine 1.4s linear infinite}
+@keyframes cpShine{to{background-position:-200% 0}}
+#cp-ppct{font-size:36px;font-weight:800;margin-top:8px;letter-spacing:.5px;line-height:1.1}
+.cp-pstage{font-size:13px;opacity:.8;font-weight:600;margin-top:2px}
+/* side decorations: fill the empty gutters on wide screens */
+.cp-rail{position:fixed;top:80px;bottom:0;width:calc((100vw - 1280px)/2 - 6px);display:none;pointer-events:none;z-index:1;overflow:hidden}
+.cp-rl{left:0}.cp-rr{right:0}
+@media(min-width:1400px){.cp-rail{display:block}}
+.cp-line{position:absolute;top:0;bottom:0;width:3px;border-radius:3px;opacity:.55;
+  background:repeating-linear-gradient(to top,var(--c) 0 10px,transparent 10px 22px);background-size:100% 44px;animation:cpFlow 3s linear infinite}
+@keyframes cpFlow{to{background-position:0 -44px}}
+.cp-dot{position:absolute;bottom:-20px;width:11px;height:11px;margin-left:-4px;border-radius:50%;background:var(--c);box-shadow:0 0 14px 4px var(--c);animation:cpUp linear infinite}
+@keyframes cpUp{to{transform:translateY(-115vh)}}
+.cp-fc{position:absolute;bottom:-60px;opacity:.65;animation:cpRise linear infinite}
+@keyframes cpRise{50%{transform:translate(14px,-55vh) rotate(100deg)}100%{transform:translate(-8px,-115vh) rotate(210deg)}}
+.cp-tipbox{position:absolute;left:12px;right:12px;top:26%;height:128px;display:none}
+.cp-tip{position:absolute;inset:0;background:rgba(255,255,255,.93);border:3px solid #ffd0de;border-radius:22px;padding:12px 14px;font-size:13px;font-weight:700;color:#171b2b;opacity:0;animation:cpTip 18s infinite;box-shadow:0 10px 26px rgba(255,101,132,.16)}
+.cp-tip:nth-child(2){animation-delay:6s;border-color:#ddd3ff}.cp-tip:nth-child(3){animation-delay:12s;border-color:#b9e6cf}
+.cp-tip b{display:block;font-size:12px;color:#ff6584;margin-bottom:4px;letter-spacing:.4px}
+@keyframes cpTip{0%{opacity:0;transform:translateY(10px)}4%,30%{opacity:1;transform:none}34%,100%{opacity:0}}
+.cp-rm{position:absolute;left:50%;bottom:96px;width:64px;margin-left:-32px;display:none;animation:cpBob 2.4s ease-in-out infinite}
+@media(min-width:1700px){.cp-tipbox,.cp-rm{display:block}}
+@media(prefers-reduced-motion:reduce){.cp-line,.cp-dot,.cp-fc,.cp-tip,.cp-rm,.cp-pbar i{animation:none!important}.cp-fc,.cp-dot{display:none}.cp-tip:first-child{opacity:1}}
 </style></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary">
 <!-- PROMINENT ANIMATED PASTEL AURORA BACKGROUND & GLOWING CIRCUIT CANVAS -->
 <div class="pointer-events-none fixed inset-0 overflow-hidden z-0">
@@ -860,6 +933,15 @@
 </div>
 </section>
 <!-- SECTION 6: HISTORY OF PAST ANALYSES -->
+<section class="cp-how" id="how">
+<div><span class="cp-h2">How ChipPal works</span><span class="cp-sub">From a photo to a decision in three quick steps</span></div>
+<div class="cp-steps">
+<div class="cp-step"><span class="n">1</span><div class="cp-ico" style="--d:0s">📷</div><b>Snap a board</b><p>Upload or capture a clear photo of a used circuit board.</p></div>
+<div class="cp-step"><span class="n">2</span><div class="cp-ico" style="--d:.6s">🔍</div><b>We find the parts</b><p>The AI spots chips, capacitors and connectors, and can read chip markings.</p></div>
+<div class="cp-step"><span class="n">3</span><div class="cp-ico" style="--d:1.2s">♻️</div><b>Reuse, sell or recycle</b><p>Get value estimates, hazard checks and a salvage plan with safe disposal tips.</p></div>
+</div>
+<div class="cp-ticker" aria-hidden="true"><div><span>Tip: sharp, well-lit photos find more parts</span><span>Never burn circuit boards</span><span>Discharge big capacitors before handling</span><span>Sell scrap only to registered recyclers</span><span>Scan a new board to earn 10 points</span><span>Click a saved scan to open all its results again</span><span>Tip: sharp, well-lit photos find more parts</span><span>Never burn circuit boards</span><span>Discharge big capacitors before handling</span><span>Sell scrap only to registered recyclers</span><span>Scan a new board to earn 10 points</span><span>Click a saved scan to open all its results again</span></div></div>
+</section>
 <section class="flex flex-col gap-space-lg" id="history">
 <div class="flex items-center justify-between">
 <div class="flex flex-col">
@@ -1014,12 +1096,12 @@
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const setT=(s,t)=>{const e=$(s);if(e)e.textContent=t;};
-let job=null,annot=null,plain=null,boxesOn=true,HK=null;
+let job=null,annot=null,plain=null,boxesOn=true,HK=null,SRV=null;
 // sign-in: send people to the login page if the session ends
 const _fetch=window.fetch.bind(window);
 window.fetch=async(...a)=>{const r=await _fetch(...a);if(r.status===401&&!String(a[0]).includes('/api/login'))location.href='/login';return r;};
 function setupUser(name){
-  HK='chippal_hist_'+name;renderHist();
+  HK='chippal_hist_'+name;renderHist();syncHist();
   const av=$$('header div').find(d=>d.classList.contains('rounded-full')&&d.textContent.trim()==='person');if(!av)return;
   av.style.cursor='pointer';av.setAttribute('role','button');av.setAttribute('tabindex','0');av.title='Signed in as '+name;
   const m=document.createElement('div');m.style.cssText='position:fixed;top:76px;right:16px;background:#fff;border:2px solid #b9e6cf;border-radius:20px;padding:14px 18px;display:none;z-index:60;box-shadow:0 12px 34px rgba(0,0,0,.14);font-weight:700';
@@ -1048,9 +1130,30 @@ const sl=$('#sensitivity-slider');
 sl.addEventListener('input',e=>setT('#sensitivity-value','Confidence ≥ '+(e.target.value/100).toFixed(2)));
 // overlay + toast
 const ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;background:rgba(23,27,43,.55);display:none;align-items:center;justify-content:center;z-index:99;flex-direction:column;gap:14px;color:#fff;font-weight:700';
-ov.innerHTML='<img src="'+$('header img').src+'" style="height:90px;animation:bob .7s ease-in-out infinite alternate"><span id="ovt">ChipPal is inspecting your board...</span><style>@keyframes bob{to{transform:translateY(-12px) rotate(4deg)}}</style>';
-document.body.append(ov);
+ov.innerHTML='<img src="'+$('header img').src+'" style="height:90px;animation:bob .7s ease-in-out infinite alternate"><span id="ovt">ChipPal is inspecting your board...</span><div class="cp-pwrap"><div class="cp-pbar"><i id="cp-pfill"></i></div><div id="cp-ppct">0%</div><div class="cp-pstage" id="cp-pst">Analysis progress</div></div><style>@keyframes bob{to{transform:translateY(-12px) rotate(4deg)}}</style>';
+ov.id='cp-ov';document.body.append(ov);
 const toast=m=>{const t=document.createElement('div');t.textContent=m;t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#ba1a1a;color:#fff;padding:12px 20px;border-radius:999px;z-index:100;font-weight:700;max-width:90vw';document.body.append(t);setTimeout(()=>t.remove(),6000);};
+const prog={pid:'',shown:0,target:0,srv:0,raf:0,poll:0,fail:false};
+function progLoop(){
+  if(prog.target<prog.srv+3&&prog.target<95)prog.target+=0.02;               // keeps creeping a little between updates
+  prog.shown+=(prog.target-prog.shown)*.12;if(prog.target-prog.shown<.05)prog.shown=prog.target;
+  const f=$('#cp-pfill'),p=$('#cp-ppct');if(f)f.style.width=Math.min(100,prog.shown)+'%';
+  if(p)p.textContent=(prog.target>=100&&prog.shown>=99.5?100:Math.min(99,Math.round(prog.shown)))+'%';
+  prog.raf=requestAnimationFrame(progLoop);}
+function progStart(){
+  const pid=(window.crypto&&crypto.randomUUID)?crypto.randomUUID().replace(/-/g,'').slice(0,16):String(Date.now())+Math.random().toString(36).slice(2,8);
+  Object.assign(prog,{pid,shown:0,target:3,srv:0,fail:false});
+  ov.classList.add('cp-prog');$('#ovt').textContent='Uploading your photo...';$('#cp-pst').textContent='Analysis progress';
+  cancelAnimationFrame(prog.raf);progLoop();clearInterval(prog.poll);
+  prog.poll=setInterval(async()=>{try{
+    const r=await _fetch('/api/progress/'+pid);if(!r.ok)return;const j=await r.json();
+    if(j.pct>prog.srv){prog.srv=j.pct;prog.target=Math.max(prog.target,Math.min(j.pct,99));}
+    if(j.stage)$('#ovt').textContent=j.stage+'...';}catch(e){}},500);
+  return pid;}
+async function progEnd(){
+  clearInterval(prog.poll);
+  if(!prog.fail){prog.target=100;const t0=Date.now();while(prog.shown<99.5&&Date.now()-t0<1000)await new Promise(r=>setTimeout(r,50));await new Promise(r=>setTimeout(r,300));}
+  cancelAnimationFrame(prog.raf);ov.classList.remove('cp-prog');}
 const busy=(on,m)=>{ov.style.display=on?'flex':'none';if(m)$('#ovt').textContent=m;};
 
 // live camera (needs https or localhost, otherwise falls back to the phone's own camera picker)
@@ -1097,16 +1200,17 @@ tb2.querySelectorAll('span')[1].textContent='Boxes: on';
 // run
 async function run(file){
   if(!file)return;
-  busy(true);
+  busy(true);const pid=progStart();
   try{
     const sm=await shrink(file,1600);plain=sm.url;
     const fd=new FormData();fd.append('file',file);fd.append('conf',sl.value/100);
-    fd.append('tiled',$('#tiny-parts-toggle').classList.contains('justify-end'));fd.append('tile',640);fd.append('enhance',window.CP_ENHANCE!==false);
+    fd.append('tiled',$('#tiny-parts-toggle').classList.contains('justify-end'));fd.append('tile',640);fd.append('enhance',window.CP_ENHANCE!==false);fd.append('progress_id',pid);
     const r=await fetch('/api/analyze',{method:'POST',body:fd}),d=await r.json();
     if(!r.ok)throw new Error(d.detail||r.status);
+    prog.target=100;
     await show(d,sm);
-  }catch(e){toast('Hmm, that did not work: '+e.message);}
-  busy(false);
+  }catch(e){prog.fail=true;toast('Hmm, that did not work: '+e.message);}
+  await progEnd();busy(false);
 }
 const lvlOf=p=>p<5?'Low Hazard':p<12?'Moderate':'High Hazard';
 const lvlCol=p=>p<5?'#2fb67c':p<12?'#edc157':'#ff6584';
@@ -1244,8 +1348,8 @@ async function recalc(){
 }
 // history (stored in this browser only)
 function hist(){if(!HK)return[];try{return JSON.parse(localStorage.getItem(HK)||'[]');}catch(e){return[];}}
-function history_add(x){if(!x.thumb)return;const h=hist();h.unshift(x);saveHist(h);renderHist();}
-function saveHist(h){try{localStorage.setItem(HK,JSON.stringify(h.slice(0,8)));}catch(e){}}
+function history_add(x){if(!x.thumb)return;const h=hist();h.unshift(x);if(SRV&&x.id)SRV.add(x.id);saveHist(h);renderHist();}
+function saveHist(h){try{localStorage.setItem(HK,JSON.stringify(h.slice(0,30)));}catch(e){}}
 const srvDel=id=>{if(id)_fetch('/api/delete/'+id,{method:'POST'}).catch(()=>{});};
 function okToast(m){const t=document.createElement('div');t.textContent=m;t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1f8f5f;color:#fff;padding:12px 20px;border-radius:999px;z-index:100;font-weight:700;max-width:90vw';document.body.append(t);setTimeout(()=>t.remove(),4000);}
 async function download(url,name){
@@ -1257,8 +1361,24 @@ function delHist(i){const h=hist(),x=h[i];if(!x||!confirm('Delete this scan from
 function clearHist(){if(!confirm('Delete all your saved scans?'))return;hist().forEach(x=>srvDel(x.id));try{localStorage.removeItem(HK);}catch(e){}if(job)resetUI();renderHist();}
 function renderHist(){const h=hist(),g=$('#history-grid');setT('#scan-count','🔥 '+h.length+(h.length===1?' board':' boards')+' scanned');
   g.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px';
-  g.innerHTML=h.length?h.map((x,i)=>'<div class="bg-surface-container-lowest rounded-3xl p-space-md shadow-md"><img src="'+x.thumb+'" alt="Scan thumbnail" style="width:100%;height:130px;object-fit:cover;border-radius:16px"><div style="margin-top:10px;font-weight:800">Scan '+(h.length-i)+'</div><div style="font-size:13px;opacity:.75">'+new Date(x.t).toLocaleString()+'</div><div style="margin-top:6px;font-weight:600;font-size:13px">'+x.parts+' parts · ₹'+x.value+' · '+x.hazard+'% hazardous</div><button data-del="'+i+'" style="margin-top:10px;border:0;border-radius:999px;padding:7px 16px;background:#ffd0de;font-weight:800;cursor:pointer">Delete</button></div>').join('')+'<div style="grid-column:1/-1"><button id="hist-clear" style="border:0;border-radius:999px;padding:9px 18px;background:#ddd3ff;font-weight:800;cursor:pointer">Clear all history</button></div>':'<p style="opacity:.7">Your scans will show up here (saved in this browser only).</p>';
-  $$('[data-del]').forEach(b=>b.onclick=()=>delHist(+b.dataset.del));const hc=$('#hist-clear');if(hc)hc.onclick=clearHist;}
+  g.innerHTML=h.length?h.map((x,i)=>'<div class="bg-surface-container-lowest rounded-3xl p-space-md shadow-md cp-hcard"><img class="cp-thumb" data-open="'+i+'" title="Open this board" src="'+x.thumb+'" alt="Scan thumbnail" style="width:100%;height:130px;object-fit:cover;border-radius:16px"><div style="margin-top:10px;font-weight:800">Scan '+(h.length-i)+'</div><div style="font-size:13px;opacity:.75">'+new Date(x.t).toLocaleString()+'</div><div style="margin-top:6px;font-weight:600;font-size:13px">'+x.parts+' parts · ₹'+x.value+' · '+x.hazard+'% hazardous</div><div class="cp-hact">'+((x.id&&(!SRV||SRV.has(x.id)))?'<button data-open="'+i+'" class="cp-open">Open board</button>':'<span class="cp-old">Saved before backups</span>')+'<button data-del="'+i+'" class="cp-del">Delete</button></div></div>').join('')+'<div style="grid-column:1/-1"><button id="hist-clear" style="border:0;border-radius:999px;padding:9px 18px;background:#ddd3ff;font-weight:800;cursor:pointer">Clear all history</button></div>':'<div class="cp-empty"><img class="cp-bob" src="'+((document.querySelector('header img')||{}).src||'')+'" alt=""><div><b>No saved scans yet</b><br>Scan a board and its results are saved here, so you can open them any time.</div></div>';
+  $$('[data-del]').forEach(b=>b.onclick=()=>delHist(+b.dataset.del));$$('[data-open]').forEach(b=>b.onclick=()=>openHist(+b.dataset.open));const hc=$('#hist-clear');if(hc)hc.onclick=clearHist;}
+async function syncHist(){
+  try{const r=await _fetch('/api/history');if(!r.ok)return;const s=(await r.json()).scans||[];
+    SRV=new Set(s.map(x=>x.id));const h=hist(),have=new Set(h.map(x=>x.id));
+    s.forEach(x=>{if(!have.has(x.id))h.push({t:Math.round(x.ts*1000),id:x.id,thumb:x.thumb,parts:x.components,value:x.value,hazard:x.hazard});});
+    h.sort((a,b)=>b.t-a.t);saveHist(h);renderHist();}catch(e){}}
+async function openHist(i){
+  const x=hist()[i];if(!x)return;
+  if(!x.id||(SRV&&!SRV.has(x.id))){toast('This scan was made before saving was added, so it cannot be reopened. New scans can.');return;}
+  try{
+    const r=await fetch('/api/open/'+x.id,{method:'POST'}),d=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(d.detail||('Could not open this scan ('+r.status+')'));
+    const url='/api/scan-image/'+x.id;
+    const dim=await new Promise(res=>{const im=new Image();im.onload=()=>res({w:im.naturalWidth,h:im.naturalHeight});im.onerror=()=>res({w:0,h:0});im.src=url;});
+    document.dispatchEvent(new CustomEvent('chippal:open',{detail:{d,plain:url,w:dim.w,h:dim.h}}));
+  }catch(e){toast(e.message);}
+}
 renderHist();
 document.addEventListener('chippal:open',async e=>{const x=e.detail;plain=x.plain;window.__noHist=true;try{await show(x.d,{w:x.w,h:x.h},true);}finally{window.__noHist=false;}});
 // nav
@@ -1278,13 +1398,15 @@ let U='anon';fetch('/api/me').then(r=>r.json()).then(u=>{if(u&&u.name)U=u.name;}
 let last=null;
 // ---------- voice ----------
 const SS=window.speechSynthesis;let voiceOn=false;
-const vb=document.createElement('button');vb.style.cssText=btn('#171b2b','#fff')+';position:fixed;left:16px;bottom:16px;z-index:70;box-shadow:0 8px 24px rgba(0,0,0,.2)';vb.textContent='🔊 Voice: off';
-if(!SS){vb.disabled=true;vb.textContent='🔇 Voice not supported';}
+const vb=document.createElement('button');const VOICE_SVG='<svg class="vicon" viewBox="0 0 64 48" aria-hidden="true"><g stroke="#171b2b" stroke-width="3" stroke-linecap="round"><path d="M14 6V2M24 6V1M34 6V2M14 42v4M24 42v5M34 42v4M5 18H1M5 30H1"/><rect x="5" y="6" width="38" height="36" rx="11" fill="#ff6584"/></g><circle cx="17" cy="21" r="5" fill="#fff"/><circle cx="31" cy="21" r="5" fill="#fff"/><circle cx="18" cy="22" r="2.4" fill="#171b2b"/><circle cx="32" cy="22" r="2.4" fill="#171b2b"/><circle cx="10" cy="29" r="2.6" fill="#ffd0de"/><circle cx="38" cy="29" r="2.6" fill="#ffd0de"/><ellipse class="mouth" cx="24" cy="32" rx="4" ry="2.6" fill="#171b2b"/><g class="waves" fill="none" stroke="#4ECCA3" stroke-width="3" stroke-linecap="round"><path class="w1" d="M49 17q5 7 0 14"/><path class="w2" d="M55 12q9 12 0 24"/></g></svg>';
+function vbSet(){const on=!!(voiceOn&&SS);vb.classList.toggle('on',on);vb.innerHTML=VOICE_SVG+'<span>'+(!SS?'Voice not supported':on?'Voice on':'Voice off')+'</span>';}
+vb.className='vbtn';vb.style.cssText='position:fixed;left:16px;bottom:16px;z-index:70';vbSet();
+if(!SS){vb.disabled=true;vbSet();}
 document.body.append(vb);
 function say(t){if(!voiceOn||!SS)return;try{SS.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-IN';SS.speak(u);}catch(e){}}
 function speakResult(d){const m=d.metrics,care=d.summary.filter(r=>/^Handle/i.test(r.verdict)||r.level==='high').map(r=>r.class),rich=d.summary.filter(r=>r.count&&r.value/r.count>=20).map(r=>r.class);
   let t='Analysis complete. '+m.components+' parts found. ';if(rich.length)t+='Valuable parts found: '+rich.join(', ')+'. ';if(care.length)t+='Hazardous parts, handle carefully: '+care.join(', ')+'. ';say(t+'Estimated value '+m.value+' rupees.'+(d.score&&d.score.awarded?' You earned '+d.score.points_added+' points.':''));}
-vb.onclick=()=>{voiceOn=!voiceOn;vb.textContent='🔊 Voice: '+(voiceOn?'on':'off');if(!voiceOn&&SS)SS.cancel();else if(last)speakResult(last);else say('Voice is on.');};
+vb.onclick=()=>{voiceOn=!voiceOn;vbSet();if(!voiceOn&&SS)SS.cancel();else if(last)speakResult(last);else say('Voice is on.');};
 // ---------- auto-enhance switch ----------
 window.CP_ENHANCE=true;
 const sl=$('#sensitivity-slider'),lab=document.createElement('label');lab.style.cssText='display:flex;gap:8px;align-items:center;margin-top:10px;font-weight:700;font-size:14px;cursor:pointer';
@@ -1527,4 +1649,13 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelAnima
 let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(Math.abs(innerWidth-W)>40||Math.abs(innerHeight-H)>200){build();start();}},250);});
 build();start();
 })();
-</script></body></html>
+</script><div class="cp-rail cp-rl" aria-hidden="true"><div class="cp-line" style="left:28%;--c:#ff6584"></div><div class="cp-line" style="left:66%;--c:#4ECCA3"></div><div class="cp-dot" style="left:28%;--c:#ff6584;animation-duration:7s;animation-delay:-0s"></div><div class="cp-dot" style="left:28%;--c:#4ECCA3;animation-duration:9s;animation-delay:-4s"></div><div class="cp-dot" style="left:66%;--c:#8aa4ff;animation-duration:8s;animation-delay:-2s"></div><div class="cp-dot" style="left:66%;--c:#ff6584;animation-duration:11s;animation-delay:-6s"></div><div class="cp-tipbox"><div class="cp-tip"><b>DID YOU KNOW?</b>Circuit boards hold recoverable copper, gold and silver.</div><div class="cp-tip"><b>SAFETY FIRST</b>Never burn boards. The smoke is toxic. Use a registered recycler.</div><div class="cp-tip"><b>PHOTO TIP</b>Shoot flat, in even light, for more detected parts.</div></div><img class="cp-rm" alt=""></div><div class="cp-rail cp-rr" aria-hidden="true"><div class="cp-line" style="left:28%;--c:#ff6584"></div><div class="cp-line" style="left:66%;--c:#4ECCA3"></div><div class="cp-dot" style="left:28%;--c:#ff6584;animation-duration:7s;animation-delay:-0s"></div><div class="cp-dot" style="left:28%;--c:#4ECCA3;animation-duration:9s;animation-delay:-4s"></div><div class="cp-dot" style="left:66%;--c:#8aa4ff;animation-duration:8s;animation-delay:-2s"></div><div class="cp-dot" style="left:66%;--c:#ff6584;animation-duration:11s;animation-delay:-6s"></div><div class="cp-tipbox"><div class="cp-tip"><b>DID YOU KNOW?</b>Circuit boards hold recoverable copper, gold and silver.</div><div class="cp-tip"><b>SAFETY FIRST</b>Never burn boards. The smoke is toxic. Use a registered recycler.</div><div class="cp-tip"><b>PHOTO TIP</b>Shoot flat, in even light, for more detected parts.</div></div><img class="cp-rm" alt=""></div><script>(()=>{
+const C=['#ff6584','#2fb67c','#8aa4ff','#edc157'];
+const svg=c=>'<svg viewBox="0 0 40 40" width="100%" height="100%"><g stroke="'+c+'" stroke-width="3" stroke-linecap="round"><path d="M12 4v5M20 4v5M28 4v5M12 31v5M20 31v5M28 31v5M4 12h5M4 20h5M4 28h5M31 12h5M31 20h5M31 28h5"/><rect x="9" y="9" width="22" height="22" rx="6" fill="'+c+'" fill-opacity=".25"/></g><circle cx="16" cy="18" r="2.2" fill="'+c+'"/><circle cx="24" cy="18" r="2.2" fill="'+c+'"/></svg>';
+const logo=(document.querySelector('header img')||{}).src||'';
+document.querySelectorAll('.cp-rail').forEach((r,ri)=>{
+  for(let i=0;i<6;i++){const d=document.createElement('div'),z=22+Math.random()*20;d.className='cp-fc';
+    d.style.cssText='left:'+(6+Math.random()*58)+'%;width:'+z+'px;height:'+z+'px;animation-duration:'+(24+Math.random()*22)+'s;animation-delay:-'+Math.random()*40+'s';
+    d.innerHTML=svg(C[(i+ri)%4]);r.append(d);}
+  const m=r.querySelector('.cp-rm');if(m)m.src=logo;});
+})();</script></body></html>
