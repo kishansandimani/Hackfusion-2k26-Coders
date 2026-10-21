@@ -1,7 +1,9 @@
+import hashlib
 import io
 import json
 import os
 import threading
+import traceback
 import time
 import base64
 import uuid
@@ -23,10 +25,12 @@ from compliance import audit
 from enhance import enhance_if_needed
 from repair import equiv_for, guides_for
 from report import make_pdf
+from scores import award, delete as delete_scores, router as scores_router
 
 WEIGHTS = "weights/best.pt"
 app = FastAPI(title="ChipPal API")
 app.include_router(auth_router)
+app.include_router(scores_router)
 
 # ---------------- AI models (loaded once) ----------------
 model = YOLO(WEIGHTS)
@@ -290,9 +294,11 @@ def finalize(orig, dets, mode, job_id=None, owner=None, enhanced=None):
 def analyze(file: UploadFile = File(...), conf: float = Form(0.2),
             tiled: bool = Form(True), tile: int = Form(640), enhance: bool = Form(True),
             user: str = Depends(current_user)):
+    raw = file.file.read()
+    img_hash = hashlib.sha256(raw).hexdigest()
     try:
         orig = ImageOps.exif_transpose(
-            Image.open(io.BytesIO(file.file.read()))).convert("RGB")
+            Image.open(io.BytesIO(raw))).convert("RGB")
     except Exception:
         raise HTTPException(400, "That file is not a readable image.")
     work, steps = enhance_if_needed(orig) if enhance else (orig, [])
@@ -306,7 +312,9 @@ def analyze(file: UploadFile = File(...), conf: float = Form(0.2),
             os.remove(path)
     if not dets:
         raise HTTPException(422, "No components found. Try a lower confidence.")
-    return finalize(orig, dets, "tiled" if tiled else "standard", owner=user, enhanced=steps)
+    result = finalize(orig, dets, "tiled" if tiled else "standard", owner=user, enhanced=steps)
+    result["score"] = award(user, img_hash)  # 10 points for each new board that finishes scanning
+    return result
 
 
 @app.post("/api/recompute")
@@ -365,10 +373,14 @@ def _job(job_id, user):
 @app.get("/api/report/{job_id}.pdf")
 def report_pdf(job_id: str, user: str = Depends(current_user)):
     j = _job(job_id, user)
-    pdf = make_pdf(j["img"], j["summary"], j["metrics"], j["mode"],
-                   plan=j["plan"]["plan"], score=j["plan"]["score"])
+    try:
+        pdf = make_pdf(j["img"], j["summary"], j["metrics"], j["mode"],
+                       plan=j["plan"]["plan"], score=j["plan"]["score"])
+    except Exception as e:  # show the real reason in the terminal and in the page
+        traceback.print_exc()
+        raise HTTPException(500, f"Could not build the PDF: {e}")
     return Response(pdf, media_type="application/pdf",
-                    headers={"Content-Disposition": 'attachment; filename="ewaste_report.pdf"'})
+                    headers={"Content-Disposition": 'attachment; filename="chippal_report.pdf"'})
 
 
 @app.get("/api/csv/{job_id}.csv")
@@ -391,6 +403,7 @@ def delete_account(response: Response, password: str = Form(""), user: str = Dep
         if not verify_password(user, password):
             raise HTTPException(403, "That password is not correct.")
         delete_user(user)
+    delete_scores(user)
     for k in [k for k, v in JOBS.items() if v.get("owner") == user]:
         JOBS.pop(k, None)
     response.delete_cookie(COOKIE)

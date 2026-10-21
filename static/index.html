@@ -1159,8 +1159,8 @@ async function show(d,sm,first=true){
   // chips
   $('#chips-sec').innerHTML='<h2 style="font-size:22px;font-weight:700">Chip identification</h2><p style="margin:6px 0 14px;opacity:.75">I read the printed markings on detected ICs and look them up in a parts list. This works best on sharp close-up photos.</p><button id="chip-go" class="px-6 py-2 rounded-full bg-primary-container text-on-primary font-bold" '+(d.ics?'':'disabled style="opacity:.5"')+'>'+(d.ics?'Read '+d.ics+' chip markings':'No ICs found in this photo')+'</button><div id="chip-out" style="margin-top:16px;overflow-x:auto"></div>';
   const cg=$('#chip-go');if(d.ics)cg.onclick=chips;
-  $('#btn-pdf').onclick=()=>location.href='/api/report/'+job+'.pdf';
-  $('#btn-csv').onclick=()=>location.href='/api/csv/'+job+'.csv';
+  $('#btn-pdf').onclick=()=>download('/api/report/'+job+'.pdf','chippal_report.pdf');
+  $('#btn-csv').onclick=()=>download('/api/csv/'+job+'.csv','chippal_report.csv');
 
   // salvage plan (rule-based, from the backend)
   planSec.classList.remove('hidden');
@@ -1248,7 +1248,11 @@ function history_add(x){if(!x.thumb)return;const h=hist();h.unshift(x);saveHist(
 function saveHist(h){try{localStorage.setItem(HK,JSON.stringify(h.slice(0,8)));}catch(e){}}
 const srvDel=id=>{if(id)_fetch('/api/delete/'+id,{method:'POST'}).catch(()=>{});};
 function okToast(m){const t=document.createElement('div');t.textContent=m;t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1f8f5f;color:#fff;padding:12px 20px;border-radius:999px;z-index:100;font-weight:700;max-width:90vw';document.body.append(t);setTimeout(()=>t.remove(),4000);}
-function resetUI(){['#results','#parts','#chips-sec','#exports','#plan','#edit'].forEach(x=>{const e=$(x);if(e)e.classList.add('hidden');});job=null;annot=plain=null;$('#scanner').scrollIntoView({behavior:'smooth'});}
+async function download(url,name){
+  try{const r=await fetch(url);if(!r.ok){let m='Download failed ('+r.status+')';try{const d=await r.json();if(d.detail)m=d.detail;}catch(e){}throw new Error(m);}
+    const b=await r.blob(),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000);okToast('Downloaded '+name);}
+  catch(e){toast(e.message);}}
+function resetUI(){document.dispatchEvent(new CustomEvent('chippal:reset'));['#results','#parts','#chips-sec','#exports','#plan','#edit'].forEach(x=>{const e=$(x);if(e)e.classList.add('hidden');});job=null;annot=plain=null;$('#scanner').scrollIntoView({behavior:'smooth'});}
 function delHist(i){const h=hist(),x=h[i];if(!x||!confirm('Delete this scan from your history?'))return;h.splice(i,1);saveHist(h);srvDel(x.id);if(x.id&&x.id===job)resetUI();renderHist();}
 function clearHist(){if(!confirm('Delete all your saved scans?'))return;hist().forEach(x=>srvDel(x.id));try{localStorage.removeItem(HK);}catch(e){}if(job)resetUI();renderHist();}
 function renderHist(){const h=hist(),g=$('#history-grid');setT('#scan-count','🔥 '+h.length+(h.length===1?' board':' boards')+' scanned');
@@ -1279,7 +1283,7 @@ if(!SS){vb.disabled=true;vb.textContent='🔇 Voice not supported';}
 document.body.append(vb);
 function say(t){if(!voiceOn||!SS)return;try{SS.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-IN';SS.speak(u);}catch(e){}}
 function speakResult(d){const m=d.metrics,care=d.summary.filter(r=>/^Handle/i.test(r.verdict)||r.level==='high').map(r=>r.class),rich=d.summary.filter(r=>r.count&&r.value/r.count>=20).map(r=>r.class);
-  let t='Analysis complete. '+m.components+' parts found. ';if(rich.length)t+='Valuable parts found: '+rich.join(', ')+'. ';if(care.length)t+='Hazardous parts, handle carefully: '+care.join(', ')+'. ';say(t+'Estimated value '+m.value+' rupees.');}
+  let t='Analysis complete. '+m.components+' parts found. ';if(rich.length)t+='Valuable parts found: '+rich.join(', ')+'. ';if(care.length)t+='Hazardous parts, handle carefully: '+care.join(', ')+'. ';say(t+'Estimated value '+m.value+' rupees.'+(d.score&&d.score.awarded?' You earned '+d.score.points_added+' points.':''));}
 vb.onclick=()=>{voiceOn=!voiceOn;vb.textContent='🔊 Voice: '+(voiceOn?'on':'off');if(!voiceOn&&SS)SS.cancel();else if(last)speakResult(last);else say('Voice is on.');};
 // ---------- auto-enhance switch ----------
 window.CP_ENHANCE=true;
@@ -1354,12 +1358,12 @@ const B=mkSec('batch','#scanner',true);
 B.innerHTML=H2('Batch scan')+'<p style="opacity:.8;margin:4px 0 12px">Add several board photos at once. ChipPal analyses them one after another and totals the whole lot. Speed depends on your computer, and the measured speed is shown at the end.</p><button id="b-pick" style="'+btn('#ffe69a')+'">Choose photos (up to 12)</button><input id="b-in" type="file" accept="image/*" multiple hidden><div id="b-prog" style="margin-top:10px;font-weight:700"></div><div id="b-out"></div>';
 $('#b-pick').onclick=()=>$('#b-in').click();
 const shrink=f=>new Promise((ok,no)=>{const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{const k=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok({url:c.toDataURL('image/jpeg',.85),w:im.width,h:im.height});};im.onerror=()=>no(new Error('Unreadable image'));im.src=u;});
-$('#b-in').onchange=async e=>{const files=[...e.target.files].slice(0,12);e.target.value='';if(!files.length)return;const t0=performance.now(),res=[];$('#b-pick').disabled=true;
+$('#b-in').onchange=async e=>{const files=[...e.target.files].slice(0,12);e.target.value='';if(!files.length)return;const t0=performance.now(),res=[];let earned=0,lastScore=null;$('#b-pick').disabled=true;
   for(let i=0;i<files.length;i++){$('#b-prog').textContent='Analysing '+(i+1)+' of '+files.length+'...';
     try{const sm=await shrink(files[i]),fd=new FormData();fd.append('file',files[i]);fd.append('conf',sl.value/100);fd.append('tiled',$('#tiny-parts-toggle').classList.contains('justify-end'));fd.append('tile',640);fd.append('enhance',window.CP_ENHANCE!==false);
-      const r=await fetch('/api/analyze',{method:'POST',body:fd}),d=await r.json();if(!r.ok)throw new Error(d.detail||r.status);res.push({name:files[i].name,d,sm});}
+      const r=await fetch('/api/analyze',{method:'POST',body:fd}),d=await r.json();if(!r.ok)throw new Error(d.detail||r.status);res.push({name:files[i].name,d,sm});if(d.score){lastScore=d.score;earned+=d.score.points_added||0;}}
     catch(err){res.push({name:files[i].name,err:err.message});}}
-  $('#b-pick').disabled=false;const sec=(performance.now()-t0)/1000;$('#b-prog').textContent='';showBatch(res,sec);};
+  $('#b-pick').disabled=false;const sec=(performance.now()-t0)/1000;$('#b-prog').textContent='';showBatch(res,sec);if(lastScore)reward(earned?{...lastScore,awarded:true,points_added:earned}:lastScore);};
 function showBatch(res,sec){const ok=res.filter(r=>r.d),tot={n:0,re:0,v:0,lo:0,hi:0,m:0,hz:0},cls={};
   ok.forEach(r=>{const d=r.d;tot.n+=d.metrics.components;tot.re+=d.metrics.reusable;tot.v+=d.metrics.value;tot.lo+=d.metrics.value_low;tot.hi+=d.metrics.value_high;tot.m+=d.mass_g;tot.hz+=d.haz_g;d.summary.forEach(s=>cls[s.class]=(cls[s.class]||0)+s.count);});
   const hp=tot.m?100*tot.hz/tot.m:0,top=Object.entries(cls).sort((a,b)=>b[1]-a[1]).slice(0,8).map(a=>esc(a[0])+' ×'+a[1]).join(', ');
@@ -1370,10 +1374,117 @@ function showBatch(res,sec){const ok=res.filter(r=>r.d),tot={n:0,re:0,v:0,lo:0,h
   $('#b-csv').onclick=()=>{const rows=[['photo','parts','reusable','value_inr','value_low','value_high','hazard_pct','score']].concat(ok.map(r=>[r.name,r.d.metrics.components,r.d.metrics.reusable,r.d.metrics.value,r.d.metrics.value_low,r.d.metrics.value_high,r.d.metrics.hazard,r.d.score]),[[],['part type','count']],Object.entries(cls));
     const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='chippal_lot.csv';a.click();};
   say('Batch finished. '+ok.length+' boards. Total estimated value '+tot.v+' rupees.');}
+
+// ---------- look and feel: tabs, short explanations, upload background ----------
+const css=document.createElement('style');css.textContent=`
+.tab-off{display:none!important}.tab-in{animation:tabIn .35s ease}@keyframes tabIn{from{opacity:0;transform:translateY(10px)}}
+.tabbar{position:sticky;z-index:40;margin:8px 0 16px;padding:10px 12px 10px;border-radius:26px;background:rgba(255,255,255,.93);backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(23,27,43,.12);border:2px solid #ffd0de}
+.tabs-scroll{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:thin}
+.tabbar button{border:0;border-radius:999px;padding:9px 16px;font-weight:800;white-space:nowrap;cursor:pointer;background:#f1efff;color:#171b2b;transition:.15s;font-family:inherit}
+.tabbar [data-tab].on{background:#ff6584;color:#fff;box-shadow:0 5px 0 #d94c6c;transform:translateY(-2px)}.tabbar [data-tab]:hover:not(.on){background:#ddd3ff}
+.tab-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:6px}.tab-actions .dl{background:#c8f3dc}.tab-actions .ar{background:#ffe69a}
+#tabintro{margin:8px 4px 0;font-size:14px;color:#4b4f68}
+.intro{margin:14px 0;padding:12px 16px;border-radius:18px;background:#f4f2ff;font-size:14px;color:#3b3f57}.intro b{color:#171b2b}
+.up-card{background:linear-gradient(120deg,#fff3f6 0%,#eafff6 35%,#efeaff 70%,#fff6dc 100%)!important;background-size:300% 300%;animation:upShift 14s ease-in-out infinite;overflow:hidden;position:relative;transition:transform .2s,box-shadow .2s}
+.up-card:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.7;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><g fill='none' stroke='%23ff6584' stroke-opacity='.22' stroke-width='2'><path d='M0 34H46V80H100M46 34V0M100 80V140M70 112H140'/><circle cx='46' cy='34' r='5'/><circle cx='100' cy='80' r='5'/><circle cx='140' cy='112' r='4'/></g></svg>")}
+.up-card>*:not([class*=absolute]):not(.up-chip){position:relative;z-index:1}
+.up-dz{border:3px dashed #ff6584!important;background:rgba(255,255,255,.55)!important;z-index:0}
+.up-card.drag{transform:scale(1.015);box-shadow:0 0 0 5px #64fcc9 inset,0 14px 40px rgba(47,182,124,.25)}
+.up-chip{position:absolute;width:38px;height:38px;opacity:.55;pointer-events:none;animation:upBob 6s ease-in-out infinite alternate}
+.up-chip.c1{left:5%;top:14%}.up-chip.c2{right:6%;top:22%;animation-delay:-2s;width:30px;height:30px}.up-chip.c3{right:12%;bottom:10%;animation-delay:-4s}.up-chip.c4{left:9%;bottom:12%;animation-delay:-1s;width:28px;height:28px}
+@keyframes upShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}@keyframes upBob{to{transform:translateY(-14px) rotate(12deg)}}
+@media (prefers-reduced-motion:reduce){.up-card,.up-chip,.tab-in{animation:none}}`;
+document.head.append(css);
+const TABS=[['results','📊','Overview','The big picture for this board: how many parts, what they are worth, how hazardous it is, and your photo with the detected parts. Slide the divider to compare the original and the AI result.'],
+['parts','🧩','Parts','Every part type found, with counts, hazard level, a suggested action and an estimated value. Click a price to search it on Flipkart. The panel at the bottom shows how each estimate is made.'],
+['plan','♻️','Salvage plan','A suggested order of work: handle hazardous parts first, then desolder the valuable ones, then send the rest for recycling. The score is our own simple index.'],
+['edit','✏️','Review and fix','The AI can miss or mislabel parts. Tap a box to correct it, or add a missed part. Every number on the page recalculates.'],
+['salvage','🎮','Detach','Drag parts off the board into the tray and watch the board value and hazardous share change. The pads underneath are an illustration.'],
+['eco','⚖️','Eco-law','Disposal risks and rules to check for the part types on this board (India first, with pointers to EU rules). A reference, not legal advice.'],
+['repair','🔧','Repair','What to match when replacing a damaged part, with steps and safety. Written guides per part type.'],
+['sell','💰','Sell timing','Log the prices you see and get a hint on whether now looks like a good time to sell. It only uses prices you enter.'],
+['chips-sec','🔬','Chips','Reads the printed text on chips and identifies known parts. Identified microcontrollers are counted separately.'],
+['exports','📄','Report','Download the PDF report or the CSV, or delete this scan from the server.']];
+const bar=document.createElement('div');bar.className='tabbar';bar.style.display='none';
+bar.innerHTML='<div class="tabs-scroll" role="tablist">'+TABS.map(t=>'<button type="button" role="tab" data-tab="'+t[0]+'"><span aria-hidden="true">'+t[1]+'</span> '+t[2]+'</button>').join('')+'</div><div class="tab-actions"><button id="tb-prev" class="ar" type="button">◀ Back</button><button id="tb-next" class="ar" type="button">Next ▶</button><button id="tb-pdf" class="dl" type="button">⬇ PDF report</button><button id="tb-csv" class="dl" type="button">⬇ CSV</button></div><p id="tabintro"></p>';
+$('#results').before(bar);
+const hdr=()=>{const h=$('header');bar.style.top=((h?h.offsetHeight:72)+8)+'px';};hdr();window.addEventListener('resize',hdr);
+let cur='results';
+function openTab(id,scroll){cur=id;TABS.forEach(t=>{const el=document.getElementById(t[0]);if(el)el.classList.toggle('tab-off',t[0]!==id);});
+  bar.querySelectorAll('[data-tab]').forEach(b=>{const on=b.dataset.tab===id;b.classList.toggle('on',on);b.setAttribute('aria-selected',on);});
+  $('#tabintro').textContent=TABS.find(t=>t[0]===id)[3];const el=document.getElementById(id);if(el){el.classList.add('tab-in');setTimeout(()=>el.classList.remove('tab-in'),450);}
+  const onb=bar.querySelector('.on');if(onb)onb.scrollIntoView({block:'nearest',inline:'center'});
+  setTimeout(()=>window.dispatchEvent(new Event('resize')),40);if(scroll)bar.scrollIntoView({behavior:'smooth',block:'start'});}
+bar.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>openTab(b.dataset.tab,true));
+const step=n=>{const i=TABS.findIndex(t=>t[0]===cur);openTab(TABS[(i+n+TABS.length)%TABS.length][0],true);};
+$('#tb-prev').onclick=()=>step(-1);$('#tb-next').onclick=()=>step(1);
+$('#tb-pdf').onclick=()=>$('#btn-pdf').click();$('#tb-csv').onclick=()=>$('#btn-csv').click();
+document.addEventListener('chippal:reset',()=>{bar.style.display='none';});
+const ids=['scanner','results','parts','chips-sec','history'];
+$$('nav a[data-path]').forEach((a,i)=>{a.onclick=e=>{e.preventDefault();const ready=!$('#results').classList.contains('hidden');
+  if(ready&&(i===1||i===2||i===3))openTab(ids[i],true);else{const t=document.getElementById(ids[i===1||i===2||i===3?0:i]);if(t)t.scrollIntoView({behavior:'smooth'});}};});
+// short explanations
+$('#scanner').insertAdjacentHTML('beforeend','<div class="intro"><b>Upload:</b> drop a clear, bright, overhead photo of a dismantled circuit board, or use the camera. ChipPal finds the parts, values them and flags hazards. <b>Sensitivity</b> sets how sure the AI must be before drawing a box. <b>Find tiny parts</b> scans the photo in small tiles. <b>Auto-enhance</b> fixes dark or soft photos first. <b>Points:</b> every new board you finish scanning earns 10 points (the same photo counts once).</div>');
+$('#history-grid').insertAdjacentHTML('beforebegin','<p class="intro" style="margin-top:0"><b>History:</b> your recent scans, saved only in this browser. Delete any of them whenever you like.</p>');
+vb.title='Speaks the results aloud, and announces parts you detach';
+const heic=[...document.querySelectorAll('#scanner *')].find(e=>!e.children.length&&e.textContent.trim()==='HEIC up to 25MB');if(heic)heic.textContent='Sharp, bright photos';
+// upload card background
+const dz=$('#scanner [class*="border-dashed"]');
+if(dz){const card=dz.parentElement,chip=c=>'<svg class="up-chip '+c+'" viewBox="0 0 40 40" aria-hidden="true"><g stroke="#ff6584" stroke-width="3" stroke-linecap="round"><path d="M12 4v5M20 4v5M28 4v5M12 31v5M20 31v5M28 31v5M4 12h5M4 20h5M4 28h5M31 12h5M31 20h5M31 28h5"/><rect x="9" y="9" width="22" height="22" rx="6" fill="#ff6584" fill-opacity=".25"/></g><circle cx="16" cy="18" r="2.2" fill="#ff6584"/><circle cx="24" cy="18" r="2.2" fill="#ff6584"/></svg>';
+  card.classList.add('up-card');dz.classList.add('up-dz');card.insertAdjacentHTML('afterbegin',chip('c1')+chip('c2')+chip('c3')+chip('c4'));
+  ['dragover','dragenter'].forEach(ev=>document.addEventListener(ev,()=>card.classList.add('drag')));['dragleave','drop'].forEach(ev=>document.addEventListener(ev,()=>card.classList.remove('drag')));}
+
+// ---------- points game ----------
+const gcss=document.createElement('style');gcss.textContent=`
+.pts-pill{border:0;border-radius:999px;padding:8px 16px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#ffe69a,#ffc2d3);color:#171b2b;margin-right:8px;box-shadow:0 4px 0 #e0a93a;font-family:inherit;white-space:nowrap}
+.pts-pill:focus-visible{outline:3px solid #171b2b;outline-offset:2px}
+@media (max-width:760px){.pts-pill .lv{display:none}}
+.pop{position:fixed;top:92px;left:50%;transform:translateX(-50%);z-index:120;min-width:260px;max-width:92vw;text-align:center;padding:16px 26px;border-radius:26px;background:linear-gradient(135deg,#ffe69a,#ff8fb1);color:#171b2b;box-shadow:0 18px 50px rgba(255,101,132,.45);animation:popIn .55s cubic-bezier(.2,1.4,.4,1)}
+.pop b{display:block;font-size:34px;line-height:1.1}.pop span{font-weight:700}
+@keyframes popIn{from{opacity:0;transform:translate(-50%,-30px) scale(.7)}}
+.gm{position:fixed;inset:0;z-index:110;background:rgba(23,27,43,.55);display:flex;align-items:flex-start;justify-content:center;padding:70px 14px 20px;overflow:auto}
+.gm .box{width:100%;max-width:640px;background:#fff;border-radius:28px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.35);font-family:inherit;color:#171b2b}
+.gm h2{margin:0 0 4px;font-size:24px}.gm .bar{height:14px;border-radius:99px;background:#eceaf7;overflow:hidden;margin:8px 0}.gm .bar i{display:block;height:100%;background:linear-gradient(90deg,#ff6584,#ffe69a);border-radius:99px;transition:width .8s}
+.gm .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin:12px 0}.gm .stats div{background:#f4f2ff;border-radius:16px;padding:10px 12px;font-weight:800;font-size:20px}.gm .stats small{display:block;font-size:12px;font-weight:600;opacity:.7}
+.gm .bd{display:flex;gap:8px;flex-wrap:wrap}.gm .bd span{padding:6px 12px;border-radius:999px;font-weight:700;font-size:13px;background:#ffe69a}.gm .bd span.lock{background:#eceaf7;opacity:.6}
+.gm table{width:100%;border-collapse:collapse;font-size:14px}.gm td,.gm th{padding:6px 8px;text-align:left}.gm tr.me{background:#ffe69a;font-weight:800}.gm tr+tr{border-top:1px solid #ece9f8}
+.gm .x{border:0;border-radius:999px;padding:8px 16px;font-weight:800;background:#ddd3ff;cursor:pointer;float:right;font-family:inherit}`;
+document.head.append(gcss);
+const pill=document.createElement('button');pill.type='button';pill.className='pts-pill';pill.textContent='⭐ 0 pts';pill.setAttribute('aria-label','Open scoreboard');
+const hb0=$('header button');if(hb0)hb0.before(pill);
+function setPill(p){pill.innerHTML='⭐ '+p.points+' pts <span class="lv">· Lv '+(p.level.index+1)+'</span>';pill.title='Level '+(p.level.index+1)+': '+p.level.name+' (tap for scoreboard)';}
+fetch('/api/score').then(r=>r.json()).then(p=>{if(p&&p.level)setPill(p);}).catch(()=>{});
+const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function confetti(power){if(calm)return;const big=power==='big',c=document.createElement('canvas');c.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:130';c.width=innerWidth;c.height=innerHeight;document.body.append(c);
+  const x=c.getContext('2d'),W=c.width,H=c.height,cols=['#ff6584','#ffe69a','#64fcc9','#8aa4ff','#edc157','#ffffff','#ffb2bc','#c58bff'],R=Math.random,n=big?240:150,ps=[];
+  const mk=o=>Object.assign({rot:R()*6.28,vr:(R()-.5)*.3,fl:R()*6.28,vf:.07+R()*.13,sw:R()*6.28,c:cols[R()*cols.length|0],w:8+R()*9,h:5+R()*8,k:R()<.14?2:R()<.3?1:0},o);
+  for(let i=0;i<n*.6;i++)ps.push(mk({x:R()*W,y:-30-R()*H*.9,vx:(R()-.5)*1.6,vy:1.5+R()*2.5,rain:1}));            // paper rain from the top
+  for(let i=0;i<n*.4;i++){const left=i%2===0,a=(left?-1:-1)*(Math.PI/180)*(left?58+R()*24:122-R()*24),s=15+R()*(big?15:10);ps.push(mk({x:left?10:W-10,y:H-10,vx:Math.cos(a)*s,vy:Math.sin(a)*s}));} // party poppers from both corners
+  const life=big?420:300;let t=0,last=performance.now();
+  (function f(now){const dt=Math.min((now-last)/16.7||1,2.5);last=now;t+=dt;x.clearRect(0,0,W,H);
+    ps.forEach(p=>{p.vy=Math.min(p.vy+.2*dt,p.rain?4.2:6.5);p.vx*=Math.pow(.992,dt);p.sw+=.06*dt;p.x+=(p.vx+Math.sin(p.sw)*.9)*dt;p.y+=p.vy*dt;p.rot+=p.vr*dt;p.fl+=p.vf*dt;
+      if(p.y>H+40)return;x.save();x.globalAlpha=t>life-70?Math.max(0,(life-t)/70):1;x.translate(p.x,p.y);x.rotate(p.rot);x.scale(1,Math.cos(p.fl));x.fillStyle=p.c;
+      if(p.k===2){x.fillRect(-1.5,-p.h*2.2,3,p.h*4.4);}else if(p.k===1){x.beginPath();x.arc(0,0,p.h*.55,0,6.283);x.fill();}else{x.fillRect(-p.w/2,-p.h/2,p.w,p.h);}x.restore();});
+    if(t<life)requestAnimationFrame(f);else c.remove();})(last);}
+function popup(big,small,extra){const d=document.createElement('div');d.className='pop';d.setAttribute('role','status');d.innerHTML='<b>'+esc(big)+'</b><span>'+esc(small)+'</span>'+(extra?'<div style="margin-top:6px;font-weight:800">'+esc(extra)+'</div>':'');document.body.append(d);setTimeout(()=>d.remove(),3800);}
+function reward(s){if(!s||!s.level)return;setPill(s);
+  if(s.awarded){const lv=s.level_up?'Level up! You are now a '+s.level.name+'.':(s.level.to_next!==null?s.level.to_next+' points to '+'next level':'Top level reached!');
+    popup('+'+s.points_added+' points!','Total: '+s.points+' points · '+lv,s.new_badges&&s.new_badges.length?'New badge: '+s.new_badges.join(', '):'');confetti(s.level_up?'big':'normal');}
+  else if(s.reason){popup('Already counted',s.reason);}}
+function openBoard(){const m=document.createElement('div');m.className='gm';m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');m.innerHTML='<div class="box"><button class="x" type="button">Close</button><h2>Scoreboard</h2><p style="margin:0;opacity:.75">Loading…</p></div>';document.body.append(m);
+  const close=()=>m.remove();m.onclick=e=>{if(e.target===m)close();};m.querySelector('.x').onclick=close;document.addEventListener('keydown',function k(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',k);}});
+  fetch('/api/leaderboard').then(r=>r.json()).then(d=>{const me=d.me,lv=me.level;setPill(me);
+    m.querySelector('.box').innerHTML='<button class="x" type="button">Close</button><h2>Scoreboard</h2><p style="margin:0 0 6px;opacity:.8">Every <b>new</b> board you finish scanning earns <b>'+me.per_scan+' points</b>. The same photo only counts once. Guests can play, but only signed-in users appear on the leaderboard.</p>'+
+     '<div style="font-weight:800;font-size:18px">Level '+(lv.index+1)+': '+esc(lv.name)+'</div><div class="bar" aria-label="Progress to next level"><i style="width:'+lv.pct+'%"></i></div><div style="font-size:13px;opacity:.75">'+(lv.to_next===null?'Top level reached!':lv.to_next+' points to the next level')+'</div>'+
+     '<div class="stats"><div>'+me.points+'<small>points</small></div><div>'+me.scans+'<small>boards scanned</small></div><div>'+me.streak+'<small>day streak</small></div><div>'+(me.rank?'#'+me.rank:'-')+'<small>rank</small></div></div>'+
+     '<h3 style="margin:12px 0 6px">Badges</h3><div class="bd">'+me.badges.map(b=>'<span class="'+(b.unlocked?'':'lock')+'" title="'+esc(b.desc)+'">'+(b.unlocked?'🏅 ':'🔒 ')+esc(b.name)+'</span>').join('')+'</div>'+
+     '<h3 style="margin:14px 0 6px">Top scanners</h3>'+(d.top.length?'<table><thead><tr><th>#</th><th>Name</th><th>Level</th><th>Points</th></tr></thead><tbody>'+d.top.map(r=>'<tr class="'+(r.name.toLowerCase()===me.name.toLowerCase()?'me':'')+'"><td>'+r.rank+'</td><td>'+esc(r.name)+'</td><td>'+esc(r.level)+'</td><td>'+r.points+'</td></tr>').join('')+'</tbody></table>':'<p style="opacity:.7">No scores yet. Scan a board to be first!</p>');
+    m.querySelector('.x').onclick=close;}).catch(()=>{m.querySelector('p').textContent='Could not load the scoreboard.';});}
+pill.onclick=openBoard;
 // ---------- on every result ----------
 document.addEventListener('chippal:result',e=>{const{d,plain,first}=e.detail;last=d;
   enhBox.style.display=d.enhanced&&d.enhanced.length?'block':'none';enhBox.innerHTML=d.enhanced&&d.enhanced.length?'<b>Photo auto-enhanced:</b> '+d.enhanced.map(esc).join(', ')+'. This helps dim or soft photos, but it cannot recreate detail the camera did not capture.':'';
-  renderEco(d);renderRepair(d);renderSell(d);renderSalvage(d,plain,first);linkify();if(first)speakResult(d);});
+  renderEco(d);renderRepair(d);renderSell(d);renderSalvage(d,plain,first);linkify();if(first){bar.style.display='block';openTab('results');speakResult(d);if(!window.__noHist)reward(d.score);}else openTab(cur);});
 })();
 </script><script>(()=>{
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;

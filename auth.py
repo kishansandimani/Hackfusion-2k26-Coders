@@ -13,6 +13,8 @@ from fastapi import APIRouter, Form, HTTPException, Request, Response
 
 DB_FILE = "users.db"
 COOKIE = "chippal_session"
+GUEST_COOKIE = "chippal_guest"      # remembers the guest identity so saved scans stay reachable
+GUEST_SECONDS = 365 * 24 * 3600
 SESSION_SECONDS = 7 * 24 * 3600
 # Open sign-up by default. Set CHIPPAL_INVITE to require an access code.
 INVITE_CODE = os.environ.get("CHIPPAL_INVITE", "")  # empty = anyone can sign up
@@ -48,8 +50,8 @@ def hash_pw(password, salt_hex):
     return hashlib.pbkdf2_hmac("sha256", password.encode(), bytes.fromhex(salt_hex), 200_000).hex()
 
 
-def make_token(name, now=None):
-    exp = int((now or time.time()) + SESSION_SECONDS)
+def make_token(name, now=None, seconds=None):
+    exp = int((now or time.time()) + (seconds or SESSION_SECONDS))
     payload = f"{name}|{exp}"
     sig = hmac.new(SECRET, payload.encode(), "sha256").hexdigest()
     return base64.urlsafe_b64encode(f"{payload}|{sig}".encode()).decode()
@@ -166,7 +168,12 @@ def login(request: Request, response: Response, username: str = Form(...), passw
 @router.post("/api/guest")
 def guest(request: Request, response: Response):
     _rate((request.client.host if request.client else "?", "guest"), 30)
-    name = "guest-" + secrets.token_hex(3)
+    tok = request.cookies.get(GUEST_COOKIE)
+    name = read_token(tok) if tok else None
+    if not (name and is_guest(name)):          # first visit: create a new guest identity
+        name = "guest-" + secrets.token_hex(3)
+    response.set_cookie(GUEST_COOKIE, make_token(name, seconds=GUEST_SECONDS), max_age=GUEST_SECONDS,
+                        httponly=True, samesite="lax", secure=(request.url.scheme == "https"))
     _set_cookie(request, response, name)
     return {"name": name}
 
