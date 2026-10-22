@@ -341,6 +341,8 @@ def analyze(file: UploadFile = File(...), conf: float = Form(0.2),
     _prog(progress_id, user, 4, "Photo received")
     raw = file.file.read()
     img_hash = hashlib.sha256(raw).hexdigest()
+    if os.environ.get("CHIPPAL_DEMO_POINTS") == "1":   # demo mode: every scan earns points, even the same photo again
+        img_hash += uuid.uuid4().hex
     try:
         orig = ImageOps.exif_transpose(
             Image.open(io.BytesIO(raw))).convert("RGB")
